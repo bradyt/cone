@@ -1,4 +1,4 @@
-package info.tangential.cone.cone;
+package info.tangential.cone;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;

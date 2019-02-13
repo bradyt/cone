@@ -1,6 +1,6 @@
 # cone
 
-A ledger-like.
+A mobile ledger-like.
 
 ## Getting Started
 
