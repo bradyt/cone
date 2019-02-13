@@ -1,5 +1,7 @@
 name: cone
 description: A mobile ledger-like.
+homepage: https://github.com/bradyt/cone
+author: Brady Trainor <mail@bradyt.com>
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -7,7 +9,7 @@ description: A mobile ledger-like.
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 1.0.0+1
+version: 0.0.0
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
