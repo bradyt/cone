@@ -6,6 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:package_info/package_info.dart';
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
+import 'package:simple_permissions/simple_permissions.dart';
 
 import 'package:cone/src/flutter/transaction.dart';
 import 'package:cone/src/flutter/posting_widget.dart';
@@ -267,48 +268,16 @@ class AddTransactionState extends State<AddTransaction> {
 }
 
 class TransactionStorage {
-  static Future<String> get _localPath async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String packageName = packageInfo.packageName;
-    final directory = await getExternalStorageDirectory();
-    return p.join(directory.path, 'Android', 'data', packageName, 'files');
-  }
-
-  static Future<File> get _localFile async {
-    final path = await _localPath;
-    return File('$path/.cone.ledger.txt');
-  }
-
-  static Future<File> writeTransaction(String transaction) async {
-    final file = await _localFile;
-    print(file);
+  static Future<void> writeTransaction(String transaction) async {
+    final directory = '/storage/emulated/0/Documents/cone/';
+    bool permission = await SimplePermissions.checkPermission(
+        Permission.WriteExternalStorage);
+    if (!permission) {
+      await SimplePermissions.requestPermission(
+          Permission.WriteExternalStorage);
+    }
+    await Directory(directory).create(recursive: true);
+    final file = File(p.join(directory, '.cone.ledger.txt'));
     return file.writeAsString('$transaction', mode: FileMode.append);
   }
 }
-
-enum Fields { date, description, account, amount, currency }
-
-List<String> accounts = [
-  'assets:checking',
-  'assets:cash',
-  'expenses:food',
-  'expenses:groceries',
-  'expenses:transportation',
-  'expenses:rent',
-  'expenses:miscellaneous',
-  'equity',
-];
-
-// enum Currency { USD, EUR, JPY, GBP, AUD, CAD, CHF, CNH, SEK, NZD }
-List<String> currencies = [
-  'USD',
-  'EUR',
-  'JPY',
-  'GBP',
-  'AUD',
-  'CAD',
-  'CHF',
-  'CNY',
-  'SEK',
-  'NZD',
-];

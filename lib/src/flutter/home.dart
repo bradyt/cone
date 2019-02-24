@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:share/share.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatelessWidget {
@@ -8,18 +7,6 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('cone'),
-        actions: <Widget>[
-          IconButton(
-            icon: Icon(Icons.share),
-            onPressed: () {
-              Share.share('check out my website https://example.com');
-            },
-          ),
-          IconButton(
-            icon: Icon(Icons.settings),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: DefaultTextStyle(
         style: Theme.of(context).textTheme.body1,
