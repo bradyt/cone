@@ -1,11 +1,8 @@
-import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:package_info/package_info.dart';
 import 'package:path/path.dart' as p;
-import 'package:path_provider/path_provider.dart';
 import 'package:simple_permissions/simple_permissions.dart';
 
 import 'package:cone/src/flutter/transaction.dart';

@@ -16,10 +16,7 @@ environment:
 
 dependencies:
   datetime_picker_formfield: ^0.1.8
-  file_picker: 1.1.1
   intl: ^0.15.7
-  package_info: 0.3.2+1
-  path_provider: 0.4.1
   simple_permissions: ^0.1.9
   url_launcher: 4.1.0+1
   flutter:
