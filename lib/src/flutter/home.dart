@@ -10,7 +10,9 @@ class Home extends StatelessWidget {
       ),
       body: DefaultTextStyle(
         style: Theme.of(context).textTheme.body1,
-        child: RichWidget(),
+        child: SingleChildScrollView(
+          child: RichWidget(),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -54,12 +56,31 @@ cone will add the transaction to your ledger file, in the following format.
 ''',
           ),
           TextSpan(
-            text: '''2016-01-05 Farmer's Market
-  expenses:groceries  50 USD
-  assets:checking''',
+            text: '''  2016-01-05 Farmer's Market
+    expenses:groceries  50 USD
+    assets:checking''',
             style: TextStyle(fontFamily: "RobotoMono"),
           ),
-          TextSpan(text: '\n\nThe cone icon is copyright Ryan Spiering, '),
+          TextSpan(
+            text: '''
+
+
+For now, the app writes to the following location:
+
+''',
+          ),
+          TextSpan(
+            text: '  ~/Documents/cone/.cone.ledger.txt',
+            style: TextStyle(fontFamily: 'RobotoMono'),
+          ),
+          TextSpan(
+            text: '''
+
+
+We hope to make the location increasingly configurable as the app develops. One might use Syncthing to sync that directory to their PC, VPS, etc.
+
+The cone icon is copyright Ryan Spiering, ''',
+          ),
           TextSpan(
               text:
                   'https://thenounproject.com/Ryan-Spiering/collection/3d-shapes/',
@@ -67,10 +88,6 @@ cone will add the transaction to your ledger file, in the following format.
                 color: Colors.blue,
                 decoration: TextDecoration.underline,
               ),
-              // style: Theme.of(context)
-              //     .textTheme
-              //     .body1
-              //     .copyWith(color: Colors.blue),
               recognizer: TapGestureRecognizer()
                 ..onTap = () {
                   launch(
