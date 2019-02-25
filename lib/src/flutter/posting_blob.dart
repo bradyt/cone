@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class PostingController {
+class PostingBlob {
   Key key;
   TextEditingController accountController;
   TextEditingController amountController;
@@ -9,7 +9,7 @@ class PostingController {
   FocusNode amountFocus;
   FocusNode currencyFocus;
 
-  PostingController({
+  PostingBlob({
     this.key,
     this.accountController,
     this.amountController,

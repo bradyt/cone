@@ -7,27 +7,27 @@ import 'package:simple_permissions/simple_permissions.dart';
 
 import 'package:cone/src/flutter/transaction.dart';
 import 'package:cone/src/flutter/posting_widget.dart';
-import 'package:cone/src/flutter/posting_controller.dart';
+import 'package:cone/src/flutter/posting_blob.dart';
 
 class AddTransaction extends StatefulWidget {
   AddTransactionState createState() => AddTransactionState();
 }
 
 class AddTransactionState extends State<AddTransaction> {
-  var dateController = TextEditingController();
-  var descriptionController = TextEditingController();
+  final dateController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   final FocusNode dateFocus = FocusNode();
   final FocusNode descriptionFocus = FocusNode();
 
   var _formKey = GlobalKey<FormState>();
 
-  List<PostingController> postingControllers = [];
+  List<PostingBlob> postingBlobs = [];
 
   void initState() {
     super.initState();
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    postingControllers.add(PostingController(
+    postingBlobs.add(PostingBlob(
       key: UniqueKey(),
       accountController: TextEditingController(text: 'expenses:'),
       amountController: TextEditingController(),
@@ -36,7 +36,7 @@ class AddTransactionState extends State<AddTransaction> {
       amountFocus: FocusNode(),
       currencyFocus: FocusNode(),
     ));
-    postingControllers.add(PostingController(
+    postingBlobs.add(PostingBlob(
       key: UniqueKey(),
       accountController: TextEditingController(text: 'assets:checking'),
       amountController: TextEditingController(),
@@ -68,42 +68,44 @@ class AddTransactionState extends State<AddTransaction> {
             children: <Widget>[
               dateAndDescriptionWidget(context),
             ]..addAll(
-                List<int>.generate(postingControllers.length, (i) => i)
-                    .map((i) {
-                  final pc = postingControllers[i];
-                  return Dismissible(
-                      key: pc.key,
+                List<int>.generate(postingBlobs.length, (i) => i).map(
+                  (i) {
+                    final pb = postingBlobs[i];
+                    return Dismissible(
+                      key: pb.key,
                       onDismissed: (direction) {
-                        setState(() {
-                          postingControllers.removeAt(i);
-                        });
+                        setState(
+                          () => postingBlobs.removeAt(i),
+                        );
                       },
                       child: PostingWidget(
                         context: context,
                         index: i,
-                        accountController: pc.accountController,
-                        amountController: pc.amountController,
-                        currencyController: pc.currencyController,
-                        accountFocus: pc.accountFocus,
-                        amountFocus: pc.amountFocus,
-                        currencyFocus: pc.currencyFocus,
-                        nextPostingFocus: (i < postingControllers.length - 1)
-                            ? postingControllers[i + 1].accountFocus
+                        accountController: pb.accountController,
+                        amountController: pb.amountController,
+                        currencyController: pb.currencyController,
+                        accountFocus: pb.accountFocus,
+                        amountFocus: pb.amountFocus,
+                        currencyFocus: pb.currencyFocus,
+                        nextPostingFocus: (i < postingBlobs.length - 1)
+                            ? postingBlobs[i + 1].accountFocus
                             : null,
                         asYetOneEmptyAmount: 1 ==
                             // ignore: unnecessary-cast
-                            postingControllers.sublist(0, i).fold(
+                            postingBlobs.sublist(0, i).fold(
                               0 as int,
-                              (int previousValue, PostingController pc) {
-                                if (pc.amountController.text == '') {
+                              (int previousValue, PostingBlob pb) {
+                                if (pb.amountController.text == '') {
                                   return previousValue + 1;
                                 } else {
                                   return previousValue;
                                 }
                               },
                             ) as int,
-                      ));
-                }),
+                      ),
+                    );
+                  },
+                ),
               ),
           ),
         ),
@@ -116,7 +118,7 @@ class AddTransactionState extends State<AddTransaction> {
   }
 
   void addPosting() {
-    postingControllers.add(PostingController(
+    postingBlobs.add(PostingBlob(
       key: UniqueKey(),
       accountController: TextEditingController(),
       amountController: TextEditingController(),
@@ -132,11 +134,11 @@ class AddTransactionState extends State<AddTransaction> {
     Transaction txn = Transaction(
       dateController.text,
       descriptionController.text,
-      postingControllers
-          .map((pc) => Posting(
-                account: pc.accountController.text,
-                amount: pc.amountController.text,
-                currency: pc.currencyController.text,
+      postingBlobs
+          .map((pb) => Posting(
+                account: pb.accountController.text,
+                amount: pb.amountController.text,
+                currency: pb.currencyController.text,
               ))
           .toList(),
     );
@@ -231,7 +233,7 @@ class AddTransactionState extends State<AddTransaction> {
       controller: descriptionController,
       autofocus: true,
       focusNode: descriptionFocus,
-      textInputAction: (postingControllers.length > 0)
+      textInputAction: (postingBlobs.length > 0)
           ? TextInputAction.next
           : TextInputAction.done,
       validator: (value) {
@@ -243,10 +245,9 @@ class AddTransactionState extends State<AddTransaction> {
         descriptionController.text = value;
       },
       onFieldSubmitted: (term) {
-        if (postingControllers.length > 0) {
+        if (postingBlobs.length > 0) {
           descriptionFocus.unfocus();
-          FocusScope.of(context)
-              .requestFocus(postingControllers[0].accountFocus);
+          FocusScope.of(context).requestFocus(postingBlobs[0].accountFocus);
         }
       },
       decoration: InputDecoration(
