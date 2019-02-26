@@ -24,6 +24,10 @@ class AddTransactionState extends State<AddTransaction> {
 
   List<PostingBlob> postingBlobs = [];
 
+  List<bool> emptyAmountBools() => postingBlobs
+      .map((pb) => ['', null].contains(pb.amountController.text))
+      .toList();
+
   void initState() {
     super.initState();
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
@@ -90,18 +94,7 @@ class AddTransactionState extends State<AddTransaction> {
                         nextPostingFocus: (i < postingBlobs.length - 1)
                             ? postingBlobs[i + 1].accountFocus
                             : null,
-                        asYetOneEmptyAmount: 1 ==
-                            // ignore: unnecessary-cast
-                            postingBlobs.sublist(0, i).fold(
-                              0 as int,
-                              (int previousValue, PostingBlob pb) {
-                                if (pb.amountController.text == '') {
-                                  return previousValue + 1;
-                                } else {
-                                  return previousValue;
-                                }
-                              },
-                            ) as int,
+                        emptyAmountBools: emptyAmountBools,
                       ),
                     );
                   },
@@ -178,12 +171,15 @@ class AddTransactionState extends State<AddTransaction> {
   TextFormField dateFormField(BuildContext context) {
     return TextFormField(
       controller: dateController,
-      textInputAction: TextInputAction.next,
       focusNode: dateFocus,
+      keyboardType: TextInputType.datetime,
+      textInputAction: TextInputAction.next,
       onFieldSubmitted: (term) {
+        print('onSubmitted $term');
         fieldFocusChange(context, dateFocus, descriptionFocus);
       },
       onSaved: (value) {
+        print('onSaved $value');
         dateController.text = value;
       },
       decoration: InputDecoration(
@@ -237,14 +233,17 @@ class AddTransactionState extends State<AddTransaction> {
           ? TextInputAction.next
           : TextInputAction.done,
       validator: (value) {
+        print('validating $value');
         if (value.isEmpty) {
           return 'Please add a description, e.g., "Towel"';
         }
       },
       onSaved: (value) {
+        print('onSaved $value');
         descriptionController.text = value;
       },
       onFieldSubmitted: (term) {
+        print('onSubmitted $term');
         if (postingBlobs.length > 0) {
           descriptionFocus.unfocus();
           FocusScope.of(context).requestFocus(postingBlobs[0].accountFocus);

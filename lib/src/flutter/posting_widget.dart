@@ -9,7 +9,7 @@ class PostingWidget extends StatelessWidget {
   final FocusNode amountFocus;
   final FocusNode currencyFocus;
   final FocusNode nextPostingFocus;
-  final bool asYetOneEmptyAmount;
+  final Function emptyAmountBools;
 
   final BuildContext context;
 
@@ -23,12 +23,14 @@ class PostingWidget extends StatelessWidget {
     this.amountFocus,
     this.currencyFocus,
     this.nextPostingFocus,
-    this.asYetOneEmptyAmount,
+    this.emptyAmountBools,
   });
 
   Widget build(BuildContext context) {
     int j = index + 1;
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Expanded(
           child: TextFormField(
@@ -60,8 +62,12 @@ class PostingWidget extends StatelessWidget {
                 FocusScope.of(context).requestFocus(currencyFocus);
               },
               validator: (value) {
-                if ((value == '' || value == null) & asYetOneEmptyAmount) {
-                  return 'At most one empty amount.';
+                List<bool> bools = emptyAmountBools();
+                if (j == 1 && bools.length == 1 && bools[0] == true) {
+                  return 'At least one amount.';
+                } else if (['', null].contains(value) &&
+                    (bools.sublist(0, j).where((it) => it).length == 2)) {
+                  return 'Second empty amount.';
                 }
               }),
         ),
