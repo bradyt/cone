@@ -45,6 +45,11 @@ class PostingWidget extends StatelessWidget {
               accountFocus.unfocus();
               FocusScope.of(context).requestFocus(amountFocus);
             },
+            validator: (value) {
+              if (value == '') {
+                return 'Enter an account.';
+              }
+            },
           ),
         ),
         Expanded(
@@ -64,7 +69,7 @@ class PostingWidget extends StatelessWidget {
               validator: (value) {
                 List<bool> bools = emptyAmountBools();
                 if (j == 1 && bools.length == 1 && bools[0] == true) {
-                  return 'At least one amount.';
+                  return 'Enter an amount.';
                 } else if (['', null].contains(value) &&
                     (bools.sublist(0, j).where((it) => it).length == 2)) {
                   return 'Second empty amount.';

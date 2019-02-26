@@ -182,6 +182,16 @@ class AddTransactionState extends State<AddTransaction> {
         print('onSaved $value');
         dateController.text = value;
       },
+      validator: (value) {
+        if (value == '') {
+          return 'Enter a date.';
+        }
+        try {
+          DateTime.parse(value);
+        } catch (e) {
+          return 'Try RFC 3339.';
+        }
+      },
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         // filled: true,
@@ -235,7 +245,7 @@ class AddTransactionState extends State<AddTransaction> {
       validator: (value) {
         print('validating $value');
         if (value.isEmpty) {
-          return 'Please add a description, e.g., "Towel"';
+          return 'Enter a description.';
         }
       },
       onSaved: (value) {
