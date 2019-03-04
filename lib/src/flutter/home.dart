@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:open_file/open_file.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class Home extends StatelessWidget {
@@ -7,6 +8,18 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('cone'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.edit),
+            onPressed: () async {
+              await OpenFile.open(
+                '/storage/emulated/0/Documents/cone/.cone.ledger.txt',
+                type: 'text/plain',
+                uti: 'public.plain-txt',
+              );
+            },
+          ),
+        ],
       ),
       body: DefaultTextStyle(
         style: Theme.of(context).textTheme.body1,
