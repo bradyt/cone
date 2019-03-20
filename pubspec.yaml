@@ -16,7 +16,7 @@ environment:
 
 dependencies:
   datetime_picker_formfield:
-  simple_permissions:
+  permission_handler:
   url_launcher: ^4.2.0+3
   flutter:
     sdk: flutter
