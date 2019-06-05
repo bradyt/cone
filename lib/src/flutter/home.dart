@@ -7,6 +7,14 @@ class Home extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         title: Text('cone'),
+        actions: <Widget>[
+          IconButton(
+            icon: Icon(Icons.settings),
+            onPressed: () {
+              Navigator.pushNamed(context, '/settings');
+            },
+          ),
+        ],
       ),
       body: DefaultTextStyle(
         style: Theme.of(context).textTheme.body1,

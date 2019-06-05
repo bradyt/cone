@@ -4,10 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
+import 'package:provider/provider.dart';
 
 import 'package:cone/src/flutter/transaction.dart';
 import 'package:cone/src/flutter/posting_widget.dart';
 import 'package:cone/src/flutter/posting_blob.dart';
+import 'package:cone/src/flutter/settings_model.dart';
 
 class AddTransaction extends StatefulWidget {
   AddTransactionState createState() => AddTransactionState();
@@ -20,6 +22,10 @@ class AddTransactionState extends State<AddTransaction> {
   final FocusNode dateFocus = FocusNode();
   final FocusNode descriptionFocus = FocusNode();
 
+  String defaultCurrency;
+  String defaultAccountOne;
+  String defaultAccountTwo;
+
   var _formKey = GlobalKey<FormState>();
 
   List<PostingBlob> postingBlobs = [];
@@ -30,21 +36,28 @@ class AddTransactionState extends State<AddTransaction> {
 
   void initState() {
     super.initState();
+    defaultCurrency =
+        Provider.of<SettingsModel>(context, listen: false).defaultCurrency;
+    defaultAccountOne =
+        Provider.of<SettingsModel>(context, listen: false).defaultAccountOne;
+    defaultAccountTwo =
+        Provider.of<SettingsModel>(context, listen: false).defaultAccountTwo;
+
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     postingBlobs.add(PostingBlob(
       key: UniqueKey(),
-      accountController: TextEditingController(text: 'expenses:'),
+      accountController: TextEditingController(text: defaultAccountOne),
       amountController: TextEditingController(),
-      currencyController: TextEditingController(text: 'USD'),
+      currencyController: TextEditingController(text: defaultCurrency),
       accountFocus: FocusNode(),
       amountFocus: FocusNode(),
       currencyFocus: FocusNode(),
     ));
     postingBlobs.add(PostingBlob(
       key: UniqueKey(),
-      accountController: TextEditingController(text: 'assets:checking'),
+      accountController: TextEditingController(text: defaultAccountTwo),
       amountController: TextEditingController(),
-      currencyController: TextEditingController(text: 'USD'),
+      currencyController: TextEditingController(text: defaultCurrency),
       accountFocus: FocusNode(),
       amountFocus: FocusNode(),
       currencyFocus: FocusNode(),
@@ -105,17 +118,17 @@ class AddTransactionState extends State<AddTransaction> {
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add),
-        onPressed: () => setState(() => addPosting()),
+        onPressed: () => setState(() => addPosting(defaultCurrency)),
       ),
     );
   }
 
-  void addPosting() {
+  void addPosting(String defaultCurrency) {
     postingBlobs.add(PostingBlob(
       key: UniqueKey(),
       accountController: TextEditingController(),
       amountController: TextEditingController(),
-      currencyController: TextEditingController(text: 'USD'),
+      currencyController: TextEditingController(text: defaultCurrency),
       accountFocus: FocusNode(),
       amountFocus: FocusNode(),
       currencyFocus: FocusNode(),
