@@ -7,11 +7,13 @@ import 'package:cone/src/flutter/cone_localizations.dart';
 import 'package:cone/src/flutter/settings_model.dart';
 
 class Home extends StatefulWidget {
+  @override
   HomeState createState() => HomeState();
 }
 
 class HomeState extends State<Home> {
-  initState() {
+  @override
+  void initState() {
     super.initState();
     Future.microtask(
       () {
@@ -23,13 +25,14 @@ class HomeState extends State<Home> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('cone'),
+        title: const Text('cone'),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: const Icon(Icons.settings),
             onPressed: () {
               Navigator.pushNamed(context, '/settings');
             },
@@ -46,13 +49,14 @@ class HomeState extends State<Home> {
         onPressed: () {
           Navigator.pushNamed(context, '/add-transaction');
         },
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
       ),
     );
   }
 }
 
 class RichWidget extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return RichText(
       text: TextSpan(
@@ -64,7 +68,7 @@ You can read about plain-text accounting at ''',
         children: <TextSpan>[
           TextSpan(
               text: 'https://plaintextaccounting.org/',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.blue,
                 decoration: TextDecoration.underline,
               ),
@@ -74,7 +78,7 @@ You can read about plain-text accounting at ''',
                     'https://plaintextaccounting.org/',
                   );
                 }),
-          TextSpan(
+          const TextSpan(
             text: '''.
 
 Press the + button to add a new transaction.
@@ -83,13 +87,13 @@ cone will add the transaction to your ledger file, in the following format.
 
 ''',
           ),
-          TextSpan(
+          const TextSpan(
             text: '''  2016-01-05 Farmer's Market
     expenses:groceries  50 USD
     assets:checking''',
-            style: TextStyle(fontFamily: "RobotoMono"),
+            style: TextStyle(fontFamily: 'RobotoMono'),
           ),
-          TextSpan(
+          const TextSpan(
             text: '''
 
 
@@ -97,11 +101,11 @@ For now, the app writes to the following location:
 
 ''',
           ),
-          TextSpan(
+          const TextSpan(
             text: '  ~/Documents/cone/.cone.ledger.txt',
             style: TextStyle(fontFamily: 'RobotoMono'),
           ),
-          TextSpan(
+          const TextSpan(
             text: '''
 
 
@@ -112,7 +116,7 @@ The cone icon is copyright Ryan Spiering, ''',
           TextSpan(
               text:
                   'https://thenounproject.com/Ryan-Spiering/collection/3d-shapes/',
-              style: TextStyle(
+              style: const TextStyle(
                 color: Colors.blue,
                 decoration: TextDecoration.underline,
               ),
@@ -122,7 +126,7 @@ The cone icon is copyright Ryan Spiering, ''',
                     'https://thenounproject.com/Ryan-Spiering/collection/3d-shapes/',
                   );
                 }),
-          TextSpan(text: '.'),
+          const TextSpan(text: '.'),
         ],
       ),
     );

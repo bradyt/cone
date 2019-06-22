@@ -5,6 +5,7 @@ import 'package:cone/src/flutter/cone_localizations.dart';
 import 'package:cone/src/flutter/settings_model.dart';
 
 class Settings extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return Consumer<SettingsModel>(
       builder: (context, settings, child) {
@@ -13,11 +14,11 @@ class Settings extends StatelessWidget {
             title: Text(ConeLocalizations.of(context).settings),
           ),
           body: SingleChildScrollView(
-            padding: EdgeInsets.all(8.0),
+            padding: const EdgeInsets.all(8),
             child: Column(
               children: <Widget>[
                 ListTile(
-                  leading: Icon(Icons.attach_money),
+                  leading: const Icon(Icons.attach_money),
                   title: Text(ConeLocalizations.of(context).defaultCurrency),
                   subtitle: Text(settings.defaultCurrency),
                   onTap: () async {
@@ -29,7 +30,7 @@ class Settings extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.fastfood),
+                  leading: const Icon(Icons.fastfood),
                   title: Text(ConeLocalizations.of(context).defaultAccountOne),
                   subtitle: Text(settings.defaultAccountOne),
                   onTap: () async {
@@ -41,7 +42,7 @@ class Settings extends StatelessWidget {
                   },
                 ),
                 ListTile(
-                  leading: Icon(Icons.credit_card),
+                  leading: const Icon(Icons.credit_card),
                   title: Text(ConeLocalizations.of(context).defaultAccountTwo),
                   subtitle: Text(settings.defaultAccountTwo),
                   onTap: () async {
@@ -63,7 +64,7 @@ class Settings extends StatelessWidget {
 
 Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
   String defaultCurrency;
-  return await showDialog<String>(
+  return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -88,7 +89,7 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
 
 Future<String> _asyncDefaultAccountOneDialog(BuildContext context) async {
   String defaultAccountOne;
-  return await showDialog<String>(
+  return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
@@ -113,7 +114,7 @@ Future<String> _asyncDefaultAccountOneDialog(BuildContext context) async {
 
 Future<String> _asyncDefaultAccountTwoDialog(BuildContext context) async {
   String defaultAccountTwo;
-  return await showDialog<String>(
+  return showDialog<String>(
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(

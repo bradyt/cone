@@ -26,7 +26,7 @@ class ConeLocalizations {
     ).currencyName;
   }
 
-  static Map<String, Map<String, String>> _localizedValues = {
+  static final Map<String, Map<String, String>> _localizedValues = {
     'pt': {
       'addTransaction': 'Adicionar transação',
       'date': 'Encontro',
@@ -180,12 +180,14 @@ class ConeLocalizationsDelegate
     extends LocalizationsDelegate<ConeLocalizations> {
   const ConeLocalizationsDelegate();
 
+  @override
   bool isSupported(Locale locale) => [
         'en',
         'es',
         'pt',
       ].contains(locale.languageCode);
 
+  @override
   Future<ConeLocalizations> load(Locale locale) {
     return SynchronousFuture<ConeLocalizations>(ConeLocalizations(locale));
   }

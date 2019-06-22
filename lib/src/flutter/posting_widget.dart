@@ -3,19 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:cone/src/flutter/cone_localizations.dart';
 
 class PostingWidget extends StatelessWidget {
-  final accountController;
-  final amountController;
-  final currencyController;
-  final int index;
-  final FocusNode accountFocus;
-  final FocusNode amountFocus;
-  final FocusNode currencyFocus;
-  final FocusNode nextPostingFocus;
-  final Function emptyAmountBools;
-
-  final BuildContext context;
-
-  PostingWidget({
+  const PostingWidget({
     this.context,
     this.index,
     this.accountController,
@@ -28,8 +16,21 @@ class PostingWidget extends StatelessWidget {
     this.emptyAmountBools,
   });
 
+  final TextEditingController accountController;
+  final TextEditingController amountController;
+  final TextEditingController currencyController;
+  final int index;
+  final FocusNode accountFocus;
+  final FocusNode amountFocus;
+  final FocusNode currencyFocus;
+  final FocusNode nextPostingFocus;
+  final Function emptyAmountBools;
+
+  final BuildContext context;
+
+  @override
   Widget build(BuildContext context) {
-    int j = index + 1;
+    final int j = index + 1;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
@@ -54,7 +55,7 @@ class PostingWidget extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Container(
             width: 80,
             child: TextFormField(
@@ -72,7 +73,7 @@ class PostingWidget extends StatelessWidget {
                   FocusScope.of(context).requestFocus(currencyFocus);
                 },
                 validator: (value) {
-                  List<bool> bools = emptyAmountBools();
+                  final List<bool> bools = emptyAmountBools();
                   if (j == 1 && bools.length == 1 && bools[0] == true) {
                     return ConeLocalizations.of(context).enterAnAmount;
                   } else if (['', null].contains(value) &&

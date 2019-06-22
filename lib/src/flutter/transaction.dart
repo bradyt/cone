@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 
 class Transaction {
+  Transaction(this.date, this.description, this.postings);
+
   String date;
   String description;
   List<Posting> postings;
 
-  Transaction(this.date, this.description, this.postings);
-
+  @override
   String toString() {
     String result = '$date $description';
-    if (postings.length > 0) {
+    if (postings.isNotEmpty) {
       result += '\n  ' +
           postings
               .map((ps) => ps.toString())
@@ -21,13 +22,14 @@ class Transaction {
 }
 
 class Posting {
+  Posting({this.key, this.account, this.amount, this.currency});
+
   String account;
   String amount;
   String currency;
   Key key;
 
-  Posting({this.key, this.account, this.amount, this.currency});
-
+  @override
   String toString() {
     if (account == null) {
       return null;

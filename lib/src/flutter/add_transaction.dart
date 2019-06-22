@@ -13,6 +13,7 @@ import 'package:cone/src/flutter/posting_blob.dart';
 import 'package:cone/src/flutter/settings_model.dart';
 
 class AddTransaction extends StatefulWidget {
+  @override
   AddTransactionState createState() => AddTransactionState();
 }
 
@@ -27,7 +28,7 @@ class AddTransactionState extends State<AddTransaction> {
   String defaultAccountOne;
   String defaultAccountTwo;
 
-  var _formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
 
   List<PostingBlob> postingBlobs = [];
 
@@ -35,6 +36,7 @@ class AddTransactionState extends State<AddTransaction> {
       .map((pb) => ['', null].contains(pb.amountController.text))
       .toList();
 
+  @override
   void initState() {
     super.initState();
     defaultCurrency =
@@ -45,26 +47,28 @@ class AddTransactionState extends State<AddTransaction> {
         Provider.of<SettingsModel>(context, listen: false).defaultAccountTwo;
 
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    postingBlobs.add(PostingBlob(
-      key: UniqueKey(),
-      accountController: TextEditingController(text: defaultAccountOne),
-      amountController: TextEditingController(),
-      currencyController: TextEditingController(text: defaultCurrency),
-      accountFocus: FocusNode(),
-      amountFocus: FocusNode(),
-      currencyFocus: FocusNode(),
-    ));
-    postingBlobs.add(PostingBlob(
-      key: UniqueKey(),
-      accountController: TextEditingController(text: defaultAccountTwo),
-      amountController: TextEditingController(),
-      currencyController: TextEditingController(text: defaultCurrency),
-      accountFocus: FocusNode(),
-      amountFocus: FocusNode(),
-      currencyFocus: FocusNode(),
-    ));
+    postingBlobs
+      ..add(PostingBlob(
+        key: UniqueKey(),
+        accountController: TextEditingController(text: defaultAccountOne),
+        amountController: TextEditingController(),
+        currencyController: TextEditingController(text: defaultCurrency),
+        accountFocus: FocusNode(),
+        amountFocus: FocusNode(),
+        currencyFocus: FocusNode(),
+      ))
+      ..add(PostingBlob(
+        key: UniqueKey(),
+        accountController: TextEditingController(text: defaultAccountTwo),
+        amountController: TextEditingController(),
+        currencyController: TextEditingController(text: defaultCurrency),
+        accountFocus: FocusNode(),
+        amountFocus: FocusNode(),
+        currencyFocus: FocusNode(),
+      ));
   }
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -72,7 +76,7 @@ class AddTransactionState extends State<AddTransaction> {
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
-                  icon: Icon(Icons.save),
+                  icon: const Icon(Icons.save),
                   onPressed: () => submitTransaction(context),
                 ),
           ),
@@ -81,7 +85,7 @@ class AddTransactionState extends State<AddTransaction> {
       body: Form(
         key: _formKey,
         child: SingleChildScrollView(
-          padding: EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(8),
           child: Column(
             children: <Widget>[
               dateAndDescriptionWidget(context),
@@ -118,7 +122,7 @@ class AddTransactionState extends State<AddTransaction> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        child: Icon(Icons.add),
+        child: const Icon(Icons.add),
         onPressed: () => setState(() => addPosting(defaultCurrency)),
       ),
     );
@@ -138,7 +142,7 @@ class AddTransactionState extends State<AddTransaction> {
 
   void submitTransaction(BuildContext context) {
     _formKey.currentState.save();
-    Transaction txn = Transaction(
+    final Transaction txn = Transaction(
       dateController.text,
       descriptionController.text,
       postingBlobs
@@ -151,13 +155,13 @@ class AddTransactionState extends State<AddTransaction> {
     );
     print(txn);
     if (_formKey.currentState.validate()) {
-      String result = txn.toString();
+      final String result = txn.toString();
       final snackBar = SnackBar(
         content: RichText(
           text: TextSpan(
             text: result,
             style: TextStyle(
-              fontFamily: "RobotoMono",
+              fontFamily: 'RobotoMono',
             ),
           ),
         ),
@@ -173,7 +177,7 @@ class AddTransactionState extends State<AddTransaction> {
       textBaseline: TextBaseline.alphabetic,
       children: [
         Padding(
-          padding: EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.only(right: 8),
           child: Container(
             width: 156,
             child: dateFormField(context),
@@ -218,7 +222,7 @@ class AddTransactionState extends State<AddTransaction> {
           onPressed: () {
             chooseDate(context, dateController.text);
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.calendar_today,
           ),
         ),
@@ -227,15 +231,17 @@ class AddTransactionState extends State<AddTransaction> {
   }
 
   Future chooseDate(BuildContext context, String initialDateString) async {
-    DateTime now = DateTime.now();
-    DateTime initialDate = convertToDate(initialDateString) ?? now;
-    DateTime result = await showDatePicker(
+    final DateTime now = DateTime.now();
+    final DateTime initialDate = convertToDate(initialDateString) ?? now;
+    final DateTime result = await showDatePicker(
       context: context,
       initialDate: initialDate,
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
-    if (result == null) return;
+    if (result == null) {
+      return null;
+    }
 
     setState(() {
       dateController.text = DateFormat('yyyy-MM-dd').format(result);
@@ -245,7 +251,7 @@ class AddTransactionState extends State<AddTransaction> {
 
   DateTime convertToDate(String input) {
     try {
-      var d = new DateFormat('yyyy-MM-dd').parseStrict(input);
+      final d = DateFormat('yyyy-MM-dd').parseStrict(input);
       return d;
     } catch (e) {
       return null;
@@ -257,9 +263,8 @@ class AddTransactionState extends State<AddTransaction> {
       controller: descriptionController,
       autofocus: true,
       focusNode: descriptionFocus,
-      textInputAction: (postingBlobs.length > 0)
-          ? TextInputAction.next
-          : TextInputAction.done,
+      textInputAction:
+          postingBlobs.isNotEmpty ? TextInputAction.next : TextInputAction.done,
       validator: (value) {
         print('validating $value');
         if (value.isEmpty) {
@@ -272,7 +277,7 @@ class AddTransactionState extends State<AddTransaction> {
       },
       onFieldSubmitted: (term) {
         print('onSubmitted $term');
-        if (postingBlobs.length > 0) {
+        if (postingBlobs.isNotEmpty) {
           descriptionFocus.unfocus();
           FocusScope.of(context).requestFocus(postingBlobs[0].accountFocus);
         }
@@ -285,7 +290,7 @@ class AddTransactionState extends State<AddTransaction> {
     );
   }
 
-  fieldFocusChange(
+  void fieldFocusChange(
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
@@ -294,8 +299,8 @@ class AddTransactionState extends State<AddTransaction> {
 
 class TransactionStorage {
   static Future<void> writeTransaction(String transaction) async {
-    final directory = '/storage/emulated/0/Documents/cone/';
-    PermissionStatus permission = await PermissionHandler()
+    const directory = '/storage/emulated/0/Documents/cone/';
+    final PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
     if (permission != PermissionStatus.granted) {
       await PermissionHandler().requestPermissions([PermissionGroup.storage]);

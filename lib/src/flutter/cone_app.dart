@@ -11,6 +11,7 @@ import 'package:cone/src/flutter/settings.dart';
 import 'package:cone/src/flutter/settings_model.dart';
 
 class ConeApp extends StatelessWidget {
+  @override
   Widget build(BuildContext context) {
     return ChangeNotifierProvider(
       builder: (context) => SettingsModel(),
@@ -20,13 +21,15 @@ class ConeApp extends StatelessWidget {
 }
 
 class ConeSettings extends StatefulWidget {
+  @override
   ConeSettingsState createState() => ConeSettingsState();
 }
 
 class ConeSettingsState extends State<ConeSettings> {
   Future<SharedPreferences> sharedPreferences;
 
-  initState() {
+  @override
+  void initState() {
     super.initState();
     sharedPreferences = SharedPreferences.getInstance().then(
       (SharedPreferences prefs) {
@@ -35,6 +38,7 @@ class ConeSettingsState extends State<ConeSettings> {
     );
   }
 
+  @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: sharedPreferences,
@@ -44,7 +48,7 @@ class ConeSettingsState extends State<ConeSettings> {
           case ConnectionState.none:
           case ConnectionState.active:
           case ConnectionState.waiting:
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           case ConnectionState.done:
             return MaterialApp(
               localeListResolutionCallback: (Iterable<Locale> locales,
