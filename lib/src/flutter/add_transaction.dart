@@ -169,11 +169,15 @@ class AddTransactionState extends State<AddTransaction> {
 
   Row dateAndDescriptionWidget(BuildContext context) {
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
       children: [
-        Expanded(
-          child: dateFormField(context),
+        Padding(
+          padding: EdgeInsets.only(right: 8),
+          child: Container(
+            width: 156,
+            child: dateFormField(context),
+          ),
         ),
         Expanded(
           child: descriptionFormField(context),
@@ -208,7 +212,7 @@ class AddTransactionState extends State<AddTransaction> {
       },
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        // filled: true,
+        filled: true,
         labelText: ConeLocalizations.of(context).date,
         suffixIcon: IconButton(
           onPressed: () {
@@ -275,7 +279,7 @@ class AddTransactionState extends State<AddTransaction> {
       },
       decoration: InputDecoration(
         border: OutlineInputBorder(),
-        // filled: true,
+        filled: true,
         labelText: ConeLocalizations.of(context).description,
       ),
     );

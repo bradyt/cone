@@ -31,15 +31,14 @@ class PostingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     int j = index + 1;
     return Row(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.baseline,
+      textBaseline: TextBaseline.alphabetic,
       children: [
         Expanded(
           child: TextFormField(
             controller: accountController,
             decoration: InputDecoration(
               labelText: '${ConeLocalizations.of(context).account} $j',
-              border: OutlineInputBorder(),
             ),
             focusNode: accountFocus,
             textInputAction: TextInputAction.next,
@@ -54,36 +53,42 @@ class PostingWidget extends StatelessWidget {
             },
           ),
         ),
-        Expanded(
-          child: TextFormField(
-              controller: amountController,
-              decoration: InputDecoration(
-                labelText: '${ConeLocalizations.of(context).amount} $j',
-                border: OutlineInputBorder(),
-              ),
-              keyboardType: TextInputType.number,
-              focusNode: amountFocus,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (term) {
-                amountFocus.unfocus();
-                FocusScope.of(context).requestFocus(currencyFocus);
-              },
-              validator: (value) {
-                List<bool> bools = emptyAmountBools();
-                if (j == 1 && bools.length == 1 && bools[0] == true) {
-                  return ConeLocalizations.of(context).enterAnAmount;
-                } else if (['', null].contains(value) &&
-                    (bools.sublist(0, j).where((it) => it).length == 2)) {
-                  return ConeLocalizations.of(context).secondEmptyAmount;
-                }
-              }),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8),
+          child: Container(
+            width: 80,
+            child: TextFormField(
+                textAlign: TextAlign.right,
+                controller: amountController,
+                decoration: InputDecoration(
+                  hintText:
+                      ConeLocalizations.of(context).numberFormat.format(0),
+                ),
+                keyboardType: TextInputType.number,
+                focusNode: amountFocus,
+                textInputAction: TextInputAction.next,
+                onFieldSubmitted: (term) {
+                  amountFocus.unfocus();
+                  FocusScope.of(context).requestFocus(currencyFocus);
+                },
+                validator: (value) {
+                  List<bool> bools = emptyAmountBools();
+                  if (j == 1 && bools.length == 1 && bools[0] == true) {
+                    return ConeLocalizations.of(context).enterAnAmount;
+                  } else if (['', null].contains(value) &&
+                      (bools.sublist(0, j).where((it) => it).length == 2)) {
+                    return ConeLocalizations.of(context).secondEmptyAmount;
+                  }
+                }),
+          ),
         ),
-        Flexible(
+        Container(
+          width: 40,
           child: TextFormField(
+            textAlign: TextAlign.right,
             controller: currencyController,
             decoration: InputDecoration(
-              labelText: '${ConeLocalizations.of(context).currency} $j',
-              border: OutlineInputBorder(),
+              hintText: '¤',
             ),
             focusNode: currencyFocus,
             textInputAction: (nextPostingFocus != null)

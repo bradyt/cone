@@ -13,6 +13,13 @@ class ConeLocalizations {
     return Localizations.of<ConeLocalizations>(context, ConeLocalizations);
   }
 
+  NumberFormat get numberFormat {
+    return NumberFormat(
+      '0.00',
+      locale.toString(),
+    );
+  }
+
   String get currencyName {
     return NumberFormat.currency(
       locale: locale.toString(),
@@ -25,8 +32,6 @@ class ConeLocalizations {
       'date': 'Encontro',
       'description': 'Descrição',
       'account': 'Conta',
-      'amount': 'Montante',
-      'currency': 'Moeda',
       'enterADate': 'Insira uma data.',
       'tryRFC3339': 'Tente RFC 3339.',
       'enterADescription': 'Digite uma descrição.',
@@ -49,8 +54,6 @@ class ConeLocalizations {
       'date': 'Date',
       'description': 'Description',
       'account': 'Account',
-      'amount': 'Amount',
-      'currency': 'Currency',
       'enterADate': 'Enter a date.',
       'tryRFC3339': 'Try RFC 3339.',
       'enterADescription': 'Enter a description.',
@@ -72,8 +75,6 @@ class ConeLocalizations {
       'addTransaction': 'Añadir transacción',
       'date': 'Fecha',
       'description': 'Descripción',
-      'account': 'Cuenta',
-      'amount': 'Cantidad',
       'currency': 'Moneda',
       'enterADate': 'Ingrese una fecha.',
       'tryRFC3339': 'Probar RFC 3339.',
@@ -104,14 +105,6 @@ class ConeLocalizations {
 
   String get account {
     return _localizedValues[locale.languageCode]['account'];
-  }
-
-  String get amount {
-    return _localizedValues[locale.languageCode]['amount'];
-  }
-
-  String get currency {
-    return _localizedValues[locale.languageCode]['currency'];
   }
 
   String get enterADate {
