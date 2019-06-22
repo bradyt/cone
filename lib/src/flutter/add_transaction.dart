@@ -153,7 +153,6 @@ class AddTransactionState extends State<AddTransaction> {
               ))
           .toList(),
     );
-    print(txn);
     if (_formKey.currentState.validate()) {
       final String result = txn.toString();
       final snackBar = SnackBar(
@@ -197,11 +196,9 @@ class AddTransactionState extends State<AddTransaction> {
       keyboardType: TextInputType.datetime,
       textInputAction: TextInputAction.next,
       onFieldSubmitted: (term) {
-        print('onSubmitted $term');
         fieldFocusChange(context, dateFocus, descriptionFocus);
       },
       onSaved: (value) {
-        print('onSaved $value');
         dateController.text = value;
       },
       validator: (value) {
@@ -266,17 +263,14 @@ class AddTransactionState extends State<AddTransaction> {
       textInputAction:
           postingBlobs.isNotEmpty ? TextInputAction.next : TextInputAction.done,
       validator: (value) {
-        print('validating $value');
         if (value.isEmpty) {
           return ConeLocalizations.of(context).enterADescription;
         }
       },
       onSaved: (value) {
-        print('onSaved $value');
         descriptionController.text = value;
       },
       onFieldSubmitted: (term) {
-        print('onSubmitted $term');
         if (postingBlobs.isNotEmpty) {
           descriptionFocus.unfocus();
           FocusScope.of(context).requestFocus(postingBlobs[0].accountFocus);
