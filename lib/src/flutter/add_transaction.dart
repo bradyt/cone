@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
+import 'package:cone/src/flutter/cone_localizations.dart';
 import 'package:cone/src/flutter/transaction.dart';
 import 'package:cone/src/flutter/posting_widget.dart';
 import 'package:cone/src/flutter/posting_blob.dart';
@@ -67,7 +68,7 @@ class AddTransactionState extends State<AddTransaction> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('cone'),
+        title: Text(ConeLocalizations.of(context).addTransaction),
         actions: <Widget>[
           Builder(
             builder: (context) => IconButton(
@@ -197,18 +198,18 @@ class AddTransactionState extends State<AddTransaction> {
       },
       validator: (value) {
         if (value == '') {
-          return 'Enter a date.';
+          return ConeLocalizations.of(context).enterADate;
         }
         try {
           DateTime.parse(value);
         } catch (e) {
-          return 'Try RFC 3339.';
+          return ConeLocalizations.of(context).tryRFC3339;
         }
       },
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         // filled: true,
-        labelText: 'Date',
+        labelText: ConeLocalizations.of(context).date,
         suffixIcon: IconButton(
           onPressed: () {
             chooseDate(context, dateController.text);
@@ -258,7 +259,7 @@ class AddTransactionState extends State<AddTransaction> {
       validator: (value) {
         print('validating $value');
         if (value.isEmpty) {
-          return 'Enter a description.';
+          return ConeLocalizations.of(context).enterADescription;
         }
       },
       onSaved: (value) {
@@ -275,7 +276,7 @@ class AddTransactionState extends State<AddTransaction> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         // filled: true,
-        labelText: 'Description',
+        labelText: ConeLocalizations.of(context).description,
       ),
     );
   }

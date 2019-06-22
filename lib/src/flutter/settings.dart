@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:cone/src/flutter/cone_localizations.dart';
 import 'package:cone/src/flutter/settings_model.dart';
 
 class Settings extends StatelessWidget {
@@ -8,14 +9,16 @@ class Settings extends StatelessWidget {
     return Consumer<SettingsModel>(
       builder: (context, settings, child) {
         return Scaffold(
-          appBar: AppBar(title: Text('Settings')),
+          appBar: AppBar(
+            title: Text(ConeLocalizations.of(context).settings),
+          ),
           body: SingleChildScrollView(
             padding: EdgeInsets.all(8.0),
             child: Column(
               children: <Widget>[
                 ListTile(
                   leading: Icon(Icons.attach_money),
-                  title: Text('Default Currency'),
+                  title: Text(ConeLocalizations.of(context).defaultCurrency),
                   subtitle: Text(settings.defaultCurrency),
                   onTap: () async {
                     final String defaultCurrency =
@@ -27,7 +30,7 @@ class Settings extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.fastfood),
-                  title: Text('First Default Account'),
+                  title: Text(ConeLocalizations.of(context).defaultAccountOne),
                   subtitle: Text(settings.defaultAccountOne),
                   onTap: () async {
                     final String defaultAccountOne =
@@ -39,7 +42,7 @@ class Settings extends StatelessWidget {
                 ),
                 ListTile(
                   leading: Icon(Icons.credit_card),
-                  title: Text('Second Default Account'),
+                  title: Text(ConeLocalizations.of(context).defaultAccountTwo),
                   subtitle: Text(settings.defaultAccountTwo),
                   onTap: () async {
                     final String defaultAccountTwo =
@@ -64,7 +67,7 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Enter Default Currency'),
+        title: Text(ConeLocalizations.of(context).enterDefaultCurrency),
         content: TextField(
           onChanged: (value) {
             defaultCurrency = value;
@@ -72,7 +75,7 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text('Submit'),
+            child: Text(ConeLocalizations.of(context).submit),
             onPressed: () {
               Navigator.pop(context, defaultCurrency);
             },
@@ -89,7 +92,7 @@ Future<String> _asyncDefaultAccountOneDialog(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Enter First Default Account'),
+        title: Text(ConeLocalizations.of(context).enterFirstDefaultAccount),
         content: TextField(
           onChanged: (value) {
             defaultAccountOne = value;
@@ -97,7 +100,7 @@ Future<String> _asyncDefaultAccountOneDialog(BuildContext context) async {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text('Submit'),
+            child: Text(ConeLocalizations.of(context).submit),
             onPressed: () {
               Navigator.pop(context, defaultAccountOne);
             },
@@ -114,7 +117,7 @@ Future<String> _asyncDefaultAccountTwoDialog(BuildContext context) async {
     context: context,
     builder: (BuildContext context) {
       return AlertDialog(
-        title: Text('Enter Second Default Account'),
+        title: Text(ConeLocalizations.of(context).enterSecondDefaultAccount),
         content: TextField(
           onChanged: (value) {
             defaultAccountTwo = value;
@@ -122,7 +125,7 @@ Future<String> _asyncDefaultAccountTwoDialog(BuildContext context) async {
         ),
         actions: <Widget>[
           FlatButton(
-            child: Text('Submit'),
+            child: Text(ConeLocalizations.of(context).submit),
             onPressed: () {
               Navigator.pop(context, defaultAccountTwo);
             },

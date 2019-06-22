@@ -12,7 +12,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   String get defaultCurrency {
-    return _defaultCurrency;
+    return _defaultCurrency ?? prefs.getString('default_currency');
   }
 
   set defaultCurrency(String defaultCurrency) {
@@ -22,7 +22,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   String get defaultAccountOne {
-    return _defaultAccountOne;
+    return _defaultAccountOne ?? prefs.getString('default_account_one');
   }
 
   set defaultAccountOne(String defaultAccountOne) {
@@ -32,7 +32,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   String get defaultAccountTwo {
-    return _defaultAccountTwo;
+    return _defaultAccountTwo ?? prefs.getString('default_account_two');
   }
 
   set defaultAccountTwo(String defaultAccountTwo) {

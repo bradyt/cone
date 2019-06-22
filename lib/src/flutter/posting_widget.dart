@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:cone/src/flutter/cone_localizations.dart';
+
 class PostingWidget extends StatelessWidget {
   final accountController;
   final amountController;
@@ -36,7 +38,7 @@ class PostingWidget extends StatelessWidget {
           child: TextFormField(
             controller: accountController,
             decoration: InputDecoration(
-              labelText: 'Account $j',
+              labelText: '${ConeLocalizations.of(context).account} $j',
               border: OutlineInputBorder(),
             ),
             focusNode: accountFocus,
@@ -47,7 +49,7 @@ class PostingWidget extends StatelessWidget {
             },
             validator: (value) {
               if (value == '') {
-                return 'Enter an account.';
+                return ConeLocalizations.of(context).enterAnAccount;
               }
             },
           ),
@@ -56,7 +58,7 @@ class PostingWidget extends StatelessWidget {
           child: TextFormField(
               controller: amountController,
               decoration: InputDecoration(
-                labelText: 'Amount $j',
+                labelText: '${ConeLocalizations.of(context).amount} $j',
                 border: OutlineInputBorder(),
               ),
               keyboardType: TextInputType.number,
@@ -69,10 +71,10 @@ class PostingWidget extends StatelessWidget {
               validator: (value) {
                 List<bool> bools = emptyAmountBools();
                 if (j == 1 && bools.length == 1 && bools[0] == true) {
-                  return 'Enter an amount.';
+                  return ConeLocalizations.of(context).enterAnAmount;
                 } else if (['', null].contains(value) &&
                     (bools.sublist(0, j).where((it) => it).length == 2)) {
-                  return 'Second empty amount.';
+                  return ConeLocalizations.of(context).secondEmptyAmount;
                 }
               }),
         ),
@@ -80,7 +82,7 @@ class PostingWidget extends StatelessWidget {
           child: TextFormField(
             controller: currencyController,
             decoration: InputDecoration(
-              labelText: 'Currency $j',
+              labelText: '${ConeLocalizations.of(context).currency} $j',
               border: OutlineInputBorder(),
             ),
             focusNode: currencyFocus,

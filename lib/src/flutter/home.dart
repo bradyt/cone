@@ -1,8 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class Home extends StatelessWidget {
+import 'package:cone/src/flutter/cone_localizations.dart';
+import 'package:cone/src/flutter/settings_model.dart';
+
+class Home extends StatefulWidget {
+  HomeState createState() => HomeState();
+}
+
+class HomeState extends State<Home> {
+  initState() {
+    super.initState();
+    Future.microtask(
+      () {
+        Provider.of<SettingsModel>(context).defaultAccountOne ??=
+            ConeLocalizations.of(context).expensesMiscellaneous;
+        Provider.of<SettingsModel>(context).defaultAccountTwo ??=
+            ConeLocalizations.of(context).assetsChecking;
+      },
+    );
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
