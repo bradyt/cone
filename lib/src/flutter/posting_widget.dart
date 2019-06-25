@@ -24,7 +24,7 @@ class PostingWidget extends StatelessWidget {
   final FocusNode amountFocus;
   final FocusNode currencyFocus;
   final FocusNode nextPostingFocus;
-  final Function emptyAmountBools;
+  final List<bool> Function() emptyAmountBools;
 
   final BuildContext context;
 
