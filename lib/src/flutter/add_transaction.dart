@@ -18,8 +18,8 @@ class AddTransaction extends StatefulWidget {
 }
 
 class AddTransactionState extends State<AddTransaction> {
-  final dateController = TextEditingController();
-  final descriptionController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
+  final TextEditingController descriptionController = TextEditingController();
 
   final FocusNode dateFocus = FocusNode();
   final FocusNode descriptionFocus = FocusNode();
@@ -28,12 +28,13 @@ class AddTransactionState extends State<AddTransaction> {
   String defaultAccountOne;
   String defaultAccountTwo;
 
-  final _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<PostingBlob> postingBlobs = [];
+  List<PostingBlob> postingBlobs = <PostingBlob>[];
 
   List<bool> emptyAmountBools() => postingBlobs
-      .map((pb) => ['', null].contains(pb.amountController.text))
+      .map((PostingBlob pb) =>
+          <String>['', null].contains(pb.amountController.text))
       .toList();
 
   @override
@@ -75,7 +76,7 @@ class AddTransactionState extends State<AddTransaction> {
         title: Text(ConeLocalizations.of(context).addTransaction),
         actions: <Widget>[
           Builder(
-            builder: (context) => IconButton(
+            builder: (BuildContext context) => IconButton(
                   icon: const Icon(Icons.save),
                   onPressed: () => submitTransaction(context),
                 ),
@@ -90,12 +91,12 @@ class AddTransactionState extends State<AddTransaction> {
             children: <Widget>[
               dateAndDescriptionWidget(context),
             ]..addAll(
-                List<int>.generate(postingBlobs.length, (i) => i).map(
-                  (i) {
-                    final pb = postingBlobs[i];
+                List<int>.generate(postingBlobs.length, (int i) => i).map(
+                  (int i) {
+                    final PostingBlob pb = postingBlobs[i];
                     return Dismissible(
                       key: pb.key,
-                      onDismissed: (direction) {
+                      onDismissed: (DismissDirection direction) {
                         setState(
                           () => postingBlobs.removeAt(i),
                         );
@@ -146,7 +147,7 @@ class AddTransactionState extends State<AddTransaction> {
       dateController.text,
       descriptionController.text,
       postingBlobs
-          .map((pb) => Posting(
+          .map((PostingBlob pb) => Posting(
                 account: pb.accountController.text,
                 amount: pb.amountController.text,
                 currency: pb.currencyController.text,
@@ -155,7 +156,7 @@ class AddTransactionState extends State<AddTransaction> {
     );
     if (_formKey.currentState.validate()) {
       final String result = txn.toString();
-      final snackBar = SnackBar(
+      final SnackBar snackBar = SnackBar(
         content: RichText(
           text: TextSpan(
             text: result,
@@ -174,7 +175,7 @@ class AddTransactionState extends State<AddTransaction> {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
-      children: [
+      children: <Widget>[
         Padding(
           padding: const EdgeInsets.only(right: 8),
           child: Container(
@@ -195,13 +196,13 @@ class AddTransactionState extends State<AddTransaction> {
       focusNode: dateFocus,
       keyboardType: TextInputType.datetime,
       textInputAction: TextInputAction.next,
-      onFieldSubmitted: (term) {
+      onFieldSubmitted: (String term) {
         fieldFocusChange(context, dateFocus, descriptionFocus);
       },
-      onSaved: (value) {
+      onSaved: (String value) {
         dateController.text = value;
       },
-      validator: (value) {
+      validator: (String value) {
         if (value == '') {
           return ConeLocalizations.of(context).enterADate;
         }
@@ -227,7 +228,8 @@ class AddTransactionState extends State<AddTransaction> {
     );
   }
 
-  Future chooseDate(BuildContext context, String initialDateString) async {
+  Future<void> chooseDate(
+      BuildContext context, String initialDateString) async {
     final DateTime now = DateTime.now();
     final DateTime initialDate = convertToDate(initialDateString) ?? now;
     final DateTime result = await showDatePicker(
@@ -236,19 +238,17 @@ class AddTransactionState extends State<AddTransaction> {
       firstDate: DateTime(1900),
       lastDate: DateTime(2100),
     );
-    if (result == null) {
-      return null;
+    if (result != null) {
+      setState(() {
+        dateController.text = DateFormat('yyyy-MM-dd').format(result);
+      });
+      fieldFocusChange(context, dateFocus, descriptionFocus);
     }
-
-    setState(() {
-      dateController.text = DateFormat('yyyy-MM-dd').format(result);
-    });
-    fieldFocusChange(context, dateFocus, descriptionFocus);
   }
 
   DateTime convertToDate(String input) {
     try {
-      final d = DateFormat('yyyy-MM-dd').parseStrict(input);
+      final DateTime d = DateFormat('yyyy-MM-dd').parseStrict(input);
       return d;
     } catch (e) {
       return null;
@@ -262,15 +262,15 @@ class AddTransactionState extends State<AddTransaction> {
       focusNode: descriptionFocus,
       textInputAction:
           postingBlobs.isNotEmpty ? TextInputAction.next : TextInputAction.done,
-      validator: (value) {
+      validator: (String value) {
         if (value.isEmpty) {
           return ConeLocalizations.of(context).enterADescription;
         }
       },
-      onSaved: (value) {
+      onSaved: (String value) {
         descriptionController.text = value;
       },
-      onFieldSubmitted: (term) {
+      onFieldSubmitted: (String term) {
         if (postingBlobs.isNotEmpty) {
           descriptionFocus.unfocus();
           FocusScope.of(context).requestFocus(postingBlobs[0].accountFocus);
@@ -293,14 +293,15 @@ class AddTransactionState extends State<AddTransaction> {
 
 class TransactionStorage {
   static Future<void> writeTransaction(String transaction) async {
-    const directory = '/storage/emulated/0/Documents/cone/';
+    const String directory = '/storage/emulated/0/Documents/cone/';
     final PermissionStatus permission = await PermissionHandler()
         .checkPermissionStatus(PermissionGroup.storage);
     if (permission != PermissionStatus.granted) {
-      await PermissionHandler().requestPermissions([PermissionGroup.storage]);
+      await PermissionHandler()
+          .requestPermissions(<PermissionGroup>[PermissionGroup.storage]);
     }
     await Directory(directory).create(recursive: true);
-    final file = File(p.join(directory, '.cone.ledger.txt'));
+    final File file = File(p.join(directory, '.cone.ledger.txt'));
     return file.writeAsString('$transaction', mode: FileMode.append);
   }
 }

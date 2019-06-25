@@ -15,7 +15,7 @@ class HomeState extends State<Home> {
   @override
   void initState() {
     super.initState();
-    Future.microtask(
+    Future<void>.microtask(
       () {
         Provider.of<SettingsModel>(context).defaultAccountOne ??=
             ConeLocalizations.of(context).expensesMiscellaneous;

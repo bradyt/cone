@@ -13,8 +13,8 @@ import 'package:cone/src/flutter/settings_model.dart';
 class ConeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      builder: (context) => SettingsModel(),
+    return ChangeNotifierProvider<SettingsModel>(
+      builder: (BuildContext context) => SettingsModel(),
       child: ConeSettings(),
     );
   }
@@ -40,7 +40,7 @@ class ConeSettingsState extends State<ConeSettings> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
+    return FutureBuilder<SharedPreferences>(
       future: sharedPreferences,
       builder:
           (BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
@@ -53,7 +53,7 @@ class ConeSettingsState extends State<ConeSettings> {
             return MaterialApp(
               localeListResolutionCallback: (Iterable<Locale> locales,
                   Iterable<Locale> supportedLocales) {
-                Future.microtask(
+                Future<void>.microtask(
                   () {
                     Provider.of<SettingsModel>(context).defaultCurrency ??=
                         NumberFormat.currency(locale: locales.first.toString())
@@ -67,12 +67,12 @@ class ConeSettingsState extends State<ConeSettings> {
                 }
                 return supportedLocales.first;
               },
-              localizationsDelegates: const [
+              localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
                 ConeLocalizationsDelegate(),
                 GlobalMaterialLocalizations.delegate,
                 GlobalWidgetsLocalizations.delegate,
               ],
-              supportedLocales: const [
+              supportedLocales: const <Locale>[
                 Locale('en', 'US'),
                 Locale('es', 'MX'),
                 Locale('pt', 'BR'),
@@ -81,10 +81,10 @@ class ConeSettingsState extends State<ConeSettings> {
                 primarySwatch: Colors.green,
                 accentColor: Colors.amberAccent,
               ),
-              routes: {
-                '/': (context) => Home(),
-                '/add-transaction': (context) => AddTransaction(),
-                '/settings': (context) => Settings(),
+              routes: <String, Widget Function(BuildContext)>{
+                '/': (BuildContext context) => Home(),
+                '/add-transaction': (BuildContext context) => AddTransaction(),
+                '/settings': (BuildContext context) => Settings(),
               },
             );
         }

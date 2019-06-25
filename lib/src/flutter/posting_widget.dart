@@ -34,7 +34,7 @@ class PostingWidget extends StatelessWidget {
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
-      children: [
+      children: <Widget>[
         Expanded(
           child: TextFormField(
             controller: accountController,
@@ -43,11 +43,11 @@ class PostingWidget extends StatelessWidget {
             ),
             focusNode: accountFocus,
             textInputAction: TextInputAction.next,
-            onFieldSubmitted: (term) {
+            onFieldSubmitted: (String term) {
               accountFocus.unfocus();
               FocusScope.of(context).requestFocus(amountFocus);
             },
-            validator: (value) {
+            validator: (String value) {
               if (value == '') {
                 return ConeLocalizations.of(context).enterAnAccount;
               }
@@ -68,16 +68,17 @@ class PostingWidget extends StatelessWidget {
                 keyboardType: TextInputType.number,
                 focusNode: amountFocus,
                 textInputAction: TextInputAction.next,
-                onFieldSubmitted: (term) {
+                onFieldSubmitted: (String term) {
                   amountFocus.unfocus();
                   FocusScope.of(context).requestFocus(currencyFocus);
                 },
-                validator: (value) {
+                validator: (String value) {
                   final List<bool> bools = emptyAmountBools();
                   if (j == 1 && bools.length == 1 && bools[0] == true) {
                     return ConeLocalizations.of(context).enterAnAmount;
-                  } else if (['', null].contains(value) &&
-                      (bools.sublist(0, j).where((it) => it).length == 2)) {
+                  } else if (<String>['', null].contains(value) &&
+                      (bools.sublist(0, j).where((bool it) => it).length ==
+                          2)) {
                     return ConeLocalizations.of(context).secondEmptyAmount;
                   }
                 }),
@@ -95,7 +96,7 @@ class PostingWidget extends StatelessWidget {
             textInputAction: (nextPostingFocus != null)
                 ? TextInputAction.next
                 : TextInputAction.done,
-            onFieldSubmitted: (term) {
+            onFieldSubmitted: (String term) {
               currencyFocus.unfocus();
               if (nextPostingFocus != null) {
                 FocusScope.of(context).requestFocus(nextPostingFocus);

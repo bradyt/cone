@@ -26,8 +26,9 @@ class ConeLocalizations {
     ).currencyName;
   }
 
-  static final Map<String, Map<String, String>> _localizedValues = {
-    'pt': {
+  static final Map<String, Map<String, String>> _localizedValues =
+      <String, Map<String, String>>{
+    'pt': <String, String>{
       'addTransaction': 'Adicionar transação',
       'date': 'Encontro',
       'description': 'Descrição',
@@ -49,7 +50,7 @@ class ConeLocalizations {
       'enterSecondDefaultAccount': 'Digite conta segundo padrão',
       'submit': 'Enviar',
     },
-    'en': {
+    'en': <String, String>{
       'addTransaction': 'Add transaction',
       'date': 'Date',
       'description': 'Description',
@@ -71,7 +72,7 @@ class ConeLocalizations {
       'enterSecondDefaultAccount': 'Enter second default account',
       'submit': 'Submit',
     },
-    'es': {
+    'es': <String, String>{
       'addTransaction': 'Añadir transacción',
       'date': 'Fecha',
       'description': 'Descripción',
@@ -181,7 +182,7 @@ class ConeLocalizationsDelegate
   const ConeLocalizationsDelegate();
 
   @override
-  bool isSupported(Locale locale) => [
+  bool isSupported(Locale locale) => <String>[
         'en',
         'es',
         'pt',

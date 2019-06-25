@@ -13,8 +13,8 @@ class Transaction {
     if (postings.isNotEmpty) {
       result += '\n  ' +
           postings
-              .map((ps) => ps.toString())
-              .where((it) => it != null)
+              .map((Posting ps) => ps.toString())
+              .where((String it) => it != null)
               .join('\n  ');
     }
     return result;

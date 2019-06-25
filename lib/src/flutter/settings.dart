@@ -8,7 +8,7 @@ class Settings extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Consumer<SettingsModel>(
-      builder: (context, settings, child) {
+      builder: (BuildContext context, SettingsModel settings, Widget child) {
         return Scaffold(
           appBar: AppBar(
             title: Text(ConeLocalizations.of(context).settings),
@@ -70,7 +70,7 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
       return AlertDialog(
         title: Text(ConeLocalizations.of(context).enterDefaultCurrency),
         content: TextField(
-          onChanged: (value) {
+          onChanged: (String value) {
             defaultCurrency = value;
           },
         ),
@@ -95,7 +95,7 @@ Future<String> _asyncDefaultAccountOneDialog(BuildContext context) async {
       return AlertDialog(
         title: Text(ConeLocalizations.of(context).enterFirstDefaultAccount),
         content: TextField(
-          onChanged: (value) {
+          onChanged: (String value) {
             defaultAccountOne = value;
           },
         ),
@@ -120,7 +120,7 @@ Future<String> _asyncDefaultAccountTwoDialog(BuildContext context) async {
       return AlertDialog(
         title: Text(ConeLocalizations.of(context).enterSecondDefaultAccount),
         content: TextField(
-          onChanged: (value) {
+          onChanged: (String value) {
             defaultAccountTwo = value;
           },
         ),
