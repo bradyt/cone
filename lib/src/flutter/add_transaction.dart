@@ -90,35 +90,34 @@ class AddTransactionState extends State<AddTransaction> {
           child: Column(
             children: <Widget>[
               dateAndDescriptionWidget(context),
-            ]..addAll(
-                List<int>.generate(postingBlobs.length, (int i) => i).map(
-                  (int i) {
-                    final PostingBlob pb = postingBlobs[i];
-                    return Dismissible(
-                      key: pb.key,
-                      onDismissed: (DismissDirection direction) {
-                        setState(
-                          () => postingBlobs.removeAt(i),
-                        );
-                      },
-                      child: PostingWidget(
-                        context: context,
-                        index: i,
-                        accountController: pb.accountController,
-                        amountController: pb.amountController,
-                        currencyController: pb.currencyController,
-                        accountFocus: pb.accountFocus,
-                        amountFocus: pb.amountFocus,
-                        currencyFocus: pb.currencyFocus,
-                        nextPostingFocus: (i < postingBlobs.length - 1)
-                            ? postingBlobs[i + 1].accountFocus
-                            : null,
-                        emptyAmountBools: emptyAmountBools,
-                      ),
-                    );
-                  },
-                ),
+              ...List<int>.generate(postingBlobs.length, (int i) => i).map(
+                (int i) {
+                  final PostingBlob pb = postingBlobs[i];
+                  return Dismissible(
+                    key: pb.key,
+                    onDismissed: (DismissDirection direction) {
+                      setState(
+                        () => postingBlobs.removeAt(i),
+                      );
+                    },
+                    child: PostingWidget(
+                      context: context,
+                      index: i,
+                      accountController: pb.accountController,
+                      amountController: pb.amountController,
+                      currencyController: pb.currencyController,
+                      accountFocus: pb.accountFocus,
+                      amountFocus: pb.amountFocus,
+                      currencyFocus: pb.currencyFocus,
+                      nextPostingFocus: (i < postingBlobs.length - 1)
+                          ? postingBlobs[i + 1].accountFocus
+                          : null,
+                      emptyAmountBools: emptyAmountBools,
+                    ),
+                  );
+                },
               ),
+            ],
           ),
         ),
       ),
