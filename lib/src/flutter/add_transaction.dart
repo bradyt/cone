@@ -75,11 +75,9 @@ class AddTransactionState extends State<AddTransaction> {
       appBar: AppBar(
         title: Text(ConeLocalizations.of(context).addTransaction),
         actions: <Widget>[
-          Builder(
-            builder: (BuildContext context) => IconButton(
-                  icon: const Icon(Icons.save),
-                  onPressed: () => submitTransaction(context),
-                ),
+          IconButton(
+            icon: const Icon(Icons.add),
+            onPressed: () => setState(() => addPosting(defaultCurrency)),
           ),
         ],
       ),
@@ -121,9 +119,13 @@ class AddTransactionState extends State<AddTransaction> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        child: const Icon(Icons.add),
-        onPressed: () => setState(() => addPosting(defaultCurrency)),
+      floatingActionButton: Builder(
+        builder: (BuildContext context) {
+          return FloatingActionButton(
+            child: const Icon(Icons.save),
+            onPressed: () => submitTransaction(context),
+          );
+        },
       ),
     );
   }
