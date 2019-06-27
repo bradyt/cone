@@ -15,7 +15,7 @@ class ConeLocalizations {
 
   NumberFormat get numberFormat {
     return NumberFormat(
-      '0.00',
+      '0.00########',
       locale.toString(),
     );
   }

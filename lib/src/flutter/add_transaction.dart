@@ -31,11 +31,6 @@ class AddTransactionState extends State<AddTransaction> {
 
   List<PostingModel> postingModels = <PostingModel>[];
 
-  List<bool> emptyAmountBools() => postingModels
-      .map((PostingModel pb) =>
-          <String>['', null].contains(pb.amountController.text))
-      .toList();
-
   @override
   void initState() {
     super.initState();
@@ -54,19 +49,53 @@ class AddTransactionState extends State<AddTransaction> {
         accountControllerText: defaultAccountTwo,
         currencyControllerText: defaultCurrency,
       ));
+    dateController.addListener(() => setState(() {}));
+    descriptionController.addListener(() => setState(() {}));
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    postingModels.forEach(
+      (PostingModel postingModel) => postingModel
+        ..accountController.addListener(() => setState(() {}))
+        ..amountController.addListener(() => setState(() {}))
+        ..currencyController.addListener(() => setState(() {})),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    if (postingModels.every((PostingModel postingModel) =>
+        postingModel.accountController.text.isNotEmpty)) {
+      postingModels.add(PostingModel(currencyControllerText: defaultCurrency)
+        ..accountController.addListener(() => setState(() {}))
+        ..amountController.addListener(() => setState(() {}))
+        ..currencyController.addListener(() => setState(() {})));
+    }
+    final bool moreThanOneAccountWithNoAmount = postingModels
+            .where((PostingModel postingModel) =>
+                postingModel.accountController.text.isNotEmpty &&
+                postingModel.amountController.text.isEmpty)
+            .length >
+        1;
+    final int firstRowWithEmptyAmount = postingModels.indexWhere(
+        (PostingModel postingModel) =>
+            postingModel.amountController.text.isEmpty);
+    final num total = postingModels
+        .map((PostingModel postingModel) =>
+            num.tryParse(postingModel.amountController.text))
+        .where((num x) => x != null)
+        .fold(0, (num x, num y) => x + y);
+    final bool allCurrenciesMatch = postingModels
+            .map((PostingModel postingModel) =>
+                postingModel.currencyController.text)
+            .toSet()
+            .length ==
+        1;
     return Scaffold(
       appBar: AppBar(
         title: Text(ConeLocalizations.of(context).addTransaction),
-        actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => setState(() => addPosting(defaultCurrency)),
-          ),
-        ],
       ),
       body: Form(
         key: _formKey,
@@ -91,7 +120,14 @@ class AddTransactionState extends State<AddTransaction> {
                       nextPostingFocus: (i < postingModels.length - 1)
                           ? postingModels[i + 1].accountFocus
                           : null,
-                      emptyAmountBools: emptyAmountBools,
+                      amountHintText: ConeLocalizations.of(context)
+                          .numberFormat
+                          .format((i == firstRowWithEmptyAmount &&
+                                  allCurrenciesMatch &&
+                                  !moreThanOneAccountWithNoAmount &&
+                                  firstRowWithEmptyAmount != -1)
+                              ? -total
+                              : 0),
                     ),
                   );
                 },
@@ -102,6 +138,32 @@ class AddTransactionState extends State<AddTransaction> {
       ),
       floatingActionButton: Builder(
         builder: (BuildContext context) {
+          final bool amountWithNoAccount = postingModels.any(
+              (PostingModel postingModel) =>
+                  postingModel.accountController.text.isEmpty &&
+                  postingModel.amountController.text.isNotEmpty);
+          final int numberOfAccounts = postingModels
+              .where((PostingModel postingModel) =>
+                  postingModel.accountController.text.isNotEmpty)
+              .length;
+          final int numberOfAmounts = postingModels
+              .where((PostingModel postingModel) =>
+                  postingModel.amountController.text.isNotEmpty)
+              .length;
+          if (dateController.text.isEmpty ||
+              descriptionController.text.isEmpty ||
+              amountWithNoAccount ||
+              numberOfAccounts < 2 ||
+              (numberOfAccounts - numberOfAmounts > 1)) {
+            return FloatingActionButton(
+              child: Icon(
+                Icons.save,
+                color: Colors.grey[600],
+              ),
+              onPressed: () {},
+              backgroundColor: Colors.grey[400],
+            );
+          }
           return FloatingActionButton(
             child: const Icon(Icons.save),
             onPressed: () => submitTransaction(context),
@@ -109,12 +171,6 @@ class AddTransactionState extends State<AddTransaction> {
         },
       ),
     );
-  }
-
-  void addPosting(String defaultCurrency) {
-    postingModels.add(PostingModel(
-      currencyControllerText: defaultCurrency,
-    ));
   }
 
   void submitTransaction(BuildContext context) {
@@ -178,16 +234,6 @@ class AddTransactionState extends State<AddTransaction> {
       onSaved: (String value) {
         dateController.text = value;
       },
-      validator: (String value) {
-        if (value == '') {
-          return ConeLocalizations.of(context).enterADate;
-        }
-        try {
-          DateTime.parse(value);
-        } catch (e) {
-          return ConeLocalizations.of(context).tryRFC3339;
-        }
-      },
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         filled: true,
@@ -239,11 +285,6 @@ class AddTransactionState extends State<AddTransaction> {
       textInputAction: postingModels.isNotEmpty
           ? TextInputAction.next
           : TextInputAction.done,
-      validator: (String value) {
-        if (value.isEmpty) {
-          return ConeLocalizations.of(context).enterADescription;
-        }
-      },
       onSaved: (String value) {
         descriptionController.text = value;
       },

@@ -9,14 +9,14 @@ class PostingWidget extends StatelessWidget {
     this.index,
     this.postingModel,
     this.nextPostingFocus,
-    this.emptyAmountBools,
+    this.amountHintText,
   });
 
   final BuildContext context;
   final int index;
   final PostingModel postingModel;
   final FocusNode nextPostingFocus;
-  final List<bool> Function() emptyAmountBools;
+  final String amountHintText;
 
   @override
   Widget build(BuildContext context) {
@@ -46,11 +46,6 @@ class PostingWidget extends StatelessWidget {
               accountFocus.unfocus();
               FocusScope.of(context).requestFocus(amountFocus);
             },
-            validator: (String value) {
-              if (value == '') {
-                return ConeLocalizations.of(context).enterAnAccount;
-              }
-            },
           ),
         ),
         Padding(
@@ -58,29 +53,19 @@ class PostingWidget extends StatelessWidget {
           child: Container(
             width: 80,
             child: TextFormField(
-                textAlign: TextAlign.right,
-                controller: amountController,
-                decoration: InputDecoration(
-                  hintText:
-                      ConeLocalizations.of(context).numberFormat.format(0),
-                ),
-                keyboardType: TextInputType.number,
-                focusNode: amountFocus,
-                textInputAction: TextInputAction.next,
-                onFieldSubmitted: (String term) {
-                  amountFocus.unfocus();
-                  FocusScope.of(context).requestFocus(currencyFocus);
-                },
-                validator: (String value) {
-                  final List<bool> bools = emptyAmountBools();
-                  if (j == 1 && bools.length == 1 && bools[0] == true) {
-                    return ConeLocalizations.of(context).enterAnAmount;
-                  } else if (<String>['', null].contains(value) &&
-                      (bools.sublist(0, j).where((bool it) => it).length ==
-                          2)) {
-                    return ConeLocalizations.of(context).secondEmptyAmount;
-                  }
-                }),
+              textAlign: TextAlign.right,
+              controller: amountController,
+              decoration: InputDecoration(
+                hintText: amountHintText,
+              ),
+              keyboardType: TextInputType.number,
+              focusNode: amountFocus,
+              textInputAction: TextInputAction.next,
+              onFieldSubmitted: (String term) {
+                amountFocus.unfocus();
+                FocusScope.of(context).requestFocus(currencyFocus);
+              },
+            ),
           ),
         ),
         Container(
