@@ -1,3 +1,11 @@
+### 0.1.5 (2019-06-27)
+
+* User can configure app to put currencies to the left of amount
+
+* Borrows several UI ideas from the MoLe app. 1. Removal of button to
+  add a posting row. 2. Save button is disabled until entry is
+  valid. 3. Balancing amount appears in first empty amount field.
+
 ### 0.1.4 (2019-06-22)
 
 * Fixes error involving developing with "hot reload"
