@@ -78,9 +78,8 @@ class AddTransactionState extends State<AddTransaction> {
               dateAndDescriptionWidget(context),
               ...List<int>.generate(postingBlobs.length, (int i) => i).map(
                 (int i) {
-                  final PostingBlob pb = postingBlobs[i];
                   return Dismissible(
-                    key: pb.key,
+                    key: postingBlobs[i].key,
                     onDismissed: (DismissDirection direction) {
                       setState(
                         () => postingBlobs.removeAt(i),
@@ -89,12 +88,7 @@ class AddTransactionState extends State<AddTransaction> {
                     child: PostingWidget(
                       context: context,
                       index: i,
-                      accountController: pb.accountController,
-                      amountController: pb.amountController,
-                      currencyController: pb.currencyController,
-                      accountFocus: pb.accountFocus,
-                      amountFocus: pb.amountFocus,
-                      currencyFocus: pb.currencyFocus,
+                      postingBlob: postingBlobs[i],
                       nextPostingFocus: (i < postingBlobs.length - 1)
                           ? postingBlobs[i + 1].accountFocus
                           : null,

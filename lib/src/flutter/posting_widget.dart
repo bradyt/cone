@@ -1,20 +1,21 @@
 import 'package:flutter/material.dart';
 
 import 'package:cone/src/flutter/cone_localizations.dart';
+import 'package:cone/src/flutter/posting_blob.dart';
 
 class PostingWidget extends StatelessWidget {
-  const PostingWidget({
+  PostingWidget({
     this.context,
     this.index,
-    this.accountController,
-    this.amountController,
-    this.currencyController,
-    this.accountFocus,
-    this.amountFocus,
-    this.currencyFocus,
+    PostingBlob postingBlob,
     this.nextPostingFocus,
     this.emptyAmountBools,
-  });
+  })  : accountController = postingBlob.accountController,
+        amountController = postingBlob.amountController,
+        currencyController = postingBlob.currencyController,
+        accountFocus = postingBlob.accountFocus,
+        amountFocus = postingBlob.amountFocus,
+        currencyFocus = postingBlob.currencyFocus;
 
   final TextEditingController accountController;
   final TextEditingController amountController;
