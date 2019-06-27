@@ -4,34 +4,31 @@ import 'package:cone/src/flutter/cone_localizations.dart';
 import 'package:cone/src/flutter/posting_blob.dart';
 
 class PostingWidget extends StatelessWidget {
-  PostingWidget({
+  const PostingWidget({
     this.context,
     this.index,
-    PostingBlob postingBlob,
+    this.postingBlob,
     this.nextPostingFocus,
     this.emptyAmountBools,
-  })  : accountController = postingBlob.accountController,
-        amountController = postingBlob.amountController,
-        currencyController = postingBlob.currencyController,
-        accountFocus = postingBlob.accountFocus,
-        amountFocus = postingBlob.amountFocus,
-        currencyFocus = postingBlob.currencyFocus;
-
-  final TextEditingController accountController;
-  final TextEditingController amountController;
-  final TextEditingController currencyController;
-  final int index;
-  final FocusNode accountFocus;
-  final FocusNode amountFocus;
-  final FocusNode currencyFocus;
-  final FocusNode nextPostingFocus;
-  final List<bool> Function() emptyAmountBools;
+  });
 
   final BuildContext context;
+  final int index;
+  final PostingBlob postingBlob;
+  final FocusNode nextPostingFocus;
+  final List<bool> Function() emptyAmountBools;
 
   @override
   Widget build(BuildContext context) {
     final int j = index + 1;
+    final TextEditingController accountController =
+        postingBlob.accountController;
+    final TextEditingController amountController = postingBlob.amountController;
+    final TextEditingController currencyController =
+        postingBlob.currencyController;
+    final FocusNode accountFocus = postingBlob.accountFocus;
+    final FocusNode amountFocus = postingBlob.amountFocus;
+    final FocusNode currencyFocus = postingBlob.currencyFocus;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
