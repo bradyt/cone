@@ -7,10 +7,10 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cone/src/flutter/cone_localizations.dart';
-import 'package:cone/src/flutter/transaction.dart';
+import 'package:cone/src/flutter/posting_model.dart';
 import 'package:cone/src/flutter/posting_widget.dart';
-import 'package:cone/src/flutter/posting_blob.dart';
 import 'package:cone/src/flutter/settings_model.dart';
+import 'package:cone/src/flutter/transaction.dart';
 
 class AddTransaction extends StatefulWidget {
   @override
@@ -20,7 +20,6 @@ class AddTransaction extends StatefulWidget {
 class AddTransactionState extends State<AddTransaction> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
-
   final FocusNode dateFocus = FocusNode();
   final FocusNode descriptionFocus = FocusNode();
 
@@ -30,10 +29,10 @@ class AddTransactionState extends State<AddTransaction> {
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  List<PostingBlob> postingBlobs = <PostingBlob>[];
+  List<PostingModel> postingModels = <PostingModel>[];
 
-  List<bool> emptyAmountBools() => postingBlobs
-      .map((PostingBlob pb) =>
+  List<bool> emptyAmountBools() => postingModels
+      .map((PostingModel pb) =>
           <String>['', null].contains(pb.amountController.text))
       .toList();
 
@@ -46,12 +45,12 @@ class AddTransactionState extends State<AddTransaction> {
     defaultAccountTwo = sm.defaultAccountTwo;
 
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    postingBlobs
-      ..add(PostingBlob(
+    postingModels
+      ..add(PostingModel(
         accountControllerText: defaultAccountOne,
         currencyControllerText: defaultCurrency,
       ))
-      ..add(PostingBlob(
+      ..add(PostingModel(
         accountControllerText: defaultAccountTwo,
         currencyControllerText: defaultCurrency,
       ));
@@ -76,21 +75,21 @@ class AddTransactionState extends State<AddTransaction> {
           child: Column(
             children: <Widget>[
               dateAndDescriptionWidget(context),
-              ...List<int>.generate(postingBlobs.length, (int i) => i).map(
+              ...List<int>.generate(postingModels.length, (int i) => i).map(
                 (int i) {
                   return Dismissible(
-                    key: postingBlobs[i].key,
+                    key: postingModels[i].key,
                     onDismissed: (DismissDirection direction) {
                       setState(
-                        () => postingBlobs.removeAt(i),
+                        () => postingModels.removeAt(i),
                       );
                     },
                     child: PostingWidget(
                       context: context,
                       index: i,
-                      postingBlob: postingBlobs[i],
-                      nextPostingFocus: (i < postingBlobs.length - 1)
-                          ? postingBlobs[i + 1].accountFocus
+                      postingModel: postingModels[i],
+                      nextPostingFocus: (i < postingModels.length - 1)
+                          ? postingModels[i + 1].accountFocus
                           : null,
                       emptyAmountBools: emptyAmountBools,
                     ),
@@ -113,7 +112,7 @@ class AddTransactionState extends State<AddTransaction> {
   }
 
   void addPosting(String defaultCurrency) {
-    postingBlobs.add(PostingBlob(
+    postingModels.add(PostingModel(
       currencyControllerText: defaultCurrency,
     ));
   }
@@ -123,8 +122,8 @@ class AddTransactionState extends State<AddTransaction> {
     final Transaction txn = Transaction(
       dateController.text,
       descriptionController.text,
-      postingBlobs
-          .map((PostingBlob pb) => Posting(
+      postingModels
+          .map((PostingModel pb) => Posting(
                 account: pb.accountController.text,
                 amount: pb.amountController.text,
                 currency: pb.currencyController.text,
@@ -237,8 +236,9 @@ class AddTransactionState extends State<AddTransaction> {
       controller: descriptionController,
       autofocus: true,
       focusNode: descriptionFocus,
-      textInputAction:
-          postingBlobs.isNotEmpty ? TextInputAction.next : TextInputAction.done,
+      textInputAction: postingModels.isNotEmpty
+          ? TextInputAction.next
+          : TextInputAction.done,
       validator: (String value) {
         if (value.isEmpty) {
           return ConeLocalizations.of(context).enterADescription;
@@ -248,9 +248,9 @@ class AddTransactionState extends State<AddTransaction> {
         descriptionController.text = value;
       },
       onFieldSubmitted: (String term) {
-        if (postingBlobs.isNotEmpty) {
+        if (postingModels.isNotEmpty) {
           descriptionFocus.unfocus();
-          FocusScope.of(context).requestFocus(postingBlobs[0].accountFocus);
+          FocusScope.of(context).requestFocus(postingModels[0].accountFocus);
         }
       },
       decoration: InputDecoration(

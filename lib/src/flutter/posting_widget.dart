@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:cone/src/flutter/cone_localizations.dart';
-import 'package:cone/src/flutter/posting_blob.dart';
+import 'package:cone/src/flutter/posting_model.dart';
 
 class PostingWidget extends StatelessWidget {
   const PostingWidget({
     this.context,
     this.index,
-    this.postingBlob,
+    this.postingModel,
     this.nextPostingFocus,
     this.emptyAmountBools,
   });
 
   final BuildContext context;
   final int index;
-  final PostingBlob postingBlob;
+  final PostingModel postingModel;
   final FocusNode nextPostingFocus;
   final List<bool> Function() emptyAmountBools;
 
@@ -22,13 +22,14 @@ class PostingWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final int j = index + 1;
     final TextEditingController accountController =
-        postingBlob.accountController;
-    final TextEditingController amountController = postingBlob.amountController;
+        postingModel.accountController;
+    final TextEditingController amountController =
+        postingModel.amountController;
     final TextEditingController currencyController =
-        postingBlob.currencyController;
-    final FocusNode accountFocus = postingBlob.accountFocus;
-    final FocusNode amountFocus = postingBlob.amountFocus;
-    final FocusNode currencyFocus = postingBlob.currencyFocus;
+        postingModel.currencyController;
+    final FocusNode accountFocus = postingModel.accountFocus;
+    final FocusNode amountFocus = postingModel.amountFocus;
+    final FocusNode currencyFocus = postingModel.currencyFocus;
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,

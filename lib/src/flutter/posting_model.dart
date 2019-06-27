@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-class PostingBlob {
-  PostingBlob({
+class PostingModel {
+  PostingModel({
     String accountControllerText,
     String currencyControllerText,
   })  : accountController = TextEditingController(text: accountControllerText),
