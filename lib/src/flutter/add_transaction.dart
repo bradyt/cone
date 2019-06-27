@@ -40,32 +40,20 @@ class AddTransactionState extends State<AddTransaction> {
   @override
   void initState() {
     super.initState();
-    defaultCurrency =
-        Provider.of<SettingsModel>(context, listen: false).defaultCurrency;
-    defaultAccountOne =
-        Provider.of<SettingsModel>(context, listen: false).defaultAccountOne;
-    defaultAccountTwo =
-        Provider.of<SettingsModel>(context, listen: false).defaultAccountTwo;
+    final SettingsModel sm = Provider.of<SettingsModel>(context, listen: false);
+    defaultCurrency = sm.defaultCurrency;
+    defaultAccountOne = sm.defaultAccountOne;
+    defaultAccountTwo = sm.defaultAccountTwo;
 
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     postingBlobs
       ..add(PostingBlob(
-        key: UniqueKey(),
-        accountController: TextEditingController(text: defaultAccountOne),
-        amountController: TextEditingController(),
-        currencyController: TextEditingController(text: defaultCurrency),
-        accountFocus: FocusNode(),
-        amountFocus: FocusNode(),
-        currencyFocus: FocusNode(),
+        accountControllerText: defaultAccountOne,
+        currencyControllerText: defaultCurrency,
       ))
       ..add(PostingBlob(
-        key: UniqueKey(),
-        accountController: TextEditingController(text: defaultAccountTwo),
-        amountController: TextEditingController(),
-        currencyController: TextEditingController(text: defaultCurrency),
-        accountFocus: FocusNode(),
-        amountFocus: FocusNode(),
-        currencyFocus: FocusNode(),
+        accountControllerText: defaultAccountTwo,
+        currencyControllerText: defaultCurrency,
       ));
   }
 
@@ -132,13 +120,7 @@ class AddTransactionState extends State<AddTransaction> {
 
   void addPosting(String defaultCurrency) {
     postingBlobs.add(PostingBlob(
-      key: UniqueKey(),
-      accountController: TextEditingController(),
-      amountController: TextEditingController(),
-      currencyController: TextEditingController(text: defaultCurrency),
-      accountFocus: FocusNode(),
-      amountFocus: FocusNode(),
-      currencyFocus: FocusNode(),
+      currencyControllerText: defaultCurrency,
     ));
   }
 

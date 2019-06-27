@@ -2,20 +2,17 @@ import 'package:flutter/material.dart';
 
 class PostingBlob {
   PostingBlob({
-    this.key,
-    this.accountController,
-    this.amountController,
-    this.currencyController,
-    this.accountFocus,
-    this.amountFocus,
-    this.currencyFocus,
-  });
+    String accountControllerText,
+    String currencyControllerText,
+  })  : accountController = TextEditingController(text: accountControllerText),
+        currencyController =
+            TextEditingController(text: currencyControllerText);
 
-  Key key;
+  Key key = UniqueKey();
   TextEditingController accountController;
-  TextEditingController amountController;
+  TextEditingController amountController = TextEditingController();
   TextEditingController currencyController;
-  FocusNode accountFocus;
-  FocusNode amountFocus;
-  FocusNode currencyFocus;
+  FocusNode accountFocus = FocusNode();
+  FocusNode amountFocus = FocusNode();
+  FocusNode currencyFocus = FocusNode();
 }
