@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import 'package:cone/src/flutter/cone_localizations.dart';
 import 'package:cone/src/flutter/posting_model.dart';
+import 'package:cone/src/flutter/settings_model.dart';
 
 class PostingWidget extends StatelessWidget {
   const PostingWidget({
@@ -20,16 +21,25 @@ class PostingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final int j = index + 1;
     final TextEditingController accountController =
         postingModel.accountController;
-    final TextEditingController amountController =
-        postingModel.amountController;
-    final TextEditingController currencyController =
-        postingModel.currencyController;
     final FocusNode accountFocus = postingModel.accountFocus;
     final FocusNode amountFocus = postingModel.amountFocus;
-    final FocusNode currencyFocus = postingModel.currencyFocus;
+    final bool currencyOnLeft =
+        Provider.of<SettingsModel>(context).currencyOnLeft;
+
+    final Widget amountWidget = AmountWidget(
+      context,
+      postingModel,
+      nextPostingFocus,
+      amountHintText,
+    );
+    final Widget currencyWidget = CurrencyWidget(
+      context,
+      postingModel,
+      nextPostingFocus,
+      currencyOnLeft: currencyOnLeft,
+    );
     return Row(
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
@@ -37,9 +47,6 @@ class PostingWidget extends StatelessWidget {
         Expanded(
           child: TextFormField(
             controller: accountController,
-            decoration: InputDecoration(
-              labelText: '${ConeLocalizations.of(context).account} $j',
-            ),
             focusNode: accountFocus,
             textInputAction: TextInputAction.next,
             onFieldSubmitted: (String term) {
@@ -48,47 +55,91 @@ class PostingWidget extends StatelessWidget {
             },
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Container(
-            width: 80,
-            child: TextFormField(
-              textAlign: TextAlign.right,
-              controller: amountController,
-              decoration: InputDecoration(
-                hintText: amountHintText,
-              ),
-              keyboardType: TextInputType.number,
-              focusNode: amountFocus,
-              textInputAction: TextInputAction.next,
-              onFieldSubmitted: (String term) {
-                amountFocus.unfocus();
-                FocusScope.of(context).requestFocus(currencyFocus);
-              },
-            ),
-          ),
-        ),
-        Container(
-          width: 40,
-          child: TextFormField(
-            textAlign: TextAlign.right,
-            controller: currencyController,
-            decoration: InputDecoration(
-              hintText: '¤',
-            ),
-            focusNode: currencyFocus,
-            textInputAction: (nextPostingFocus != null)
-                ? TextInputAction.next
-                : TextInputAction.done,
-            onFieldSubmitted: (String term) {
-              currencyFocus.unfocus();
-              if (nextPostingFocus != null) {
-                FocusScope.of(context).requestFocus(nextPostingFocus);
-              }
-            },
-          ),
-        ),
+        if (currencyOnLeft) currencyWidget,
+        amountWidget,
+        if (!currencyOnLeft) currencyWidget,
       ],
+    );
+  }
+}
+
+class AmountWidget extends StatelessWidget {
+  const AmountWidget(
+    this.context,
+    this.postingModel,
+    this.nextPostingFocus,
+    this.amountHintText,
+  );
+
+  final BuildContext context;
+  final PostingModel postingModel;
+  final FocusNode nextPostingFocus;
+  final String amountHintText;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Container(
+        width: 80,
+        child: TextFormField(
+          textAlign: TextAlign.center,
+          controller: postingModel.amountController,
+          decoration: InputDecoration(
+            hintText: amountHintText,
+          ),
+          keyboardType: TextInputType.number,
+          focusNode: postingModel.amountFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (String term) {
+            postingModel.amountFocus.unfocus();
+            if (nextPostingFocus != null) {
+              FocusScope.of(context).requestFocus(nextPostingFocus);
+            }
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class CurrencyWidget extends StatelessWidget {
+  const CurrencyWidget(
+    this.context,
+    this.postingModel,
+    this.nextPostingFocus, {
+    this.currencyOnLeft,
+  });
+
+  final BuildContext context;
+  final PostingModel postingModel;
+  final FocusNode nextPostingFocus;
+  final bool currencyOnLeft;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Container(
+        width: 40,
+        child: TextFormField(
+          textAlign: TextAlign.center,
+          controller: postingModel.currencyController,
+          decoration: InputDecoration(
+            hintText: '',
+          ),
+          focusNode: postingModel.currencyFocus,
+          textInputAction: TextInputAction.next,
+          onFieldSubmitted: (String term) {
+            postingModel.currencyFocus.unfocus();
+            if (currencyOnLeft) {
+              FocusScope.of(context).requestFocus(postingModel.amountFocus);
+            } else if (nextPostingFocus != null) {
+              FocusScope.of(context).requestFocus(nextPostingFocus);
+            }
+          },
+        ),
+      ),
     );
   }
 }

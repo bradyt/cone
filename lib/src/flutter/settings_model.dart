@@ -3,6 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class SettingsModel extends ChangeNotifier {
   String _defaultCurrency;
+  bool _currencyOnLeft;
   String _defaultAccountOne;
   String _defaultAccountTwo;
   SharedPreferences prefs;
@@ -18,6 +19,16 @@ class SettingsModel extends ChangeNotifier {
   set defaultCurrency(String defaultCurrency) {
     prefs.setString('default_currency', defaultCurrency);
     _defaultCurrency = defaultCurrency;
+    notifyListeners();
+  }
+
+  bool get currencyOnLeft {
+    return _currencyOnLeft ?? prefs.getBool('default_currency');
+  }
+
+  set currencyOnLeft(bool currencyOnLeft) {
+    prefs.setBool('currency_on_left', currencyOnLeft);
+    _currencyOnLeft = currencyOnLeft;
     notifyListeners();
   }
 

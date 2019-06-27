@@ -183,6 +183,8 @@ class AddTransactionState extends State<AddTransaction> {
                 account: pb.accountController.text,
                 amount: pb.amountController.text,
                 currency: pb.currencyController.text,
+                currencyOnLeft:
+                    Provider.of<SettingsModel>(context).currencyOnLeft,
               ))
           .toList(),
     );
@@ -237,7 +239,6 @@ class AddTransactionState extends State<AddTransaction> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         filled: true,
-        labelText: ConeLocalizations.of(context).date,
         suffixIcon: IconButton(
           onPressed: () {
             chooseDate(context, dateController.text);
@@ -297,7 +298,6 @@ class AddTransactionState extends State<AddTransaction> {
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         filled: true,
-        labelText: ConeLocalizations.of(context).description,
       ),
     );
   }

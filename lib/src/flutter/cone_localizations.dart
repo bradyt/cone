@@ -43,6 +43,7 @@ class ConeLocalizations {
       'expensesMiscellaneous': 'despesas:miscelânea',
       'assetsChecking': 'ativas:corrente',
       'defaultCurrency': 'Moeda padrão',
+      'currencyOnLeft': 'Moeda à esquerda',
       'defaultAccountOne': 'Conta padrão one',
       'defaultAccountTwo': 'Conta padrão dois',
       'enterDefaultCurrency': 'Digite moeda predefinida',
@@ -65,6 +66,7 @@ class ConeLocalizations {
       'expensesMiscellaneous': 'expenses:miscellaneous',
       'assetsChecking': 'assets:checking',
       'defaultCurrency': 'Default Currency',
+      'currencyOnLeft': 'Currency on left',
       'defaultAccountOne': 'Default account one',
       'defaultAccountTwo': 'Default account two',
       'enterDefaultCurrency': 'Enter default currency',
@@ -87,6 +89,7 @@ class ConeLocalizations {
       'expensesMiscellaneous': 'gastos:diversos',
       'assetsChecking': 'bienes:cheques',
       'defaultCurrency': 'Moneda por defecto',
+      'currencyOnLeft': 'Moneda a la izquierda',
       'defaultAccountOne': 'Primera cuenta por defecto',
       'defaultAccountTwo': 'Segunda cuenta por defecto',
       'enterDefaultCurrency': 'Introduzca la moneda por defecto',
@@ -150,6 +153,10 @@ class ConeLocalizations {
 
   String get defaultCurrency {
     return _localizedValues[locale.languageCode]['defaultCurrency'];
+  }
+
+  String get currencyOnLeft {
+    return _localizedValues[locale.languageCode]['currencyOnLeft'];
   }
 
   String get defaultAccountOne {

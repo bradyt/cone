@@ -22,11 +22,18 @@ class Transaction {
 }
 
 class Posting {
-  Posting({this.key, this.account, this.amount, this.currency});
+  Posting({
+    this.key,
+    this.account,
+    this.amount,
+    this.currency,
+    this.currencyOnLeft,
+  });
 
   String account;
   String amount;
   String currency;
+  bool currencyOnLeft;
   Key key;
 
   @override
@@ -35,6 +42,8 @@ class Posting {
       return null;
     } else if (amount == '') {
       return '$account';
+    } else if (currencyOnLeft) {
+      return '$account  $currency $amount';
     } else {
       return '$account  $amount $currency';
     }

@@ -30,6 +30,16 @@ class Settings extends StatelessWidget {
                   },
                 ),
                 ListTile(
+                  leading: const Icon(Icons.compare_arrows),
+                  title: Text(ConeLocalizations.of(context).currencyOnLeft),
+                  subtitle: Text(settings.currencyOnLeft
+                      ? '${settings.defaultCurrency} 5.00'
+                      : '5.00 ${settings.defaultCurrency}'),
+                  onTap: () async {
+                    settings.currencyOnLeft = !settings.currencyOnLeft;
+                  },
+                ),
+                ListTile(
                   leading: const Icon(Icons.fastfood),
                   title: Text(ConeLocalizations.of(context).defaultAccountOne),
                   subtitle: Text(settings.defaultAccountOne),
