@@ -56,12 +56,12 @@ class AddTransactionState extends State<AddTransaction> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    postingModels.forEach(
-      (PostingModel postingModel) => postingModel
+    for (final PostingModel postingModel in postingModels) {
+      postingModel
         ..accountController.addListener(() => setState(() {}))
         ..amountController.addListener(() => setState(() {}))
-        ..currencyController.addListener(() => setState(() {})),
-    );
+        ..currencyController.addListener(() => setState(() {}));
+    }
   }
 
   @override
@@ -194,7 +194,7 @@ class AddTransactionState extends State<AddTransaction> {
         content: RichText(
           text: TextSpan(
             text: result,
-            style: TextStyle(
+            style: const TextStyle(
               fontFamily: 'RobotoMono',
             ),
           ),
