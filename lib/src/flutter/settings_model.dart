@@ -23,7 +23,7 @@ class SettingsModel extends ChangeNotifier {
   }
 
   bool get currencyOnLeft {
-    return _currencyOnLeft ?? prefs.getBool('default_currency');
+    return _currencyOnLeft ?? prefs.getBool('currency_on_left');
   }
 
   set currencyOnLeft(bool currencyOnLeft) {

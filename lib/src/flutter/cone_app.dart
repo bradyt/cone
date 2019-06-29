@@ -34,7 +34,7 @@ class ConeSettingsState extends State<ConeSettings> {
     sharedPreferences = SharedPreferences.getInstance().then(
       (SharedPreferences prefs) {
         Provider.of<SettingsModel>(context).sharedPreferences = prefs;
-        Provider.of<SettingsModel>(context).currencyOnLeft = false;
+        Provider.of<SettingsModel>(context).currencyOnLeft ??= false;
       },
     );
   }
