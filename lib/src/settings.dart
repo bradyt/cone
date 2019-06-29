@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:cone/src/flutter/cone_localizations.dart';
-import 'package:cone/src/flutter/settings_model.dart';
+import 'package:cone/src/cone_localizations.dart';
+import 'package:cone/src/settings_model.dart';
 
 class Settings extends StatelessWidget {
   @override

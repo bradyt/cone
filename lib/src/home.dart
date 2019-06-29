@@ -3,8 +3,8 @@ import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:cone/src/flutter/cone_localizations.dart';
-import 'package:cone/src/flutter/settings_model.dart';
+import 'package:cone/src/cone_localizations.dart';
+import 'package:cone/src/settings_model.dart';
 
 class Home extends StatefulWidget {
   @override

@@ -4,11 +4,11 @@ import 'package:intl/intl.dart' show NumberFormat;
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:cone/src/flutter/add_transaction.dart';
-import 'package:cone/src/flutter/cone_localizations.dart';
-import 'package:cone/src/flutter/home.dart';
-import 'package:cone/src/flutter/settings.dart';
-import 'package:cone/src/flutter/settings_model.dart';
+import 'package:cone/src/add_transaction.dart';
+import 'package:cone/src/cone_localizations.dart';
+import 'package:cone/src/home.dart';
+import 'package:cone/src/settings.dart';
+import 'package:cone/src/settings_model.dart';
 
 class ConeApp extends StatelessWidget {
   @override

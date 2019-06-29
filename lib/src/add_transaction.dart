@@ -6,11 +6,11 @@ import 'package:path/path.dart' as p;
 import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
-import 'package:cone/src/flutter/cone_localizations.dart';
-import 'package:cone/src/flutter/posting_model.dart';
-import 'package:cone/src/flutter/posting_widget.dart';
-import 'package:cone/src/flutter/settings_model.dart';
-import 'package:cone/src/flutter/transaction.dart';
+import 'package:cone/src/cone_localizations.dart';
+import 'package:cone/src/posting_model.dart';
+import 'package:cone/src/posting_widget.dart';
+import 'package:cone/src/settings_model.dart';
+import 'package:cone/src/transaction.dart';
 
 class AddTransaction extends StatefulWidget {
   @override
