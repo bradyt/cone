@@ -40,15 +40,9 @@ class ConeLocalizations {
       'enterAnAmount': 'Digite um valor',
       'secondEmptyAmount': 'Quantidade segunda vazio',
       'settings': 'Definições',
-      'expensesMiscellaneous': 'despesas:miscelânea',
-      'assetsChecking': 'ativas:corrente',
       'defaultCurrency': 'Moeda padrão',
       'currencyOnLeft': 'Moeda à esquerda',
-      'defaultAccountOne': 'Conta padrão one',
-      'defaultAccountTwo': 'Conta padrão dois',
       'enterDefaultCurrency': 'Digite moeda predefinida',
-      'enterFirstDefaultAccount': 'Digite primeira conta padrão',
-      'enterSecondDefaultAccount': 'Digite conta segundo padrão',
       'submit': 'Enviar',
     },
     'en': <String, String>{
@@ -63,15 +57,9 @@ class ConeLocalizations {
       'enterAnAmount': 'Enter an amount',
       'secondEmptyAmount': 'Second empty amount',
       'settings': 'Settings',
-      'expensesMiscellaneous': 'expenses:miscellaneous',
-      'assetsChecking': 'assets:checking',
       'defaultCurrency': 'Default Currency',
       'currencyOnLeft': 'Currency on left',
-      'defaultAccountOne': 'Default account one',
-      'defaultAccountTwo': 'Default account two',
       'enterDefaultCurrency': 'Enter default currency',
-      'enterFirstDefaultAccount': 'Enter first default account',
-      'enterSecondDefaultAccount': 'Enter second default account',
       'submit': 'Submit',
     },
     'es': <String, String>{
@@ -86,15 +74,9 @@ class ConeLocalizations {
       'enterAnAmount': 'Ingrese una cantidad',
       'secondEmptyAmount': 'Segunda cantidad vacía',
       'settings': 'Ajustes',
-      'expensesMiscellaneous': 'gastos:diversos',
-      'assetsChecking': 'bienes:cheques',
       'defaultCurrency': 'Moneda por defecto',
       'currencyOnLeft': 'Moneda a la izquierda',
-      'defaultAccountOne': 'Primera cuenta por defecto',
-      'defaultAccountTwo': 'Segunda cuenta por defecto',
       'enterDefaultCurrency': 'Introduzca la moneda por defecto',
-      'enterFirstDefaultAccount': 'Ingrese la primera cuenta predeterminada',
-      'enterSecondDefaultAccount': 'Ingrese la segunda cuenta predeterminada',
       'submit': 'Enviar',
     },
   };
@@ -139,14 +121,6 @@ class ConeLocalizations {
     return _localizedValues[locale.languageCode]['settings'];
   }
 
-  String get expensesMiscellaneous {
-    return _localizedValues[locale.languageCode]['expensesMiscellaneous'];
-  }
-
-  String get assetsChecking {
-    return _localizedValues[locale.languageCode]['assetsChecking'];
-  }
-
   String get addTransaction {
     return _localizedValues[locale.languageCode]['addTransaction'];
   }
@@ -159,24 +133,8 @@ class ConeLocalizations {
     return _localizedValues[locale.languageCode]['currencyOnLeft'];
   }
 
-  String get defaultAccountOne {
-    return _localizedValues[locale.languageCode]['defaultAccountOne'];
-  }
-
-  String get defaultAccountTwo {
-    return _localizedValues[locale.languageCode]['defaultAccountTwo'];
-  }
-
   String get enterDefaultCurrency {
     return _localizedValues[locale.languageCode]['enterDefaultCurrency'];
-  }
-
-  String get enterFirstDefaultAccount {
-    return _localizedValues[locale.languageCode]['enterFirstDefaultAccount'];
-  }
-
-  String get enterSecondDefaultAccount {
-    return _localizedValues[locale.languageCode]['enterSecondDefaultAccount'];
   }
 
   String get submit {

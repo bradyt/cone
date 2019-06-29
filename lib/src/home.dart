@@ -1,10 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/gestures.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import 'package:cone/src/cone_localizations.dart';
-import 'package:cone/src/settings_model.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -12,19 +8,6 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
-  @override
-  void initState() {
-    super.initState();
-    Future<void>.microtask(
-      () {
-        Provider.of<SettingsModel>(context).defaultAccountOne ??=
-            ConeLocalizations.of(context).expensesMiscellaneous;
-        Provider.of<SettingsModel>(context).defaultAccountTwo ??=
-            ConeLocalizations.of(context).assetsChecking;
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(

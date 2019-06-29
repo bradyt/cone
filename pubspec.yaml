@@ -16,6 +16,7 @@ environment:
 
 dependencies:
   datetime_picker_formfield:
+  flutter_typeahead:
   permission_handler:
   provider:
   shared_preferences:

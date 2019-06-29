@@ -1,4 +1,6 @@
-### 0.1.5 (2019-06-27)
+### 0.1.5 (2019-06-28)
+
+* Add completion of account names via those found in ledger file
 
 * User can configure app to put currencies to the left of amount
 

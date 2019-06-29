@@ -24,8 +24,6 @@ class AddTransactionState extends State<AddTransaction> {
   final FocusNode descriptionFocus = FocusNode();
 
   String defaultCurrency;
-  String defaultAccountOne;
-  String defaultAccountTwo;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
@@ -34,19 +32,15 @@ class AddTransactionState extends State<AddTransaction> {
   @override
   void initState() {
     super.initState();
-    final SettingsModel sm = Provider.of<SettingsModel>(context, listen: false);
-    defaultCurrency = sm.defaultCurrency;
-    defaultAccountOne = sm.defaultAccountOne;
-    defaultAccountTwo = sm.defaultAccountTwo;
+    defaultCurrency =
+        Provider.of<SettingsModel>(context, listen: false).defaultCurrency;
 
     dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
     postingModels
       ..add(PostingModel(
-        accountControllerText: defaultAccountOne,
         currencyControllerText: defaultCurrency,
       ))
       ..add(PostingModel(
-        accountControllerText: defaultAccountTwo,
         currencyControllerText: defaultCurrency,
       ));
     dateController.addListener(() => setState(() {}));

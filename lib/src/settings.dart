@@ -39,30 +39,6 @@ class Settings extends StatelessWidget {
                     settings.currencyOnLeft = !settings.currencyOnLeft;
                   },
                 ),
-                ListTile(
-                  leading: const Icon(Icons.fastfood),
-                  title: Text(ConeLocalizations.of(context).defaultAccountOne),
-                  subtitle: Text(settings.defaultAccountOne),
-                  onTap: () async {
-                    final String defaultAccountOne =
-                        await _asyncDefaultAccountOneDialog(context);
-                    if (defaultAccountOne != null) {
-                      settings.defaultAccountOne = defaultAccountOne;
-                    }
-                  },
-                ),
-                ListTile(
-                  leading: const Icon(Icons.credit_card),
-                  title: Text(ConeLocalizations.of(context).defaultAccountTwo),
-                  subtitle: Text(settings.defaultAccountTwo),
-                  onTap: () async {
-                    final String defaultAccountTwo =
-                        await _asyncDefaultAccountTwoDialog(context);
-                    if (defaultAccountTwo != null) {
-                      settings.defaultAccountTwo = defaultAccountTwo;
-                    }
-                  },
-                ),
               ],
             ),
           ),
@@ -89,56 +65,6 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
             child: Text(ConeLocalizations.of(context).submit),
             onPressed: () {
               Navigator.pop(context, defaultCurrency);
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<String> _asyncDefaultAccountOneDialog(BuildContext context) async {
-  String defaultAccountOne;
-  return showDialog<String>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(ConeLocalizations.of(context).enterFirstDefaultAccount),
-        content: TextField(
-          onChanged: (String value) {
-            defaultAccountOne = value;
-          },
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(ConeLocalizations.of(context).submit),
-            onPressed: () {
-              Navigator.pop(context, defaultAccountOne);
-            },
-          ),
-        ],
-      );
-    },
-  );
-}
-
-Future<String> _asyncDefaultAccountTwoDialog(BuildContext context) async {
-  String defaultAccountTwo;
-  return showDialog<String>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(ConeLocalizations.of(context).enterSecondDefaultAccount),
-        content: TextField(
-          onChanged: (String value) {
-            defaultAccountTwo = value;
-          },
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(ConeLocalizations.of(context).submit),
-            onPressed: () {
-              Navigator.pop(context, defaultAccountTwo);
             },
           ),
         ],

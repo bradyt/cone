@@ -1,4 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:path/path.dart' as p;
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cone/src/posting_model.dart';
@@ -45,13 +50,58 @@ class PostingWidget extends StatelessWidget {
       textBaseline: TextBaseline.alphabetic,
       children: <Widget>[
         Expanded(
-          child: TextFormField(
-            controller: accountController,
-            focusNode: accountFocus,
-            textInputAction: TextInputAction.next,
-            onFieldSubmitted: (String term) {
+          child: TypeAheadFormField<String>(
+            textFieldConfiguration: TextFieldConfiguration<dynamic>(
+              controller: accountController,
+              focusNode: accountFocus,
+              textInputAction: TextInputAction.next,
+              onSubmitted: (dynamic _) {
+                accountFocus.unfocus();
+                FocusScope.of(context).requestFocus(amountFocus);
+              },
+            ),
+            itemBuilder: (BuildContext context, String suggestion) =>
+                ListTile(title: Text(suggestion)),
+            onSuggestionSelected: (String suggestion) {
+              accountController.text = suggestion;
               accountFocus.unfocus();
               FocusScope.of(context).requestFocus(amountFocus);
+            },
+            suggestionsCallback: (String text) {
+              return GetAccounts.getAccounts().then(
+                (List<String> lines) {
+                  Set<String> accountNames = <String>{};
+                  for (final String line in lines) {
+                    if (line.isNotEmpty) {
+                      if (line.startsWith(RegExp('[ \t]+[^ \t]'))) {
+                        accountNames.add(line.trim().split('  ').first);
+                      } else if (line.startsWith('account')) {
+                        accountNames
+                            .add(line.replaceFirst('account', '').trim());
+                      }
+                    }
+                  }
+                  final Set<String> subAccounts = <String>{};
+                  for (String accountName in accountNames) {
+                    while (accountName.lastIndexOf(':') != -1) {
+                      accountName = accountName.substring(
+                          0, accountName.lastIndexOf(':'));
+                      subAccounts.add(accountName);
+                    }
+                  }
+                  accountNames = accountNames.union(subAccounts);
+                  final List<String> fuzzyText = text.split(' ');
+                  return accountNames
+                      .where((String accountName) => fuzzyText.every(
+                          (String subtext) => accountName.contains(subtext)))
+                      .toList()
+                        ..sort();
+                },
+              );
+            },
+            transitionBuilder: (BuildContext context, Widget suggestionsBox,
+                AnimationController controller) {
+              return suggestionsBox;
             },
           ),
         ),
@@ -141,5 +191,20 @@ class CurrencyWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class GetAccounts {
+  static Future<List<String>> getAccounts() async {
+    const String directory = '/storage/emulated/0/Documents/cone/';
+    final PermissionStatus permission = await PermissionHandler()
+        .checkPermissionStatus(PermissionGroup.storage);
+    if (permission != PermissionStatus.granted) {
+      await PermissionHandler()
+          .requestPermissions(<PermissionGroup>[PermissionGroup.storage]);
+    }
+    await Directory(directory).create(recursive: true);
+    final File file = File(p.join(directory, '.cone.ledger.txt'));
+    return file.readAsLines();
   }
 }
