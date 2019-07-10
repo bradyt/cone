@@ -1,13 +1,10 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:path/path.dart' as p;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cone/src/posting_model.dart';
 import 'package:cone/src/settings_model.dart';
+import 'package:cone/src/utils.dart';
 
 class PostingWidget extends StatelessWidget {
   const PostingWidget({
@@ -32,6 +29,8 @@ class PostingWidget extends StatelessWidget {
     final FocusNode amountFocus = postingModel.amountFocus;
     final bool currencyOnLeft =
         Provider.of<SettingsModel>(context).currencyOnLeft;
+    final String ledgerFileUri =
+        Provider.of<SettingsModel>(context).ledgerFileUri;
 
     final Widget amountWidget = AmountWidget(
       context,
@@ -68,7 +67,7 @@ class PostingWidget extends StatelessWidget {
               FocusScope.of(context).requestFocus(amountFocus);
             },
             suggestionsCallback: (String text) {
-              return GetAccounts.getAccounts().then(
+              return GetAccounts.getAccounts(ledgerFileUri).then(
                 (List<String> lines) {
                   Set<String> accountNames = <String>{};
                   for (final String line in lines) {
@@ -195,16 +194,8 @@ class CurrencyWidget extends StatelessWidget {
 }
 
 class GetAccounts {
-  static Future<List<String>> getAccounts() async {
-    const String directory = '/storage/emulated/0/Documents/cone/';
-    final PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.storage);
-    if (permission != PermissionStatus.granted) {
-      await PermissionHandler()
-          .requestPermissions(<PermissionGroup>[PermissionGroup.storage]);
-    }
-    await Directory(directory).create(recursive: true);
-    final File file = File(p.join(directory, '.cone.ledger.txt'));
-    return file.readAsLines();
+  static Future<List<String>> getAccounts(String ledgerFileUri) async {
+    final String fileContents = await readFile(ledgerFileUri);
+    return fileContents.split('\n');
   }
 }

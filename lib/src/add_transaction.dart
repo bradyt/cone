@@ -1,9 +1,6 @@
-import 'dart:io';
-
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:path/path.dart' as p;
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cone/src/cone_localizations.dart';
@@ -11,6 +8,7 @@ import 'package:cone/src/posting_model.dart';
 import 'package:cone/src/posting_widget.dart';
 import 'package:cone/src/settings_model.dart';
 import 'package:cone/src/transaction.dart';
+import 'package:cone/src/utils.dart';
 
 class AddTransaction extends StatefulWidget {
   @override
@@ -23,6 +21,7 @@ class AddTransactionState extends State<AddTransaction> {
   final FocusNode dateFocus = FocusNode();
   final FocusNode descriptionFocus = FocusNode();
 
+  String ledgerFileUri;
   String defaultCurrency;
 
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -32,6 +31,8 @@ class AddTransactionState extends State<AddTransaction> {
   @override
   void initState() {
     super.initState();
+    ledgerFileUri =
+        Provider.of<SettingsModel>(context, listen: false).ledgerFileUri;
     defaultCurrency =
         Provider.of<SettingsModel>(context, listen: false).defaultCurrency;
 
@@ -167,9 +168,9 @@ class AddTransactionState extends State<AddTransaction> {
     );
   }
 
-  void submitTransaction(BuildContext context) {
+  Future<void> submitTransaction(BuildContext context) async {
     _formKey.currentState.save();
-    final Transaction txn = Transaction(
+    final String transaction = Transaction(
       dateController.text,
       descriptionController.text,
       postingModels
@@ -181,21 +182,64 @@ class AddTransactionState extends State<AddTransaction> {
                     Provider.of<SettingsModel>(context).currencyOnLeft,
               ))
           .toList(),
-    );
-    if (_formKey.currentState.validate()) {
-      final String result = txn.toString();
-      final SnackBar snackBar = SnackBar(
-        content: RichText(
-          text: TextSpan(
-            text: result,
-            style: const TextStyle(
-              fontFamily: 'RobotoMono',
-            ),
+    ).toString();
+    final SnackBar snackBar = SnackBar(
+      content: RichText(
+        text: TextSpan(
+          text: transaction,
+          style: const TextStyle(
+            fontFamily: 'RobotoMono',
           ),
         ),
-      );
-      TransactionStorage.writeTransaction('\n\n' + result);
+      ),
+    );
+    try {
+      await isUriOpenable(ledgerFileUri);
+      await appendFile(ledgerFileUri, transaction);
       Scaffold.of(context).showSnackBar(snackBar);
+    } on PlatformException catch (e) {
+      await showDialog<int>(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            content: SingleChildScrollView(
+              child: Column(
+                children: <Widget>[
+                  ListTile(
+                    title: const Text('Code'),
+                    subtitle: Text(e.code),
+                  ),
+                  ListTile(
+                    title: const Text('Message'),
+                    subtitle: Text(e.message),
+                  ),
+                  ListTile(
+                    title: const Text('Uri authority component'),
+                    subtitle: Text(Uri.tryParse(ledgerFileUri).authority),
+                  ),
+                  ListTile(
+                    title: const Text('Uri path component'),
+                    subtitle:
+                        Text(Uri.tryParse(Uri.decodeFull(ledgerFileUri)).path),
+                  ),
+                  ListTile(
+                    title: const Text('Uri'),
+                    subtitle: Text(Uri.decodeFull(ledgerFileUri)),
+                  ),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                child: const Text('Ok'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -300,20 +344,5 @@ class AddTransactionState extends State<AddTransaction> {
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
-  }
-}
-
-class TransactionStorage {
-  static Future<void> writeTransaction(String transaction) async {
-    const String directory = '/storage/emulated/0/Documents/cone/';
-    final PermissionStatus permission = await PermissionHandler()
-        .checkPermissionStatus(PermissionGroup.storage);
-    if (permission != PermissionStatus.granted) {
-      await PermissionHandler()
-          .requestPermissions(<PermissionGroup>[PermissionGroup.storage]);
-    }
-    await Directory(directory).create(recursive: true);
-    final File file = File(p.join(directory, '.cone.ledger.txt'));
-    return file.writeAsString('$transaction', mode: FileMode.append);
   }
 }

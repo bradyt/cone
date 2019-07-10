@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/gestures.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
+
+import 'package:cone/src/settings_model.dart';
+import 'package:cone/src/utils.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -8,6 +11,17 @@ class Home extends StatefulWidget {
 }
 
 class HomeState extends State<Home> {
+  String ledgerFileUri;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Future<void>.microtask(() async {
+      ledgerFileUri = Provider.of<SettingsModel>(context).ledgerFileUri;
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,92 +39,74 @@ class HomeState extends State<Home> {
       body: DefaultTextStyle(
         style: Theme.of(context).textTheme.body1,
         child: SingleChildScrollView(
-          child: RichWidget(),
+          child: Transactions(),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.pushNamed(context, '/add-transaction');
-        },
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: (ledgerFileUri == null)
+          ? FloatingActionButton(
+              onPressed: () {},
+              backgroundColor: Colors.grey[400],
+              child: Icon(
+                Icons.add,
+                color: Colors.grey[600],
+              ),
+            )
+          : FloatingActionButton(
+              onPressed: () {
+                Navigator.pushNamed(context, '/add-transaction');
+              },
+              child: const Icon(Icons.add),
+            ),
     );
   }
 }
 
-class RichWidget extends StatelessWidget {
+class Transactions extends StatefulWidget {
+  @override
+  TransactionsState createState() => TransactionsState();
+}
+
+class TransactionsState extends State<Transactions> {
+  String ledgerFileUri;
+  String fileContents;
+  String code;
+  String message;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    Future<void>.microtask(() async {
+      ledgerFileUri = Provider.of<SettingsModel>(context).ledgerFileUri;
+      if (ledgerFileUri != null) {
+        try {
+          fileContents = await readFile(ledgerFileUri);
+        } on PlatformException catch (e) {
+          code = e.code;
+          message = e.message;
+        }
+      }
+      setState(() {});
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RichText(
-      text: TextSpan(
-        text: '''
-Welcome to cone, a mobile plain-text double-entry ledger app.
-
-You can read about plain-text accounting at ''',
-        style: DefaultTextStyle.of(context).style,
-        children: <TextSpan>[
-          TextSpan(
-              text: 'https://plaintextaccounting.org/',
-              style: const TextStyle(
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.all(8),
+        child: RichText(
+          text: TextSpan(
+            style: DefaultTextStyle.of(context).style,
+            children: <TextSpan>[
+              TextSpan(
+                text: (code == null)
+                    ? (fileContents ?? 'Please select a file')
+                    : 'Error\ncode: $code\nmessage: $message',
+                style: TextStyle(fontFamily: 'RobotoMono'),
               ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  launch(
-                    'https://plaintextaccounting.org/',
-                  );
-                }),
-          const TextSpan(
-            text: '''.
-
-Press the + button to add a new transaction.
-
-cone will add the transaction to your ledger file, in the following format.
-
-''',
+            ],
           ),
-          const TextSpan(
-            text: '''  2016-01-05 Farmer's Market
-    expenses:groceries  50 USD
-    assets:checking''',
-            style: TextStyle(fontFamily: 'RobotoMono'),
-          ),
-          const TextSpan(
-            text: '''
-
-
-For now, the app writes to the following location:
-
-''',
-          ),
-          const TextSpan(
-            text: '  ~/Documents/cone/.cone.ledger.txt',
-            style: TextStyle(fontFamily: 'RobotoMono'),
-          ),
-          const TextSpan(
-            text: '''
-
-
-We hope to make the location increasingly configurable as the app develops. One might use Syncthing to sync that directory to their PC, VPS, etc.
-
-The cone icon is copyright Ryan Spiering, ''',
-          ),
-          TextSpan(
-              text:
-                  'https://thenounproject.com/Ryan-Spiering/collection/3d-shapes/',
-              style: const TextStyle(
-                color: Colors.blue,
-                decoration: TextDecoration.underline,
-              ),
-              recognizer: TapGestureRecognizer()
-                ..onTap = () {
-                  launch(
-                    'https://thenounproject.com/Ryan-Spiering/collection/3d-shapes/',
-                  );
-                }),
-          const TextSpan(text: '.'),
-        ],
+        ),
       ),
     );
   }
