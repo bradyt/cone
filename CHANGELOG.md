@@ -1,3 +1,16 @@
+### 0.2.0 (2019-07-09)
+
+* Breaking change: At least for now, cone requires Android >= 19.
+
+* Location of ledger file is now configurable. Implemented via Storage
+  Access Framework and `ACTION_OPEN_DOCUMENT`.
+
+  - Works with external storage, such as Documents.
+
+  - Currently works with Google Drive and OneDrive.
+
+* Home page now shows simply the contents of the ledger file.
+
 ### 0.1.5 (2019-06-28)
 
 * Add completion of account names via those found in ledger file

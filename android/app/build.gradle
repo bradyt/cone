@@ -36,8 +36,8 @@ android {
         applicationId "info.tangential.cone"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 7
-        versionName "0.1.5"
+        versionCode 8
+        versionName "0.2.0"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
