@@ -35,6 +35,7 @@ class ConeSettingsState extends State<ConeSettings> {
       (SharedPreferences prefs) {
         Provider.of<SettingsModel>(context).sharedPreferences = prefs;
         Provider.of<SettingsModel>(context).currencyOnLeft ??= false;
+        return prefs;
       },
     );
   }
@@ -45,13 +46,15 @@ class ConeSettingsState extends State<ConeSettings> {
       future: sharedPreferences,
       builder:
           (BuildContext context, AsyncSnapshot<SharedPreferences> snapshot) {
+        Widget result;
         switch (snapshot.connectionState) {
           case ConnectionState.none:
           case ConnectionState.active:
           case ConnectionState.waiting:
-            return const Center(child: CircularProgressIndicator());
+            result = const Center(child: CircularProgressIndicator());
+            break;
           case ConnectionState.done:
-            return MaterialApp(
+            result = MaterialApp(
               localeListResolutionCallback: (Iterable<Locale> locales,
                   Iterable<Locale> supportedLocales) {
                 Future<void>.microtask(
@@ -89,6 +92,7 @@ class ConeSettingsState extends State<ConeSettings> {
               },
             );
         }
+        return result;
       },
     );
   }
