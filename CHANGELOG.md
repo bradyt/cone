@@ -9,6 +9,8 @@
 
   - Currently works with Google Drive and OneDrive.
 
+* No longer need to query user for permission
+
 * Home page now shows simply the contents of the ledger file.
 
 ### 0.1.5 (2019-06-28)
