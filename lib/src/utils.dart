@@ -182,8 +182,8 @@ Set<String> getAccountsAndSubAccountsFromLines(List<String> lines) {
 List<String> fuzzyMatch(String input, Set<String> candidates) {
   final List<String> fuzzyText = input.split(' ');
   return candidates
-      .where((String candidate) =>
-          fuzzyText.every((String subtext) => candidate.contains(subtext)))
+      .where((String candidate) => fuzzyText.every((String subtext) =>
+          candidate.toLowerCase().contains(subtext.toLowerCase())))
       .toList()
         ..sort();
 }
