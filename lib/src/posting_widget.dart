@@ -71,23 +71,9 @@ class PostingWidget extends StatelessWidget {
             suggestionsCallback: (String text) {
               return GetLines.getLines(ledgerFileUri).then(
                 (List<String> lines) {
-                  Set<String> accountNames =
-                      lines.map(getAccountNameFromLine).toSet()..remove(null);
-                  final Set<String> subAccounts = <String>{};
-                  for (String accountName in accountNames) {
-                    while (accountName.lastIndexOf(':') != -1) {
-                      accountName = accountName.substring(
-                          0, accountName.lastIndexOf(':'));
-                      subAccounts.add(accountName);
-                    }
-                  }
-                  accountNames = accountNames.union(subAccounts);
-                  final List<String> fuzzyText = text.split(' ');
-                  return accountNames
-                      .where((String accountName) => fuzzyText.every(
-                          (String subtext) => accountName.contains(subtext)))
-                      .toList()
-                        ..sort();
+                  final Set<String> accounts =
+                      getAccountsAndSubAccountsFromLines(lines);
+                  return fuzzyMatch(text, accounts);
                 },
               );
             },

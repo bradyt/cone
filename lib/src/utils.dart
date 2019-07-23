@@ -161,3 +161,29 @@ String getTransactionDescriptionFromBeancountLine(String line) {
   }
   return result;
 }
+
+Set<String> getSubAccounts(Set<String> accounts) {
+  final Set<String> subAccounts = <String>{};
+  for (String account in accounts) {
+    while (account.lastIndexOf(':') != -1) {
+      account = account.substring(0, account.lastIndexOf(':'));
+      subAccounts.add(account);
+    }
+  }
+  return subAccounts;
+}
+
+Set<String> getAccountsAndSubAccountsFromLines(List<String> lines) {
+  final Set<String> accounts = lines.map(getAccountNameFromLine).toSet()
+    ..remove(null);
+  return accounts.union(getSubAccounts(accounts));
+}
+
+List<String> fuzzyMatch(String input, Set<String> candidates) {
+  final List<String> fuzzyText = input.split(' ');
+  return candidates
+      .where((String candidate) =>
+          fuzzyText.every((String subtext) => candidate.contains(subtext)))
+      .toList()
+        ..sort();
+}

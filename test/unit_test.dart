@@ -96,4 +96,12 @@ void main() {
           '! hello ; a comment');
     });
   });
+  group('Test fuzzy match', () {
+    test('Test fuzzy match', () {
+      expect(fuzzyMatch('as', <String>{'assets'}), <String>['assets']);
+      expect(fuzzyMatch('as', <String>{'Assets'}), <String>[]);
+      expect(fuzzyMatch('As', <String>{'assets'}), <String>[]);
+      expect(fuzzyMatch('As', <String>{'Assets'}), <String>['Assets']);
+    });
+  });
 }
