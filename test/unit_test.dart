@@ -62,6 +62,7 @@ void main() {
       expect(getAccountNameFromLine('2019-07-14 open a:b:c'), 'a:b:c');
       expect(getAccountNameFromLine('2019-07-14 opening balance'), null);
       expect(getAccountNameFromLine('2019-07-14 open house'), null);
+      expect(getAccountNameFromLine('  ; a comment'), null);
     });
   });
   group('Test description suggestions', () {
