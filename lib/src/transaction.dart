@@ -43,9 +43,9 @@ class Posting {
     } else if (amount == '') {
       return '$account';
     } else if (currencyOnLeft) {
-      return '$account  $currency $amount';
+      return '$account  $currency $amount'.trimRight();
     } else {
-      return '$account  $amount $currency';
+      return '$account  $amount $currency'.trimRight();
     }
   }
 }
