@@ -1,3 +1,19 @@
+### 0.2.1 (2019-07-22)
+
+* Fixes back button
+
+* Trim trailing whitespace from postings with no amounts
+
+* Save button now exits the form
+
+* Autocompletion for account field opens on focus
+
+* Autocompletion for descriptions field
+
+* Fix case sensitivity for autocomplete
+
+* Project now has some tests
+
 ### 0.2.0 (2019-07-09)
 
 * Breaking change: At least for now, cone requires Android >= 19.
