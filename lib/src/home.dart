@@ -51,11 +51,28 @@ class HomeState extends State<Home> {
                 color: Colors.grey[600],
               ),
             )
-          : FloatingActionButton(
-              onPressed: () {
-                Navigator.pushNamed(context, '/add-transaction');
-              },
-              child: const Icon(Icons.add),
+          : Builder(
+              builder: (BuildContext context) => FloatingActionButton(
+                    onPressed: () async {
+                      final dynamic transaction =
+                          await Navigator.pushNamed<dynamic>(
+                              context, '/add-transaction');
+                      if (transaction != null) {
+                        final SnackBar snackBar = SnackBar(
+                          content: RichText(
+                            text: TextSpan(
+                              text: transaction as String,
+                              style: const TextStyle(
+                                fontFamily: 'RobotoMono',
+                              ),
+                            ),
+                          ),
+                        );
+                        Scaffold.of(context).showSnackBar(snackBar);
+                      }
+                    },
+                    child: const Icon(Icons.add),
+                  ),
             ),
     );
   }

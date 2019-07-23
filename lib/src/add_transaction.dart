@@ -195,20 +195,10 @@ class AddTransactionState extends State<AddTransaction> {
               ))
           .toList(),
     ).toString();
-    final SnackBar snackBar = SnackBar(
-      content: RichText(
-        text: TextSpan(
-          text: transaction,
-          style: const TextStyle(
-            fontFamily: 'RobotoMono',
-          ),
-        ),
-      ),
-    );
     try {
       await isUriOpenable(ledgerFileUri);
       await appendFile(ledgerFileUri, transaction);
-      Scaffold.of(context).showSnackBar(snackBar);
+      Navigator.of(context).pop(transaction);
     } on PlatformException catch (e) {
       await showDialog<int>(
         context: context,
