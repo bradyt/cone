@@ -66,6 +66,7 @@ class PostingWidget extends StatelessWidget {
               accountFocus.unfocus();
               FocusScope.of(context).requestFocus(amountFocus);
             },
+            suggestionsBoxController: postingModel.suggestionsBoxController,
             suggestionsCallback: (String text) {
               return GetAccounts.getAccounts(ledgerFileUri).then(
                 (List<String> lines) {

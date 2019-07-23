@@ -60,6 +60,14 @@ class AddTransactionState extends State<AddTransaction> {
   }
 
   @override
+  void dispose() {
+    for (final PostingModel postingModel in postingModels) {
+      postingModel.suggestionsBoxController.close();
+    }
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     if (postingModels.every((PostingModel postingModel) =>
         postingModel.accountController.text.isNotEmpty)) {
