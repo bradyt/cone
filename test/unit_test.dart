@@ -60,6 +60,9 @@ void main() {
     test('Get account name from line', () {
       expect(getAccountNameFromLine('account a:b:c'), 'a:b:c');
       expect(getAccountNameFromLine('  a:b:c  23.00 USD'), 'a:b:c');
+      expect(getAccountNameFromLine('2019-07-14 open a:b:c'), 'a:b:c');
+      expect(getAccountNameFromLine('2019-07-14 opening balance'), null);
+      expect(getAccountNameFromLine('2019-07-14 open house'), null);
     });
   });
 }

@@ -129,6 +129,8 @@ String getAccountNameFromLine(String line) {
       result = line.trim().split('  ').first;
     } else if (line.startsWith('account')) {
       result = line.replaceFirst('account', '').trim();
+    } else if (line.startsWith(RegExp(r'[-0-9]{10} open [A-Za-z]+:'))) {
+      result = line.trim().split(' ').last;
     }
   }
   return result;
