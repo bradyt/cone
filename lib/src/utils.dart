@@ -67,12 +67,9 @@ Future<String> readFile(String uri) async {
 
 Future<void> appendFile(String uri, String contentsToAppend) async {
   await isUriOpenable(uri);
-  String originalContents = await readFile(uri);
-  originalContents = trimAllRight(originalContents);
+  final String originalContents = await readFile(uri);
   final String newContents =
-      ((originalContents.isNotEmpty) ? originalContents + '\n\n' : '') +
-          trimAllRight(contentsToAppend) +
-          '\n';
+      combineContentsWithLinebreak(originalContents, contentsToAppend);
   try {
     await _channel.invokeMethod<dynamic>('alterDocument', <String, String>{
       'uri': uri,
@@ -83,14 +80,44 @@ Future<void> appendFile(String uri, String contentsToAppend) async {
   }
 }
 
-String trimAllRight(String input) {
-  if (input == null || input.isEmpty) {
-    return input;
+class MeasureNewlines {
+  MeasureNewlines(String contents) {
+    listOfCleanLines =
+        contents.split(re).map((String line) => line.trim()).toList();
+    lastLine = listOfCleanLines.length - 1;
+    lastNonEmptyLine =
+        listOfCleanLines.lastIndexWhere((String line) => line.isNotEmpty);
+    distance = lastLine - lastNonEmptyLine;
   }
-  String output = input;
-  final RegExp re = RegExp(r'[\r\n\s]');
-  while (re.hasMatch(output[output.length - 1])) {
-    output = output.substring(0, output.length - 1);
+
+  static final RegExp re = RegExp(r'\r\n?|\n');
+  List<String> listOfCleanLines;
+  int lastLine;
+  int lastNonEmptyLine;
+  int distance;
+
+  int numberOfNewlinesToAddBetween() {
+    int result;
+    if (lastNonEmptyLine == -1) {
+      result = 0;
+    } else if (distance == 0) {
+      result = 2;
+    } else if (distance == 1) {
+      result = 1;
+    } else if (distance > 1) {
+      result = 0;
+    }
+    return result;
   }
-  return output;
+
+  bool needsNewline() {
+    return distance == 0;
+  }
+}
+
+String combineContentsWithLinebreak(String firstPart, String secondPart) {
+  return firstPart +
+      '\n' * MeasureNewlines(firstPart).numberOfNewlinesToAddBetween() +
+      secondPart +
+      ((MeasureNewlines(secondPart).needsNewline()) ? '\n' : '');
 }
