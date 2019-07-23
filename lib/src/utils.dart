@@ -135,3 +135,29 @@ String getAccountNameFromLine(String line) {
   }
   return result;
 }
+
+String getTransactionDescriptionFromLine(String line) {
+  final RegExp re = RegExp(r'[-0-9=]{10,21}');
+  String result;
+  if (line.startsWith(re)) {
+    final String dateRemoved = line.replaceFirst(re, '');
+    final int commentStart = dateRemoved.indexOf(';');
+    final String description = (commentStart == -1)
+        ? dateRemoved
+        : dateRemoved.substring(0, commentStart);
+    result = description.trim();
+  }
+  return result;
+}
+
+String getTransactionDescriptionFromBeancountLine(String line) {
+  final RegExp re = RegExp(r'[-0-9]{10}');
+  String result;
+  if (line.startsWith(re)) {
+    final String dateRemoved = line.replaceFirst(re, '').trim();
+    if (dateRemoved.startsWith(RegExp(r'[*!]'))) {
+      result = dateRemoved.trim();
+    }
+  }
+  return result;
+}

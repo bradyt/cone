@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
@@ -18,6 +19,8 @@ class AddTransaction extends StatefulWidget {
 class AddTransactionState extends State<AddTransaction> {
   final TextEditingController dateController = TextEditingController();
   final TextEditingController descriptionController = TextEditingController();
+  SuggestionsBoxController suggestionsBoxController =
+      SuggestionsBoxController();
   final FocusNode dateFocus = FocusNode();
   final FocusNode descriptionFocus = FocusNode();
 
@@ -61,6 +64,7 @@ class AddTransactionState extends State<AddTransaction> {
 
   @override
   void dispose() {
+    suggestionsBoxController.close();
     for (final PostingModel postingModel in postingModels) {
       postingModel.suggestionsBoxController.close();
     }
@@ -324,27 +328,52 @@ class AddTransactionState extends State<AddTransaction> {
     }
   }
 
-  TextFormField descriptionFormField(BuildContext context) {
-    return TextFormField(
-      controller: descriptionController,
-      autofocus: true,
-      focusNode: descriptionFocus,
-      textInputAction: postingModels.isNotEmpty
-          ? TextInputAction.next
-          : TextInputAction.done,
-      onSaved: (String value) {
-        descriptionController.text = value;
-      },
-      onFieldSubmitted: (String term) {
-        if (postingModels.isNotEmpty) {
+  TypeAheadFormField<String> descriptionFormField(BuildContext context) {
+    return TypeAheadFormField<String>(
+      textFieldConfiguration: TextFieldConfiguration<dynamic>(
+        controller: descriptionController,
+        autofocus: true,
+        focusNode: descriptionFocus,
+        textInputAction: postingModels.isNotEmpty
+            ? TextInputAction.next
+            : TextInputAction.done,
+        onSubmitted: (dynamic _) {
           descriptionFocus.unfocus();
           FocusScope.of(context).requestFocus(postingModels[0].accountFocus);
-        }
-      },
-      decoration: InputDecoration(
-        border: OutlineInputBorder(),
-        filled: true,
+        },
+        decoration: InputDecoration(
+          border: OutlineInputBorder(),
+          filled: true,
+        ),
       ),
+      itemBuilder: (BuildContext context, String suggestion) =>
+          ListTile(title: Text(suggestion)),
+      onSuggestionSelected: (String suggestion) {
+        descriptionController.text = suggestion;
+        descriptionFocus.unfocus();
+        FocusScope.of(context).requestFocus(postingModels[0].accountFocus);
+      },
+      suggestionsBoxController: suggestionsBoxController,
+      suggestionsCallback: (String text) {
+        return GetLines.getLines(ledgerFileUri).then(
+          (List<String> lines) {
+            final Set<String> descriptionNames = <String>{
+              for (final String line in lines)
+                getTransactionDescriptionFromLine(line)
+            }..remove(null);
+            final List<String> fuzzyText = text.split(' ');
+            return descriptionNames
+                .where((String descriptionName) => fuzzyText.every(
+                    (String subtext) => descriptionName.contains(subtext)))
+                .toList()
+                  ..sort();
+          },
+        );
+      },
+      transitionBuilder: (BuildContext context, Widget suggestionsBox,
+          AnimationController controller) {
+        return suggestionsBox;
+      },
     );
   }
 
@@ -352,5 +381,12 @@ class AddTransactionState extends State<AddTransaction> {
       BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
     currentFocus.unfocus();
     FocusScope.of(context).requestFocus(nextFocus);
+  }
+}
+
+class GetLines {
+  static Future<List<String>> getLines(String ledgerFileUri) async {
+    final String fileContents = await readFile(ledgerFileUri);
+    return fileContents.split('\n');
   }
 }

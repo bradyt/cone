@@ -55,7 +55,6 @@ void main() {
           'hello world\n\n', 'Taco Time!', 'hello world\n\nTaco Time!\n');
     });
   });
-
   group('Test account suggestions', () {
     test('Get account name from line', () {
       expect(getAccountNameFromLine('account a:b:c'), 'a:b:c');
@@ -63,6 +62,37 @@ void main() {
       expect(getAccountNameFromLine('2019-07-14 open a:b:c'), 'a:b:c');
       expect(getAccountNameFromLine('2019-07-14 opening balance'), null);
       expect(getAccountNameFromLine('2019-07-14 open house'), null);
+    });
+  });
+  group('Test description suggestions', () {
+    test('Get transaction description from line', () {
+      expect(getTransactionDescriptionFromLine('blah blah'), null);
+      expect(getTransactionDescriptionFromLine('2019-07-14 hello'), 'hello');
+      expect(getTransactionDescriptionFromLine('2019-07-14 hello ; a comment'),
+          'hello');
+      expect(
+          getTransactionDescriptionFromLine(
+              '2019-07-14=2019-07-15 hello ; a comment'),
+          'hello');
+    });
+  });
+  group('Test beancount description suggestions', () {
+    test('Get beancount transaction description from line', () {
+      expect(getTransactionDescriptionFromBeancountLine('blah blah'), null);
+      expect(
+          getTransactionDescriptionFromBeancountLine('2019-07-14 hello'), null);
+      expect(
+          getTransactionDescriptionFromBeancountLine(
+              '2019-07-14 hello ; a comment'),
+          null);
+      expect(
+          getTransactionDescriptionFromBeancountLine(
+              '2019-07-14=2019-07-15 hello ; a comment'),
+          null);
+      expect(
+          getTransactionDescriptionFromBeancountLine(
+              '2019-07-14 ! hello ; a comment'),
+          '! hello ; a comment');
     });
   });
 }

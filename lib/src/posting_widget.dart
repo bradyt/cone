@@ -69,13 +69,10 @@ class PostingWidget extends StatelessWidget {
             },
             suggestionsBoxController: postingModel.suggestionsBoxController,
             suggestionsCallback: (String text) {
-              return GetAccounts.getAccounts(ledgerFileUri).then(
+              return GetLines.getLines(ledgerFileUri).then(
                 (List<String> lines) {
-                  Set<String> accountNames = <String>{};
-                  for (final String line in lines) {
-                    accountNames.add(getAccountNameFromLine(line));
-                  }
-                  accountNames.remove(null);
+                  Set<String> accountNames =
+                      lines.map(getAccountNameFromLine).toSet()..remove(null);
                   final Set<String> subAccounts = <String>{};
                   for (String accountName in accountNames) {
                     while (accountName.lastIndexOf(':') != -1) {
@@ -189,8 +186,8 @@ class CurrencyWidget extends StatelessWidget {
   }
 }
 
-class GetAccounts {
-  static Future<List<String>> getAccounts(String ledgerFileUri) async {
+class GetLines {
+  static Future<List<String>> getLines(String ledgerFileUri) async {
     final String fileContents = await readFile(ledgerFileUri);
     return fileContents.split('\n');
   }
