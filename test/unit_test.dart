@@ -55,4 +55,11 @@ void main() {
           'hello world\n\n', 'Taco Time!', 'hello world\n\nTaco Time!\n');
     });
   });
+
+  group('Test account suggestions', () {
+    test('Get account name from line', () {
+      expect(getAccountNameFromLine('account a:b:c'), 'a:b:c');
+      expect(getAccountNameFromLine('  a:b:c  23.00 USD'), 'a:b:c');
+    });
+  });
 }

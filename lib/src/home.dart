@@ -102,7 +102,7 @@ class TransactionsState extends State<Transactions> {
                 text: (code == null)
                     ? (fileContents ?? 'Please select a file')
                     : 'Error\ncode: $code\nmessage: $message',
-                style: TextStyle(fontFamily: 'RobotoMono'),
+                style: const TextStyle(fontFamily: 'RobotoMono'),
               ),
             ],
           ),

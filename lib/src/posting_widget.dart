@@ -73,15 +73,9 @@ class PostingWidget extends StatelessWidget {
                 (List<String> lines) {
                   Set<String> accountNames = <String>{};
                   for (final String line in lines) {
-                    if (line.isNotEmpty) {
-                      if (line.startsWith(RegExp('[ \t]+[^ \t]'))) {
-                        accountNames.add(line.trim().split('  ').first);
-                      } else if (line.startsWith('account')) {
-                        accountNames
-                            .add(line.replaceFirst('account', '').trim());
-                      }
-                    }
+                    accountNames.add(getAccountNameFromLine(line));
                   }
+                  accountNames.remove(null);
                   final Set<String> subAccounts = <String>{};
                   for (String accountName in accountNames) {
                     while (accountName.lastIndexOf(':') != -1) {

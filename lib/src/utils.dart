@@ -121,3 +121,15 @@ String combineContentsWithLinebreak(String firstPart, String secondPart) {
       secondPart +
       ((MeasureNewlines(secondPart).needsNewline()) ? '\n' : '');
 }
+
+String getAccountNameFromLine(String line) {
+  String result;
+  if (line.isNotEmpty) {
+    if (line.startsWith(RegExp('[ \t]+[^ \t]'))) {
+      result = line.trim().split('  ').first;
+    } else if (line.startsWith('account')) {
+      result = line.replaceFirst('account', '').trim();
+    }
+  }
+  return result;
+}
