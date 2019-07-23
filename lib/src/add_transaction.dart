@@ -351,12 +351,7 @@ class AddTransactionState extends State<AddTransaction> {
               for (final String line in lines)
                 getTransactionDescriptionFromLine(line)
             }..remove(null);
-            final List<String> fuzzyText = text.split(' ');
-            return descriptionNames
-                .where((String descriptionName) => fuzzyText.every(
-                    (String subtext) => descriptionName.contains(subtext)))
-                .toList()
-                  ..sort();
+            return fuzzyMatch(text, descriptionNames);
           },
         );
       },
