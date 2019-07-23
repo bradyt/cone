@@ -50,6 +50,7 @@ class PostingWidget extends StatelessWidget {
       children: <Widget>[
         Expanded(
           child: TypeAheadFormField<String>(
+            getImmediateSuggestions: true,
             textFieldConfiguration: TextFieldConfiguration<dynamic>(
               controller: accountController,
               focusNode: accountFocus,
