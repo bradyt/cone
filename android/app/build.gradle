@@ -41,6 +41,10 @@ android {
     flavorDimensions "deploy"
 
     productFlavors {
+        play {
+            dimension "deploy"
+            signingConfig signingConfigs.debug
+        }
         fdroid {
             dimension "deploy"
             signingConfig null
