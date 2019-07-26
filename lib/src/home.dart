@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 
 import 'package:cone/src/settings_model.dart';
+import 'package:cone/src/transaction_snackbar.dart';
 import 'package:cone/src/utils.dart';
 
 class Home extends StatefulWidget {
@@ -54,26 +55,18 @@ class HomeState extends State<Home> {
             )
           : Builder(
               builder: (BuildContext context) => FloatingActionButton(
-                    onPressed: () async {
-                      final dynamic transaction =
-                          await Navigator.pushNamed<dynamic>(
-                              context, '/add-transaction');
-                      if (transaction != null) {
-                        final SnackBar snackBar = SnackBar(
-                          content: RichText(
-                            text: TextSpan(
-                              text: transaction as String,
-                              style: const TextStyle(
-                                fontFamily: 'IBMPlexMono',
-                              ),
-                            ),
-                          ),
-                        );
-                        Scaffold.of(context).showSnackBar(snackBar);
-                      }
-                    },
-                    child: const Icon(Icons.add),
-                  ),
+                onPressed: () async {
+                  final dynamic transaction =
+                      await Navigator.pushNamed<dynamic>(
+                          context, '/add-transaction');
+                  if (transaction != null) {
+                    final SnackBar snackBar =
+                        transactionSnackBar(transaction as String);
+                    Scaffold.of(context).showSnackBar(snackBar);
+                  }
+                },
+                child: const Icon(Icons.add),
+              ),
             ),
     );
   }

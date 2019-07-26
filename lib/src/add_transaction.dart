@@ -10,6 +10,7 @@ import 'package:cone/src/posting_model.dart';
 import 'package:cone/src/posting_widget.dart';
 import 'package:cone/src/settings_model.dart';
 import 'package:cone/src/transaction.dart';
+import 'package:cone/src/transaction_snackbar.dart';
 import 'package:cone/src/utils.dart';
 
 class AddTransaction extends StatefulWidget {
@@ -208,7 +209,14 @@ class AddTransactionState extends State<AddTransaction> {
       });
       await isUriOpenable(ledgerFileUri);
       await appendFile(ledgerFileUri, transaction);
-      Navigator.of(context).pop(transaction);
+      if (!kReleaseMode && Provider.of<SettingsModel>(context).debugMode) {
+        Scaffold.of(context).showSnackBar(transactionSnackBar(transaction));
+        setState(() {
+          saveInProgress = false;
+        });
+      } else {
+        Navigator.of(context).pop(transaction);
+      }
     } on PlatformException catch (e) {
       await showDialog<int>(
         context: context,
