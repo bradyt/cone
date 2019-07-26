@@ -27,6 +27,8 @@ class AddTransactionState extends State<AddTransaction> {
   String ledgerFileUri;
   String defaultCurrency;
 
+  bool saveInProgress;
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   List<PostingModel> postingModels = <PostingModel>[];
@@ -49,6 +51,7 @@ class AddTransactionState extends State<AddTransaction> {
       ));
     dateController.addListener(() => setState(() {}));
     descriptionController.addListener(() => setState(() {}));
+    saveInProgress = false;
   }
 
   @override
@@ -157,11 +160,12 @@ class AddTransactionState extends State<AddTransaction> {
               .where((PostingModel postingModel) =>
                   postingModel.amountController.text.isNotEmpty)
               .length;
-          if (dateController.text.isEmpty ||
-              descriptionController.text.isEmpty ||
-              amountWithNoAccount ||
-              numberOfAccounts < 2 ||
-              (numberOfAccounts - numberOfAmounts > 1)) {
+          if (saveInProgress ||
+              (dateController.text.isEmpty ||
+                  descriptionController.text.isEmpty ||
+                  amountWithNoAccount ||
+                  numberOfAccounts < 2 ||
+                  (numberOfAccounts - numberOfAmounts > 1))) {
             return FloatingActionButton(
               child: Icon(
                 Icons.save,
@@ -196,6 +200,9 @@ class AddTransactionState extends State<AddTransaction> {
           .toList(),
     ).toString();
     try {
+      setState(() {
+        saveInProgress = true;
+      });
       await isUriOpenable(ledgerFileUri);
       await appendFile(ledgerFileUri, transaction);
       Navigator.of(context).pop(transaction);
@@ -242,6 +249,9 @@ class AddTransactionState extends State<AddTransaction> {
           );
         },
       );
+      setState(() {
+        saveInProgress = false;
+      });
     }
   }
 
