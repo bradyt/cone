@@ -17,7 +17,7 @@ class Transaction {
               .where((String it) => it != null)
               .join('\n  ');
     }
-    return result;
+    return result.trimRight();
   }
 }
 
