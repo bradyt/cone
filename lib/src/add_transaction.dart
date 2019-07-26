@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -161,11 +162,13 @@ class AddTransactionState extends State<AddTransaction> {
                   postingModel.amountController.text.isNotEmpty)
               .length;
           if (saveInProgress ||
-              (dateController.text.isEmpty ||
-                  descriptionController.text.isEmpty ||
-                  amountWithNoAccount ||
-                  numberOfAccounts < 2 ||
-                  (numberOfAccounts - numberOfAmounts > 1))) {
+              ((kReleaseMode ||
+                      !Provider.of<SettingsModel>(context).debugMode) &&
+                  (dateController.text.isEmpty ||
+                      descriptionController.text.isEmpty ||
+                      amountWithNoAccount ||
+                      numberOfAccounts < 2 ||
+                      (numberOfAccounts - numberOfAmounts > 1)))) {
             return FloatingActionButton(
               child: Icon(
                 Icons.save,
