@@ -190,19 +190,23 @@ class AddTransactionState extends State<AddTransaction> {
 
   Future<void> submitTransaction(BuildContext context) async {
     _formKey.currentState.save();
-    final String transaction = Transaction(
-      dateController.text,
-      descriptionController.text,
-      postingModels
-          .map((PostingModel pb) => Posting(
-                account: pb.accountController.text,
-                amount: pb.amountController.text,
-                currency: pb.currencyController.text,
-                currencyOnLeft:
-                    Provider.of<SettingsModel>(context).currencyOnLeft,
-              ))
-          .toList(),
-    ).toString();
+    final String transaction = transactionToString(
+      locale: ConeLocalizations.of(context).locale.toString(),
+      transaction: Transaction(
+        dateController.text,
+        descriptionController.text,
+        postingModels
+            .map((PostingModel pb) => Posting(
+                  account: pb.accountController.text,
+                  amount: pb.amountController.text,
+                  currency: pb.currencyController.text,
+                  currencyOnLeft:
+                      Provider.of<SettingsModel>(context).currencyOnLeft,
+                ))
+            .toList(),
+      ),
+      currencyOnLeft: Provider.of<SettingsModel>(context).currencyOnLeft,
+    );
     try {
       setState(() {
         saveInProgress = true;
