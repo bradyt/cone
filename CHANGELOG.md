@@ -1,3 +1,15 @@
+### 0.2.2 (2019-07-26)
+
+* Save button is disabled before writing to disk
+
+* Switch to font with more currency symbols
+
+* Don't insert line with two spaces after transaction
+
+* Pad amount with zeros if currency matches locale's
+
+* Try to align on decimal separator
+
 ### 0.2.1 (2019-07-22)
 
 * Fixes back button
