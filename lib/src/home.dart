@@ -63,7 +63,7 @@ class HomeState extends State<Home> {
                             text: TextSpan(
                               text: transaction as String,
                               style: const TextStyle(
-                                fontFamily: 'RobotoMono',
+                                fontFamily: 'IBMPlexMono',
                               ),
                             ),
                           ),
@@ -119,7 +119,7 @@ class TransactionsState extends State<Transactions> {
                 text: (code == null)
                     ? (fileContents ?? 'Please select a file')
                     : 'Error\ncode: $code\nmessage: $message',
-                style: const TextStyle(fontFamily: 'RobotoMono'),
+                style: const TextStyle(fontFamily: 'IBMPlexMono'),
               ),
             ],
           ),

@@ -61,9 +61,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: RobotoMono
+    - family: IBMPlexMono
       fonts:
-        - asset: fonts/RobotoMono-Regular.ttf
+        - asset: fonts/IBM_Plex_Mono/IBMPlexMono-Regular.ttf
   # fonts:
   #   - family: Schyler
   #     fonts:
