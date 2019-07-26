@@ -108,6 +108,18 @@ class TransactionsState extends State<Transactions> {
 
   @override
   Widget build(BuildContext context) {
+    String body({String fileContents, String code}) {
+      if (code == null) {
+        if (fileContents == null) {
+          return 'Please select a .txt file';
+        } else {
+          return fileContents.replaceAll(' ', '·').replaceAll('\t', '» ');
+        }
+      } else {
+        return 'Error\ncode: $code\nmessage: $message';
+      }
+    }
+
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8),
@@ -116,9 +128,7 @@ class TransactionsState extends State<Transactions> {
             style: DefaultTextStyle.of(context).style,
             children: <TextSpan>[
               TextSpan(
-                text: (code == null)
-                    ? (fileContents ?? 'Please select a file')
-                    : 'Error\ncode: $code\nmessage: $message',
+                text: body(fileContents: fileContents, code: code),
                 style: const TextStyle(fontFamily: 'IBMPlexMono'),
               ),
             ],
