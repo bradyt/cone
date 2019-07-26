@@ -6,10 +6,21 @@ class SettingsModel extends ChangeNotifier {
   String _ledgerFileDisplayName;
   String _defaultCurrency;
   bool _currencyOnLeft;
+  bool _debugMode;
   SharedPreferences prefs;
 
   set sharedPreferences(SharedPreferences preferences) {
     prefs = preferences;
+  }
+
+  bool get debugMode {
+    return _debugMode ?? prefs.getBool('debug_mode') ?? false;
+  }
+
+  set debugMode(bool debugMode) {
+    prefs.setBool('debug_mode', debugMode);
+    _debugMode = debugMode;
+    notifyListeners();
   }
 
   String get ledgerFileUri {

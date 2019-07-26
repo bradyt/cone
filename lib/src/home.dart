@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -112,8 +113,11 @@ class TransactionsState extends State<Transactions> {
       if (code == null) {
         if (fileContents == null) {
           return 'Please select a .txt file';
-        } else {
+        } else if (!kReleaseMode &&
+            Provider.of<SettingsModel>(context).debugMode) {
           return fileContents.replaceAll(' ', '·').replaceAll('\t', '» ');
+        } else {
+          return fileContents;
         }
       } else {
         return 'Error\ncode: $code\nmessage: $message';

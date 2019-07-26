@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +45,15 @@ class Settings extends StatelessWidget {
             padding: const EdgeInsets.all(8),
             child: Column(
               children: <Widget>[
+                if (!kReleaseMode)
+                  ListTile(
+                    leading: const Icon(Icons.developer_mode),
+                    title: const Text('Debug mode'),
+                    subtitle: Text(settings.debugMode.toString()),
+                    onTap: () async {
+                      settings.debugMode = !settings.debugMode;
+                    },
+                  ),
                 ListTile(
                   leading: const Icon(Icons.attach_money),
                   title: Text(ConeLocalizations.of(context).defaultCurrency),
