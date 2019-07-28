@@ -16,6 +16,6 @@ void main() {
   });
 
   test('getPlatformVersion', () async {
-    expect(await UriPicker.platformVersion, '42');
+    expect(await UriPicker.pickUri(), '42');
   });
 }

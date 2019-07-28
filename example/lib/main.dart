@@ -12,22 +12,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  String _platformVersion = 'Unknown';
-
-  @override
-  void initState() {
-    super.initState();
-    initPlatformState();
-  }
+  String _uri;
 
   // Platform messages are asynchronous, so we initialize in an async method.
-  Future<void> initPlatformState() async {
-    String platformVersion;
+  Future<void> pickUri() async {
+    String uri;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
-      platformVersion = await UriPicker.platformVersion;
+      uri = await UriPicker.pickUri();
     } on PlatformException {
-      platformVersion = 'Failed to get platform version.';
+      uri = 'Failed to get uri.';
     }
 
     // If the widget was removed from the tree while the asynchronous platform
@@ -36,7 +30,7 @@ class _MyAppState extends State<MyApp> {
     if (!mounted) return;
 
     setState(() {
-      _platformVersion = platformVersion;
+      _uri = uri;
     });
   }
 
@@ -45,10 +39,22 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: const Text('Plugin example app'),
+          title: const Text('Uri Picker example app'),
         ),
         body: Center(
-          child: Text('Running on: $_platformVersion\n'),
+          child: SingleChildScrollView(
+            child: Column(
+              children: <Widget>[
+                Text(_uri ?? 'No uri yet'),
+                RaisedButton(
+                  child: Text('Pick URI'),
+                  onPressed: () async {
+                    await pickUri();
+                  },
+                ),
+              ],
+            ),
+          ),
         ),
       ),
     );
