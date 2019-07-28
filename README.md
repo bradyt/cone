@@ -1,6 +1,6 @@
 # uri_picker
 
-A new flutter plugin project.
+Flutter plugin for Android URI picker.
 
 ## Getting Started
 
