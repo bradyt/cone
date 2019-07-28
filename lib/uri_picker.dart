@@ -6,8 +6,8 @@ class UriPicker {
   static const MethodChannel _channel =
       const MethodChannel('uri_picker');
 
-  static Future<String> get platformVersion async {
-    final String version = await _channel.invokeMethod('getPlatformVersion');
-    return version;
+  static Future<String> pickUri() async {
+    final String uri = await _channel.invokeMethod('pickUri');
+    return uri;
   }
 }
