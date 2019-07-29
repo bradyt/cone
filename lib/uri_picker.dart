@@ -7,11 +7,6 @@ class UriPicker {
       const MethodChannel('tangential.info/uri_picker');
 
   static Future<String> pickUri() async {
-    final String uri = await _channel.invokeMethod('pickUri');
-    return uri;
-  }
-
-  static Future<String> pickUri() async {
     String uri;
     try {
       uri = await _channel.invokeMethod<dynamic>('pickUri') as String;
@@ -61,7 +56,7 @@ class UriPicker {
     }
   }
 
-  static Future<String> readFile(String uri) async {
+  static Future<String> readTextFromUri(String uri) async {
     String fileContents;
     try {
       fileContents = await _channel
@@ -74,11 +69,8 @@ class UriPicker {
     return fileContents;
   }
 
-  static Future<void> appendFile(String uri, String contentsToAppend) async {
+  static Future<void> alterDocument(String uri, String newContents) async {
     await isUriOpenable(uri);
-    final String originalContents = await readFile(uri);
-    final String newContents =
-        combineContentsWithLinebreak(originalContents, contentsToAppend);
     try {
       await _channel.invokeMethod<dynamic>('alterDocument', <String, String>{
         'uri': uri,

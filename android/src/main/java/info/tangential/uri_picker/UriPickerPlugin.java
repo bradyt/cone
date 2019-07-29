@@ -2,8 +2,10 @@ package info.tangential.uri_picker;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
-import android.util.Log;
+import android.os.ParcelFileDescriptor;
+import android.provider.OpenableColumns;
 import androidx.annotation.NonNull;
 
 import io.flutter.plugin.common.MethodCall;
@@ -13,7 +15,16 @@ import io.flutter.plugin.common.MethodChannel.Result;
 import io.flutter.plugin.common.PluginRegistry.Registrar;
 import io.flutter.plugin.common.PluginRegistry.ActivityResultListener;
 
-/** UriPickerPlugin */
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
+/**
+ * UriPickerPlugin
+ */
 public class UriPickerPlugin implements MethodCallHandler, ActivityResultListener {
 
   private static final int OPEN_REQUEST_CODE = 0;
@@ -43,8 +54,8 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
     if (call.method.equals("pickUri")) {
       performFileSearch();
     } else {
-      Uri uri = Uri.parse(call.argument("uri"));
-      switch(call.method) {
+      Uri uri = Uri.parse((String) call.argument("uri"));
+      switch (call.method) {
         case "getDisplayName":
           getDisplayName(uri);
           break;
@@ -58,7 +69,7 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
           readTextFromUri(uri);
           break;
         case "alterDocument":
-          alterDocument(uri, call.argument("newContents"));
+          alterDocument(uri, (String) call.argument("newContents"));
           break;
         default:
           result.notImplemented();
@@ -91,83 +102,62 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
     return true;
   }
 
-  public void getDisplayName(Uri uri) {
+  private void getDisplayName(Uri uri) {
     String displayName = null;
-    Cursor cursor = this.getContentResolver().query(uri, null, null, null, null, null);
-    try {
+    try (Cursor cursor = registrar.activity().getContentResolver()
+        .query(uri, null, null, null, null, null);) {
       if (cursor != null && cursor.moveToFirst()) {
         displayName = cursor.getString(
-          cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
+            cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME));
       }
-    } finally {
-      cursor.close();
     }
-    channelResult.success(displayName);
+    result.success(displayName);
   }
 
   private void isUriOpenable(Uri uri) {
-    InputStream inputStream = null;
     String name = null;
     String message = null;
-    try {
-      inputStream = this.getContentResolver().openInputStream(uri);
+    try (InputStream inputStream = registrar.activity().getContentResolver()
+        .openInputStream(uri);) {
+      result.success(null);
+      return;
     } catch (FileNotFoundException e) {
       name = e.getClass().getName();
       message = e.getMessage();
-    } finally {
-      if (inputStream != null) {
-        try {
-          inputStream.close();
-        } catch (IOException e) {
-        }
-      }
-      if (name == null) {
-        channelResult.success(null);
-      } else {
-        channelResult.error(name, message, null);
-      }
+    } catch (IOException e) {
+      name = e.getClass().getName();
+      message = e.getMessage();
     }
+    result.error(name, message, null);
   }
 
   private void takePersistablePermission(Uri uri) {
     try {
-      this.getContentResolver().takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
-    } catch(Exception e) {
+      registrar.activeContext().getContentResolver()
+          .takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+    } catch (Exception e) {
       e.printStackTrace();
     } finally {
-      channelResult.success(null);
+      result.success(null);
     }
   }
 
-
-  public void readTextFromUri(Uri uri) {
-    InputStream inputStream = null;
+  private void readTextFromUri(Uri uri) {
     StringBuilder stringBuilder = new StringBuilder();
     String name = null;
     String message = null;
-    try {
-      inputStream = this.getContentResolver().openInputStream(uri);
+    try (InputStream inputStream = registrar.activeContext().getContentResolver()
+        .openInputStream(uri);) {
       BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
       String line;
       while ((line = reader.readLine()) != null) {
-        stringBuilder.append(line + "\n");
+        stringBuilder.append(line);
+        stringBuilder.append("\n");
       }
     } catch (IOException e) {
       e.printStackTrace();
-    } finally {
-      if (inputStream != null) {
-        try {
-          inputStream.close();
-        } catch (IOException e) {
-
-        }
-      }
     }
-    if (name == null) {
-      channelResult.success(stringBuilder.toString());
-    } else {
-      channelResult.error(name, message, null);
-    }
+    result.success(stringBuilder.toString());
   }
 
   private void alterDocument(Uri uri, String newContents) {
@@ -176,19 +166,21 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
     ParcelFileDescriptor pfd = null;
     FileOutputStream fileOutputStream = null;
     try {
-      pfd = this.getContentResolver().openFileDescriptor(uri, "w");
-      fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
-      try {
-        fileOutputStream.write((newContents).getBytes());
-      } catch (IOException e) {
-        name = e.getClass().getName();
-        message = e.getMessage();
-      } finally {
+      pfd = registrar.activeContext().getContentResolver().openFileDescriptor(uri, "w");
+      if (pfd != null) {
+        fileOutputStream = new FileOutputStream(pfd.getFileDescriptor());
         try {
-          fileOutputStream.close();
+          fileOutputStream.write((newContents).getBytes());
         } catch (IOException e) {
           name = e.getClass().getName();
           message = e.getMessage();
+        } finally {
+          try {
+            fileOutputStream.close();
+          } catch (IOException e) {
+            name = e.getClass().getName();
+            message = e.getMessage();
+          }
         }
       }
     } catch (FileNotFoundException e) {
@@ -196,16 +188,18 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
       message = e.getMessage();
     } finally {
       try {
-        pfd.close();
+        if (pfd != null) {
+          pfd.close();
+        }
       } catch (IOException e) {
         name = e.getClass().getName();
         message = e.getMessage();
       }
     }
     if (name == null) {
-      channelResult.success(null);
+      result.success(null);
     } else {
-      channelResult.error(name, message, null);
+      result.error(name, message, null);
     }
   }
 }
