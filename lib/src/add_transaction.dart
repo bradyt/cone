@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
+import 'package:uri_picker/uri_picker.dart';
 
 import 'package:cone/src/cone_localizations.dart';
 import 'package:cone/src/posting_model.dart';
@@ -211,7 +212,7 @@ class AddTransactionState extends State<AddTransaction> {
       setState(() {
         saveInProgress = true;
       });
-      await isUriOpenable(ledgerFileUri);
+      await UriPicker.isUriOpenable(ledgerFileUri);
       await appendFile(ledgerFileUri, transaction);
       if (!kReleaseMode && Provider.of<SettingsModel>(context).debugMode) {
         Scaffold.of(context).showSnackBar(transactionSnackBar(transaction));
@@ -396,7 +397,7 @@ class AddTransactionState extends State<AddTransaction> {
 
 class GetLines {
   static Future<List<String>> getLines(String ledgerFileUri) async {
-    final String fileContents = await readFile(ledgerFileUri);
+    final String fileContents = await UriPicker.readTextFromUri(ledgerFileUri);
     return fileContents.split('\n');
   }
 }

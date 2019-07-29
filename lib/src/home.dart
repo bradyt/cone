@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:uri_picker/uri_picker.dart';
 
 import 'package:cone/src/settings_model.dart';
 import 'package:cone/src/transaction_snackbar.dart';
-import 'package:cone/src/utils.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -90,7 +90,7 @@ class TransactionsState extends State<Transactions> {
       ledgerFileUri = Provider.of<SettingsModel>(context).ledgerFileUri;
       if (ledgerFileUri != null) {
         try {
-          fileContents = await readFile(ledgerFileUri);
+          fileContents = await UriPicker.readTextFromUri(ledgerFileUri);
         } on PlatformException catch (e) {
           code = e.code;
           message = e.message;

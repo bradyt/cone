@@ -1,88 +1,20 @@
 import 'dart:math' show max;
 
-import 'package:flutter/services.dart'
-    show MethodChannel, MissingPluginException, PlatformException;
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:intl/number_symbols.dart' show NumberSymbols;
 import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
+import 'package:uri_picker/uri_picker.dart';
 
 import 'package:cone/src/transaction.dart';
 
-const MethodChannel _channel = MethodChannel('cone.tangential.info/uri');
-
-Future<String> pickUri() async {
-  String uri;
-  try {
-    uri = await _channel.invokeMethod<dynamic>('pickUri') as String;
-  } on PlatformException {
-    rethrow;
-  } on MissingPluginException {
-    rethrow;
-  }
-  return uri;
-}
-
-Future<String> getDisplayName(String uri) async {
-  String displayName;
-  try {
-    displayName =
-        await _channel.invokeMethod<dynamic>('getDisplayName', <String, String>{
-      'uri': uri,
-    }) as String;
-  } on PlatformException {
-    rethrow;
-  }
-  return displayName;
-}
-
-Future<void> isUriOpenable(String uri) async {
-  try {
-    await _channel.invokeMethod<dynamic>('isUriOpenable', <String, String>{
-      'uri': uri,
-    });
-  } on PlatformException {
-    rethrow;
-  } on MissingPluginException {
-    rethrow;
-  }
-}
-
-Future<void> takePersistablePermission(String uri) async {
-  try {
-    await _channel
-        .invokeMethod<dynamic>('takePersistablePermission', <String, String>{
-      'uri': uri,
-    });
-  } on PlatformException {
-    rethrow;
-  } on MissingPluginException {
-    rethrow;
-  }
-}
-
-Future<String> readFile(String uri) async {
-  String fileContents;
-  try {
-    fileContents = await _channel
-        .invokeMethod<dynamic>('readTextFromUri', <String, String>{
-      'uri': uri,
-    }) as String;
-  } on PlatformException {
-    rethrow;
-  }
-  return fileContents;
-}
-
 Future<void> appendFile(String uri, String contentsToAppend) async {
-  await isUriOpenable(uri);
-  final String originalContents = await readFile(uri);
+  await UriPicker.isUriOpenable(uri);
+  final String originalContents = await UriPicker.readTextFromUri(uri);
   final String newContents =
       combineContentsWithLinebreak(originalContents, contentsToAppend);
   try {
-    await _channel.invokeMethod<dynamic>('alterDocument', <String, String>{
-      'uri': uri,
-      'newContents': newContents,
-    });
+    await UriPicker.alterDocument(uri, newContents);
   } on PlatformException catch (e) {
     print('PlatformException $e');
   }

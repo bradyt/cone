@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:provider/provider.dart';
+import 'package:uri_picker/uri_picker.dart';
 
 import 'package:cone/src/posting_model.dart';
 import 'package:cone/src/settings_model.dart';
@@ -174,7 +175,7 @@ class CurrencyWidget extends StatelessWidget {
 
 class GetLines {
   static Future<List<String>> getLines(String ledgerFileUri) async {
-    final String fileContents = await readFile(ledgerFileUri);
+    final String fileContents = await UriPicker.readTextFromUri(ledgerFileUri);
     return fileContents.split('\n');
   }
 }

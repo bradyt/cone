@@ -2,10 +2,10 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:uri_picker/uri_picker.dart';
 
 import 'package:cone/src/cone_localizations.dart';
 import 'package:cone/src/settings_model.dart';
-import 'package:cone/src/utils.dart';
 
 const MethodChannel channel = MethodChannel('cone.tangential.info/uri');
 
@@ -84,13 +84,14 @@ class Settings extends StatelessWidget {
                       : generateAlias(settings.ledgerFileUri,
                           settings.ledgerFileDisplayName)),
                   onTap: () async {
-                    final String ledgerFileUri = await pickUri();
+                    final String ledgerFileUri = await UriPicker.pickUri();
                     final String ledgerFileDisplayName =
-                        await getDisplayName(ledgerFileUri);
+                        await UriPicker.getDisplayName(ledgerFileUri);
                     try {
                       if (ledgerFileUri != null) {
-                        await isUriOpenable(ledgerFileUri);
-                        await takePersistablePermission(ledgerFileUri);
+                        await UriPicker.isUriOpenable(ledgerFileUri);
+                        await UriPicker.takePersistablePermission(
+                            ledgerFileUri);
                         settings
                           ..ledgerFileUri = ledgerFileUri
                           ..ledgerFileDisplayName = ledgerFileDisplayName;
