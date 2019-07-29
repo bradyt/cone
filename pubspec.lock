@@ -392,6 +392,15 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.1.6"
+  uri_picker:
+    dependency: "direct main"
+    description:
+      path: "."
+      ref: "0.0.1"
+      resolved-ref: "4c3bb5df55c206f9f34769d4d999a14518d6ec9d"
+      url: "git://github.com/bradyt/uri_picker.git"
+    source: git
+    version: "0.0.1"
   vector_math:
     dependency: transitive
     description:
