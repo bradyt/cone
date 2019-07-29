@@ -26,7 +26,7 @@ public class UriPickerPlugin implements MethodCallHandler {
 
   public static void registerWith(Registrar registrar) {
     final MethodChannel channel =
-        new MethodChannel(registrar.messenger(), "info.tangential/uri_picker");
+        new MethodChannel(registrar.messenger(), "tangential.info/uri_picker");
     channel.setMethodCallHandler(new UriPickerPlugin(registrar));
   }
 
