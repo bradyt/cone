@@ -1,8 +1,8 @@
 name: uri_picker
 description: Flutter plugin for Android URI picker.
 version: 0.0.1
-author:
-homepage:
+author: Brady Trainor <mail@bradyt.net>
+homepage: https://github.com/bradyt/uri_picker
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
