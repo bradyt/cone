@@ -85,6 +85,10 @@ class ConeSettingsState extends State<ConeSettings> {
                 primarySwatch: Colors.green,
                 accentColor: Colors.amberAccent,
               ),
+              darkTheme: ThemeData(
+                brightness: Brightness.dark,
+                accentColor: Colors.greenAccent,
+              ),
               routes: <String, Widget Function(BuildContext)>{
                 '/': (BuildContext context) => Home(),
                 '/add-transaction': (BuildContext context) => AddTransaction(),
