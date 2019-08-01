@@ -1,3 +1,12 @@
+### 0.2.3 (2019-08-01)
+
+* Rethrow exceptions when appending
+
+* Dark theme for Android P
+
+* Reading and writing over Platform Channnel is factored out into
+  plugin
+
 ### 0.2.2 (2019-07-26)
 
 * Save button is disabled before writing to disk
