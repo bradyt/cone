@@ -16,7 +16,7 @@ Future<void> appendFile(String uri, String contentsToAppend) async {
   try {
     await UriPicker.alterDocument(uri, newContents);
   } on PlatformException catch (e) {
-    print('PlatformException $e');
+    rethrow;
   }
 }
 
