@@ -2,9 +2,9 @@
 
 * Rethrow exceptions when appending
 
-* Dark theme for Android P
+* Dark theme for Android Q and Samsung's Android P
 
-* Reading and writing over Platform Channnel is factored out into
+* Reading and writing over Platform Channel is factored out into
   plugin
 
 ### 0.2.2 (2019-07-26)
