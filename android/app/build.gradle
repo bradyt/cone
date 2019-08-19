@@ -41,13 +41,21 @@ android {
     flavorDimensions "deploy"
 
     productFlavors {
+        dev {
+            dimension "deploy"
+            signingConfig signingConfigs.debug
+            applicationIdSuffix ".dev"
+            resValue "string", "app_name", "cone.dev"
+        }
         play {
             dimension "deploy"
             signingConfig signingConfigs.debug
+            resValue "string", "app_name", "cone"
         }
         fdroid {
             dimension "deploy"
             signingConfig null
+            resValue "string", "app_name", "cone"
         }
     }
 

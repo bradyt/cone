@@ -19,7 +19,8 @@ After that, you can [run the
 app](https://flutter.dev/docs/get-started/test-drive?tab=terminal#run-the-app-2)
 from the root of the project.
 
-EDIT: Replace `flutter run` with `flutter run --flavor=play`.
+Replace `flutter run` with `flutter run --flavor=dev`. See
+https://github.com/flutter/flutter/issues/22856.
 
 ## Donate
 
