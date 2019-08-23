@@ -22,7 +22,7 @@ dependencies:
   uri_picker:
     git:
       url: git://github.com/bradyt/uri_picker.git
-      ref: 0.0.1
+      ref: 0.0.2
   flutter:
     sdk: flutter
   flutter_localizations:
