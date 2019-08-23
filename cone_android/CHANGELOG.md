@@ -1,3 +1,7 @@
+### 0.2.4 (2019-08-23)
+
+* Allow selection of files with mimetype application/octet-stream
+
 ### 0.2.3 (2019-08-01)
 
 * Rethrow exceptions when appending
