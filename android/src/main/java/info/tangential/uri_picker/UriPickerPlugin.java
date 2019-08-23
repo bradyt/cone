@@ -80,7 +80,9 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
   private void performFileSearch() {
     Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
     intent.addCategory(Intent.CATEGORY_OPENABLE);
-    intent.setType("text/plain");
+    intent.setType("*/*");
+    String[] mimetypes = {"text/plain", "application/octet-stream"};
+    intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes);
     intent.setFlags(
         Intent.FLAG_GRANT_READ_URI_PERMISSION
             | Intent.FLAG_GRANT_WRITE_URI_PERMISSION
