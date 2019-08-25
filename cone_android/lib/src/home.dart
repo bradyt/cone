@@ -38,9 +38,7 @@ class HomeState extends State<Home> {
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Transactions(),
-      ),
+      body: Transactions(),
       floatingActionButton: (ledgerFileUri == null)
           ? FloatingActionButton(
               onPressed: () {},
