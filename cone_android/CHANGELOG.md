@@ -1,3 +1,7 @@
+### 0.2.5 (2019-08-24)
+
+* Fix issue with last lines not visible
+
 ### 0.2.4 (2019-08-23)
 
 * Allow selection of files with mimetype application/octet-stream
