@@ -38,11 +38,8 @@ class HomeState extends State<Home> {
           ),
         ],
       ),
-      body: DefaultTextStyle(
-        style: Theme.of(context).textTheme.body1,
-        child: SingleChildScrollView(
-          child: Transactions(),
-        ),
+      body: SingleChildScrollView(
+        child: Transactions(),
       ),
       floatingActionButton: (ledgerFileUri == null)
           ? FloatingActionButton(
@@ -120,15 +117,12 @@ class TransactionsState extends State<Transactions> {
     return SingleChildScrollView(
       child: Padding(
         padding: const EdgeInsets.all(8),
-        child: RichText(
-          text: TextSpan(
-            style: DefaultTextStyle.of(context).style,
-            children: <TextSpan>[
-              TextSpan(
-                text: body(fileContents: fileContents, code: code),
-                style: const TextStyle(fontFamily: 'IBMPlexMono'),
-              ),
-            ],
+        child: Text.rich(
+          TextSpan(
+            text: body(fileContents: fileContents, code: code),
+          ),
+          style: const TextStyle(
+            fontFamily: 'IBMPlexMono',
           ),
         ),
       ),
