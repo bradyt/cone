@@ -112,12 +112,17 @@ class TransactionsState extends State<Transactions> {
       }
     }
 
-    return SingleChildScrollView(
-      child: Padding(
-        padding: const EdgeInsets.all(8),
+    final List<String> lines =
+        body(fileContents: fileContents, code: code).split('\n');
+
+    return ListView.builder(
+      itemCount: lines.length,
+      itemBuilder: (BuildContext context, int index) => Padding(
+        padding: EdgeInsets.fromLTRB(
+            8, (index == 0) ? 8 : 0, 8, (index == lines.length - 1) ? 8 : 0),
         child: Text.rich(
           TextSpan(
-            text: body(fileContents: fileContents, code: code),
+            text: lines[index],
           ),
           style: const TextStyle(
             fontFamily: 'IBMPlexMono',
