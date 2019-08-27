@@ -21,13 +21,13 @@ class _MyAppState extends State<MyApp> {
     try {
       uri = await UriPicker.pickUri();
     } on PlatformException {
-      uri = 'Failed to get uri.';
+      rethrow;
     }
 
     // If the widget was removed from the tree while the asynchronous platform
     // message was in flight, we want to discard the reply rather than calling
     // setState to update our non-existent appearance.
-    if (!mounted) return;
+    if (!mounted || uri == null) return;
 
     setState(() {
       _uri = uri;

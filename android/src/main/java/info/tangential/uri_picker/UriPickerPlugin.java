@@ -92,10 +92,15 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
 
   @Override
   public boolean onActivityResult(int requestCode, int resultCode, Intent resultData) {
-    if (requestCode == OPEN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-      Uri uri = resultData.getData();
-      if (uri != null) {
-        result.success(uri.toString());
+    if (requestCode == OPEN_REQUEST_CODE) {
+      if (resultCode == Activity.RESULT_OK) {
+        Uri uri = resultData.getData();
+        if (uri != null) {
+          result.success(uri.toString());
+          return true;
+        }
+      } else {
+        result.success(null);
         return true;
       }
     }
