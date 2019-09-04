@@ -1,3 +1,7 @@
+### 0.2.6 (2019-09-03)
+
+* Persist write permissions
+
 ### 0.2.5 (2019-08-24)
 
 * Fix issue with last lines not visible
