@@ -396,11 +396,11 @@ packages:
     dependency: "direct main"
     description:
       path: "."
-      ref: "0.0.2"
-      resolved-ref: "673b944494c7e82fbc3064126cfc59f40a26b8e6"
+      ref: "0.0.4"
+      resolved-ref: fe69c49acd1f775a325ad8ddb834ec2e78104fb2
       url: "git://github.com/bradyt/uri_picker.git"
     source: git
-    version: "0.0.2"
+    version: "0.0.4"
   vector_math:
     dependency: transitive
     description:
