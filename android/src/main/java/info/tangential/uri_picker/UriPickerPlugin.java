@@ -141,7 +141,8 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
   private void takePersistablePermission(Uri uri) {
     try {
       registrar.activeContext().getContentResolver()
-          .takePersistableUriPermission(uri, Intent.FLAG_GRANT_READ_URI_PERMISSION);
+          .takePersistableUriPermission(uri,
+              Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
     } catch (Exception e) {
       e.printStackTrace();
     } finally {
