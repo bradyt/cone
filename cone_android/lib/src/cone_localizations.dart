@@ -79,6 +79,23 @@ class ConeLocalizations {
       'enterDefaultCurrency': 'Introduzca la moneda por defecto',
       'submit': 'Enviar',
     },
+    'ru': <String, String>{
+      'addTransaction': 'Добавить транзакцию',
+      'date': 'Дата',
+      'description': 'Описание',
+      'account': 'Счет',
+      'enterADate': 'Введите дату.',
+      'tryRFC3339': 'Попытаться RFC 3339.',
+      'enterADescription': 'Введите описание.',
+      'enterAnAccount': 'Введите счет',
+      'enterAnAmount': 'Введите сумму',
+      'secondEmptyAmount': 'Второй счёт пуст',
+      'settings': 'Настройки',
+      'defaultCurrency': 'Валюта по-умолчанию',
+      'currencyOnLeft': 'Валюта слева',
+      'enterDefaultCurrency': 'Введите валюту по-умолчанию',
+      'submit': 'Принять',
+    },
   };
 
   String get date {
@@ -151,6 +168,7 @@ class ConeLocalizationsDelegate
         'en',
         'es',
         'pt',
+        'ru',
       ].contains(locale.languageCode);
 
   @override
