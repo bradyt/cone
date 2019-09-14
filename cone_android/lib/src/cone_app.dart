@@ -80,7 +80,7 @@ class ConeSettingsState extends State<ConeSettings> {
                 Locale('en', 'US'),
                 Locale('es', 'MX'),
                 Locale('pt', 'BR'),
-                Locale('ru', 'RU')
+                Locale('ru', 'RU'),
               ],
               theme: ThemeData(
                 primarySwatch: Colors.green,
