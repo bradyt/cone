@@ -1,3 +1,7 @@
+### 0.2.7 (2019-09-14)
+
+* Add Russian localization
+
 ### 0.2.6 (2019-09-03)
 
 * Persist write permissions
