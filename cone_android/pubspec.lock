@@ -395,11 +395,9 @@ packages:
   uri_picker:
     dependency: "direct main"
     description:
-      path: "."
-      ref: "0.0.4"
-      resolved-ref: fe69c49acd1f775a325ad8ddb834ec2e78104fb2
-      url: "git://github.com/bradyt/uri_picker.git"
-    source: git
+      path: "../uri_picker"
+      relative: true
+    source: path
     version: "0.0.4"
   vector_math:
     dependency: transitive

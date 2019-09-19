@@ -20,9 +20,7 @@ dependencies:
   provider:
   shared_preferences:
   uri_picker:
-    git:
-      url: git://github.com/bradyt/uri_picker.git
-      ref: 0.0.4
+    path: ../uri_picker
   flutter:
     sdk: flutter
   flutter_localizations:
