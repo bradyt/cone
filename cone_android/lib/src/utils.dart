@@ -15,7 +15,7 @@ Future<void> appendFile(String uri, String contentsToAppend) async {
       combineContentsWithLinebreak(originalContents, contentsToAppend);
   try {
     await UriPicker.alterDocument(uri, newContents);
-  } on PlatformException catch (e) {
+  } on PlatformException catch (_) {
     rethrow;
   }
 }
