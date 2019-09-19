@@ -5,8 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cone/src/add_transaction.dart';
-import 'package:cone/src/cone_localizations.dart';
 import 'package:cone/src/home.dart';
+import 'package:cone/src/localizations.dart';
 import 'package:cone/src/settings.dart';
 import 'package:cone/src/settings_model.dart';
 

@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 import 'package:uri_picker/uri_picker.dart';
 
-import 'package:cone/src/cone_localizations.dart';
+import 'package:cone/src/localizations.dart';
 import 'package:cone/src/posting_model.dart';
 import 'package:cone/src/posting_widget.dart';
 import 'package:cone/src/settings_model.dart';
