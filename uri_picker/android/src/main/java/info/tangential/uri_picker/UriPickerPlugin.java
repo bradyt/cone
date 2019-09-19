@@ -128,9 +128,6 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
         .openInputStream(uri);) {
       result.success(null);
       return;
-    } catch (FileNotFoundException e) {
-      name = e.getClass().getName();
-      message = e.getMessage();
     } catch (IOException e) {
       name = e.getClass().getName();
       message = e.getMessage();
@@ -139,14 +136,20 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
   }
 
   private void takePersistablePermission(Uri uri) {
+    String name = null;
+    String message = null;
     try {
       registrar.activeContext().getContentResolver()
           .takePersistableUriPermission(uri,
               Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
     } catch (Exception e) {
-      e.printStackTrace();
-    } finally {
+      name = e.getClass().getName();
+      message = e.getMessage();
+    }
+    if (name == null) {
       result.success(null);
+    } else {
+      result.error(name, message, null);
     }
   }
 
@@ -164,8 +167,14 @@ public class UriPickerPlugin implements MethodCallHandler, ActivityResultListene
       }
     } catch (IOException e) {
       e.printStackTrace();
+      name = e.getClass().getName();
+      message = e.getMessage();
     }
-    result.success(stringBuilder.toString());
+    if (name == null) {
+      result.success(stringBuilder.toString());
+    } else {
+      result.error(name, message, null);
+    }
   }
 
   private void alterDocument(Uri uri, String newContents) {
