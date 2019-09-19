@@ -1,6 +1,9 @@
 import 'package:test/test.dart';
 
-import 'package:cone/src/utils.dart';
+import 'package:cone/src/state_management/suggestions_model.dart'
+    show fuzzyMatch, getAccountNameFromLine, getTransactionDescriptionFromLine;
+import 'package:cone/src/utils.dart'
+    show MeasureNewlines, combineContentsWithLinebreak;
 
 void main() {
   group('Number of new lines to add', () {
@@ -75,25 +78,6 @@ void main() {
           getTransactionDescriptionFromLine(
               '2019-07-14=2019-07-15 hello ; a comment'),
           'hello');
-    });
-  });
-  group('Test beancount description suggestions', () {
-    test('Get beancount transaction description from line', () {
-      expect(getTransactionDescriptionFromBeancountLine('blah blah'), null);
-      expect(
-          getTransactionDescriptionFromBeancountLine('2019-07-14 hello'), null);
-      expect(
-          getTransactionDescriptionFromBeancountLine(
-              '2019-07-14 hello ; a comment'),
-          null);
-      expect(
-          getTransactionDescriptionFromBeancountLine(
-              '2019-07-14=2019-07-15 hello ; a comment'),
-          null);
-      expect(
-          getTransactionDescriptionFromBeancountLine(
-              '2019-07-14 ! hello ; a comment'),
-          '! hello ; a comment');
     });
   });
   group('Test fuzzy match', () {

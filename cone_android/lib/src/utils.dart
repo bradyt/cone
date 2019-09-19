@@ -1,5 +1,6 @@
 import 'dart:math' show max;
 
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:intl/number_symbols.dart' show NumberSymbols;
@@ -60,72 +61,6 @@ String combineContentsWithLinebreak(String firstPart, String secondPart) {
       '\n' * MeasureNewlines(firstPart).numberOfNewlinesToAddBetween() +
       secondPart +
       ((MeasureNewlines(secondPart).needsNewline()) ? '\n' : '');
-}
-
-String getAccountNameFromLine(String line) {
-  String result;
-  if (line.isNotEmpty) {
-    if (line.startsWith(RegExp('[ \t]+[^ \t;]'))) {
-      result = line.trim().split('  ').first;
-    } else if (line.startsWith('account')) {
-      result = line.replaceFirst('account', '').trim();
-    } else if (line.startsWith(RegExp(r'[-0-9]{10} open [A-Za-z]+:'))) {
-      result = line.trim().split(' ').last;
-    }
-  }
-  return result;
-}
-
-String getTransactionDescriptionFromLine(String line) {
-  final RegExp re = RegExp(r'[-0-9=]{10,21}');
-  String result;
-  if (line.startsWith(re)) {
-    final String dateRemoved = line.replaceFirst(re, '');
-    final int commentStart = dateRemoved.indexOf(';');
-    final String description = (commentStart == -1)
-        ? dateRemoved
-        : dateRemoved.substring(0, commentStart);
-    result = description.trim();
-  }
-  return result;
-}
-
-String getTransactionDescriptionFromBeancountLine(String line) {
-  final RegExp re = RegExp(r'[-0-9]{10}');
-  String result;
-  if (line.startsWith(re)) {
-    final String dateRemoved = line.replaceFirst(re, '').trim();
-    if (dateRemoved.startsWith(RegExp(r'[*!]'))) {
-      result = dateRemoved.trim();
-    }
-  }
-  return result;
-}
-
-Set<String> getSubAccounts(Set<String> accounts) {
-  final Set<String> subAccounts = <String>{};
-  for (String account in accounts) {
-    while (account.lastIndexOf(':') != -1) {
-      account = account.substring(0, account.lastIndexOf(':'));
-      subAccounts.add(account);
-    }
-  }
-  return subAccounts;
-}
-
-Set<String> getAccountsAndSubAccountsFromLines(List<String> lines) {
-  final Set<String> accounts = lines.map(getAccountNameFromLine).toSet()
-    ..remove(null);
-  return accounts.union(getSubAccounts(accounts));
-}
-
-List<String> fuzzyMatch(String input, Set<String> candidates) {
-  final List<String> fuzzyText = input.split(' ');
-  return candidates
-      .where((String candidate) => fuzzyText.every((String subtext) =>
-          candidate.toLowerCase().contains(subtext.toLowerCase())))
-      .toList()
-        ..sort();
 }
 
 String transactionToString({
@@ -243,4 +178,68 @@ num parseAmountToNum({String locale, String amount, String currency}) {
     // ignore: avoid_returning_null
     return null;
   }
+}
+
+String generateTitleFromPlatformException(PlatformException e) {
+  final RegExp pascalWords = RegExp(r'(?:[A-Z]+|^)[a-z]*');
+  List<String> getPascalWords(String input) =>
+      pascalWords.allMatches(input).map((Match m) => m[0]).toList();
+  final List<String> keyWords = getPascalWords(e.code.split('.').last)
+    ..removeLast();
+  final String sentence = keyWords.join(' ');
+  final String title = (sentence == null || sentence.isEmpty)
+      ? null
+      : sentence[0].toUpperCase() + sentence.substring(1).toLowerCase();
+
+  return title;
+}
+
+Future<int> showGenericInfo(
+    {BuildContext context, String title, Map<String, String> info}) {
+  return showDialog<int>(
+    context: context,
+    builder: (BuildContext context) {
+      final Iterable<MapEntry<String, String>> entries = info.entries;
+      return AlertDialog(
+        title: (title != null) ? Text(title) : null,
+        content: ListView.builder(
+          itemCount: info.length,
+          itemBuilder: (BuildContext content, int index) {
+            final MapEntry<String, String> entry = entries.elementAt(index);
+            return ListTile(
+              title: Text(entry.key),
+              subtitle: Text(entry.value),
+            );
+          },
+        ),
+        actions: <Widget>[
+          RaisedButton(
+            child: const Text('Ok'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+Future<int> showError(
+    {BuildContext context,
+    PlatformException e,
+    String ledgerFileUri,
+    String ledgerFileDisplayName}) {
+  final String title = generateTitleFromPlatformException(e);
+  final Map<String, String> info = <String, String>{
+    'Code': e.code,
+    'Message': e.message,
+    if (ledgerFileDisplayName != null) 'Display name': ledgerFileDisplayName,
+    if (ledgerFileUri != null) ...<String, String>{
+      'Uri authority component': Uri.tryParse(ledgerFileUri).authority,
+      'Uri path component': Uri.tryParse(Uri.decodeFull(ledgerFileUri)).path,
+      'Uri': Uri.decodeFull(ledgerFileUri),
+    }
+  };
+  return showGenericInfo(context: context, title: title, info: info);
 }

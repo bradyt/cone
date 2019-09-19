@@ -1,568 +1,358 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:intl/intl.dart';
-import 'package:provider/provider.dart';
-import 'package:uri_picker/uri_picker.dart';
+import 'package:intl/intl.dart' show DateFormat;
 
-import 'package:cone/src/localizations.dart';
-import 'package:cone/src/posting_model.dart';
-import 'package:cone/src/settings_model.dart';
-import 'package:cone/src/transaction.dart';
-import 'package:cone/src/transaction_snackbar.dart';
-import 'package:cone/src/utils.dart';
+import 'package:cone/src/localizations.dart' show ConeLocalizations;
+import 'package:cone/src/model.dart' show ConeModel;
+import 'package:cone/src/state_management/posting_model.dart' show PostingModel;
+import 'package:cone/src/utils.dart' show showGenericInfo;
 
-class AddTransaction extends StatefulWidget {
-  @override
-  AddTransactionState createState() => AddTransactionState();
-}
-
-class AddTransactionState extends State<AddTransaction> {
-  final TextEditingController dateController = TextEditingController();
-  final TextEditingController descriptionController = TextEditingController();
-  SuggestionsBoxController suggestionsBoxController =
-      SuggestionsBoxController();
-  final FocusNode dateFocus = FocusNode();
-  final FocusNode descriptionFocus = FocusNode();
-
-  String ledgerFileUri;
-  String defaultCurrency;
-
-  bool saveInProgress;
-
-  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-
-  List<PostingModel> postingModels = <PostingModel>[];
-
-  @override
-  void initState() {
-    super.initState();
-    ledgerFileUri =
-        Provider.of<SettingsModel>(context, listen: false).ledgerFileUri;
-    defaultCurrency =
-        Provider.of<SettingsModel>(context, listen: false).defaultCurrency;
-
-    dateController.text = DateFormat('yyyy-MM-dd').format(DateTime.now());
-    postingModels
-      ..add(PostingModel(
-        currencyControllerText: defaultCurrency,
-      ))
-      ..add(PostingModel(
-        currencyControllerText: defaultCurrency,
-      ));
-    dateController.addListener(() => setState(() {}));
-    descriptionController.addListener(() => setState(() {}));
-    saveInProgress = false;
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    for (final PostingModel postingModel in postingModels) {
-      postingModel
-        ..accountController.addListener(() => setState(() {}))
-        ..amountController.addListener(() => setState(() {}))
-        ..currencyController.addListener(() => setState(() {}));
-    }
-  }
-
-  @override
-  void dispose() {
-    suggestionsBoxController.close();
-    for (final PostingModel postingModel in postingModels) {
-      postingModel.suggestionsBoxController.close();
-    }
-    super.dispose();
-  }
-
+class AddTransaction extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    if (postingModels.every((PostingModel postingModel) =>
-        postingModel.accountController.text.isNotEmpty)) {
-      postingModels.add(PostingModel(currencyControllerText: defaultCurrency)
-        ..accountController.addListener(() => setState(() {}))
-        ..amountController.addListener(() => setState(() {}))
-        ..currencyController.addListener(() => setState(() {})));
-    }
-    final bool moreThanOneAccountWithNoAmount = postingModels
-            .where((PostingModel postingModel) =>
-                postingModel.accountController.text.isNotEmpty &&
-                postingModel.amountController.text.isEmpty)
-            .length >
-        1;
-    final int firstRowWithEmptyAmount = postingModels.indexWhere(
-        (PostingModel postingModel) =>
-            postingModel.amountController.text.isEmpty);
-    final num total = postingModels
-        .map((PostingModel postingModel) =>
-            num.tryParse(postingModel.amountController.text))
-        .where((num x) => x != null)
-        .fold(0, (num x, num y) => x + y);
-    final bool allCurrenciesMatch = postingModels
-            .map((PostingModel postingModel) =>
-                postingModel.currencyController.text)
-            .toSet()
-            .length ==
-        1;
     return Scaffold(
       appBar: AppBar(
         title: Text(ConeLocalizations.of(context).addTransaction),
       ),
-      body: Form(
-        key: _formKey,
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.all(8),
-          child: Column(
-            children: <Widget>[
-              dateAndDescriptionWidget(context),
-              ...List<int>.generate(postingModels.length, (int i) => i).map(
-                (int i) {
-                  return Dismissible(
-                    key: postingModels[i].key,
-                    onDismissed: (DismissDirection direction) {
-                      setState(
-                        () => postingModels.removeAt(i),
-                      );
-                    },
-                    child: PostingWidget(
-                      context: context,
-                      index: i,
-                      postingModel: postingModels[i],
-                      nextPostingFocus: (i < postingModels.length - 1)
-                          ? postingModels[i + 1].accountFocus
-                          : null,
-                      amountHintText: ConeLocalizations.of(context)
-                          .numberFormat
-                          .format((i == firstRowWithEmptyAmount &&
-                                  allCurrenciesMatch &&
-                                  !moreThanOneAccountWithNoAmount &&
-                                  firstRowWithEmptyAmount != -1)
-                              ? -total
-                              : 0),
-                    ),
-                  );
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-      floatingActionButton: Builder(
-        builder: (BuildContext context) {
-          final bool amountWithNoAccount = postingModels.any(
-              (PostingModel postingModel) =>
-                  postingModel.accountController.text.isEmpty &&
-                  postingModel.amountController.text.isNotEmpty);
-          final int numberOfAccounts = postingModels
-              .where((PostingModel postingModel) =>
-                  postingModel.accountController.text.isNotEmpty)
-              .length;
-          final int numberOfAmounts = postingModels
-              .where((PostingModel postingModel) =>
-                  postingModel.amountController.text.isNotEmpty)
-              .length;
-          if (saveInProgress ||
-              ((kReleaseMode ||
-                      !Provider.of<SettingsModel>(context).debugMode) &&
-                  (dateController.text.isEmpty ||
-                      descriptionController.text.isEmpty ||
-                      amountWithNoAccount ||
-                      numberOfAccounts < 2 ||
-                      (numberOfAccounts - numberOfAmounts > 1)))) {
-            return FloatingActionButton(
-              child: Icon(
-                Icons.save,
-                color: Colors.grey[600],
-              ),
-              onPressed: () {},
-              backgroundColor: Colors.grey[400],
-            );
-          }
-          return FloatingActionButton(
-            child: const Icon(Icons.save),
-            onPressed: () => submitTransaction(context),
-          );
-        },
-      ),
+      body: AddTransactionBody(),
+      floatingActionButton: SaveButton(),
     );
   }
+}
 
-  Future<void> submitTransaction(BuildContext context) async {
-    _formKey.currentState.save();
-    final String transaction = transactionToString(
-      locale: ConeLocalizations.of(context).locale.toString(),
-      transaction: Transaction(
-        dateController.text,
-        descriptionController.text,
-        postingModels
-            .map((PostingModel pb) => Posting(
-                  account: pb.accountController.text,
-                  amount: pb.amountController.text,
-                  currency: pb.currencyController.text,
-                  currencyOnLeft:
-                      Provider.of<SettingsModel>(context).currencyOnLeft,
-                ))
-            .toList(),
-      ),
-      currencyOnLeft: Provider.of<SettingsModel>(context).currencyOnLeft,
-    );
-    try {
-      setState(() {
-        saveInProgress = true;
-      });
-      await UriPicker.isUriOpenable(ledgerFileUri);
-      await appendFile(ledgerFileUri, transaction);
-      if (!kReleaseMode && Provider.of<SettingsModel>(context).debugMode) {
-        Scaffold.of(context).showSnackBar(transactionSnackBar(transaction));
-        setState(() {
-          saveInProgress = false;
-        });
-      } else {
-        Navigator.of(context).pop(transaction);
-      }
-    } on PlatformException catch (e) {
-      await showDialog<int>(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            content: SingleChildScrollView(
-              child: Column(
-                children: <Widget>[
-                  ListTile(
-                    title: const Text('Code'),
-                    subtitle: Text(e.code),
-                  ),
-                  ListTile(
-                    title: const Text('Message'),
-                    subtitle: Text(e.message),
-                  ),
-                  ListTile(
-                    title: const Text('Uri authority component'),
-                    subtitle: Text(Uri.tryParse(ledgerFileUri).authority),
-                  ),
-                  ListTile(
-                    title: const Text('Uri path component'),
-                    subtitle:
-                        Text(Uri.tryParse(Uri.decodeFull(ledgerFileUri)).path),
-                  ),
-                  ListTile(
-                    title: const Text('Uri'),
-                    subtitle: Text(Uri.decodeFull(ledgerFileUri)),
-                  ),
-                ],
-              ),
-            ),
-            actions: <Widget>[
-              FlatButton(
-                child: const Text('Ok'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
-      );
-      setState(() {
-        saveInProgress = false;
-      });
-    }
-  }
-
-  Row dateAndDescriptionWidget(BuildContext context) {
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
+class AddTransactionBody extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final bool saveInProgress = ConeModel.of(context).saveInProgress;
+    return Stack(
       children: <Widget>[
-        Padding(
-          padding: const EdgeInsets.only(right: 8),
-          child: Container(
-            width: 156,
-            child: dateFormField(context),
+        Opacity(
+          opacity: saveInProgress ? 0.5 : 1.0,
+          child: AddTransactionForm(),
+        ),
+        if (saveInProgress)
+          const ModalBarrier(
+            dismissible: false,
           ),
-        ),
-        Expanded(
-          child: descriptionFormField(context),
-        ),
+        if (saveInProgress) const Center(child: CircularProgressIndicator()),
       ],
     );
   }
+}
 
-  TextFormField dateFormField(BuildContext context) {
-    return TextFormField(
-      controller: dateController,
-      focusNode: dateFocus,
+class AddTransactionForm extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final ConeModel coneModel = ConeModel.of(context);
+
+    Future<void>.microtask(
+      coneModel.ensurePostingsAreNotFull,
+    );
+
+    return ListView.builder(
+      itemCount: coneModel.postingModels.length + 1,
+      itemBuilder: (BuildContext context, int index) => (index == 0)
+          ? DateAndDescriptionWidget()
+          : DismissiblePostingWidget(index - 1),
+    );
+  }
+}
+
+class DateAndDescriptionWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8),
+      child: Row(
+        children: <Widget>[
+          Container(
+            width: 156,
+            child: DateField(),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: DescriptionField(),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class DateField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final ConeModel coneModel = ConeModel.of(context);
+    return TextField(
+      controller: coneModel.dateController,
+      focusNode: coneModel.dateFocus,
       keyboardType: TextInputType.datetime,
       textInputAction: TextInputAction.next,
-      onFieldSubmitted: (String term) {
-        fieldFocusChange(context, dateFocus, descriptionFocus);
-      },
-      onSaved: (String value) {
-        dateController.text = value;
+      onSubmitted: (String _) {
+        coneModel.dateFocus.unfocus();
+        FocusScope.of(context).requestFocus(coneModel.descriptionFocus);
       },
       decoration: InputDecoration(
         border: OutlineInputBorder(),
         filled: true,
         suffixIcon: IconButton(
-          onPressed: () {
-            chooseDate(context, dateController.text);
+          icon: const Icon(Icons.calendar_today),
+          onPressed: () async {
+            final DateTime result = await showDatePicker(
+              context: context,
+              initialDate: coneModel.initialDate,
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
+            );
+            if (result != null) {
+              coneModel.dateController.text =
+                  DateFormat('yyyy-MM-dd').format(result);
+              coneModel.dateFocus.unfocus();
+              FocusScope.of(context).requestFocus(coneModel.descriptionFocus);
+            } else {
+              FocusScope.of(context).requestFocus(coneModel.dateFocus);
+            }
           },
-          icon: const Icon(
-            Icons.calendar_today,
-          ),
         ),
       ),
     );
   }
+}
 
-  Future<void> chooseDate(
-      BuildContext context, String initialDateString) async {
-    final DateTime now = DateTime.now();
-    final DateTime initialDate = convertToDate(initialDateString) ?? now;
-    final DateTime result = await showDatePicker(
-      context: context,
-      initialDate: initialDate,
-      firstDate: DateTime(1900),
-      lastDate: DateTime(2100),
-    );
-    if (result != null) {
-      setState(() {
-        dateController.text = DateFormat('yyyy-MM-dd').format(result);
-      });
-      fieldFocusChange(context, dateFocus, descriptionFocus);
-    }
-  }
-
-  DateTime convertToDate(String input) {
-    try {
-      final DateTime d = DateFormat('yyyy-MM-dd').parseStrict(input);
-      return d;
-    } catch (e) {
-      return null;
-    }
-  }
-
-  TypeAheadFormField<String> descriptionFormField(BuildContext context) {
+class DescriptionField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final ConeModel coneModel = ConeModel.of(context);
     return TypeAheadFormField<String>(
       textFieldConfiguration: TextFieldConfiguration<dynamic>(
-        controller: descriptionController,
+        controller: coneModel.descriptionController,
         autofocus: true,
-        focusNode: descriptionFocus,
-        textInputAction: postingModels.isNotEmpty
-            ? TextInputAction.next
-            : TextInputAction.done,
+        focusNode: coneModel.descriptionFocus,
+        textInputAction: (coneModel.postingModels.isEmpty)
+            ? TextInputAction.done
+            : TextInputAction.next,
         onSubmitted: (dynamic _) {
-          descriptionFocus.unfocus();
-          FocusScope.of(context).requestFocus(postingModels[0].accountFocus);
+          coneModel.descriptionFocus.unfocus();
+          FocusScope.of(context)
+              .requestFocus(coneModel.postingModels[0].accountFocus);
         },
         decoration: InputDecoration(
           border: OutlineInputBorder(),
           filled: true,
         ),
       ),
-      itemBuilder: (BuildContext context, String suggestion) =>
+      itemBuilder: (BuildContext _, String suggestion) =>
           ListTile(title: Text(suggestion)),
       onSuggestionSelected: (String suggestion) {
-        descriptionController.text = suggestion;
-        descriptionFocus.unfocus();
-        FocusScope.of(context).requestFocus(postingModels[0].accountFocus);
+        coneModel.descriptionController.text = suggestion;
+        coneModel.descriptionFocus.unfocus();
+        FocusScope.of(context)
+            .requestFocus(coneModel.postingModels[0].accountFocus);
       },
-      suggestionsBoxController: suggestionsBoxController,
-      suggestionsCallback: (String text) {
-        return GetLines.getLines(ledgerFileUri).then(
-          (List<String> lines) {
-            final Set<String> descriptionNames = <String>{
-              for (final String line in lines)
-                getTransactionDescriptionFromLine(line)
-            }..remove(null);
-            return fuzzyMatch(text, descriptionNames);
-          },
-        );
-      },
-      transitionBuilder: (BuildContext context, Widget suggestionsBox,
-          AnimationController controller) {
-        return suggestionsBox;
-      },
+      suggestionsBoxController: coneModel.suggestionsBoxController,
+      suggestionsCallback: ConeModel.of(context).descriptionSuggestions,
+      transitionBuilder:
+          (BuildContext _, Widget suggestionsBox, AnimationController __) =>
+              suggestionsBox,
     );
-  }
-
-  void fieldFocusChange(
-      BuildContext context, FocusNode currentFocus, FocusNode nextFocus) {
-    currentFocus.unfocus();
-    FocusScope.of(context).requestFocus(nextFocus);
   }
 }
 
-class GetLines {
-  static Future<List<String>> getLines(String ledgerFileUri) async {
-    final String fileContents = await UriPicker.readTextFromUri(ledgerFileUri);
-    return fileContents.split('\n');
+class DismissiblePostingWidget extends StatelessWidget {
+  const DismissiblePostingWidget(this.index);
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final ConeModel coneModel = ConeModel.of(context);
+    return Dismissible(
+      key: coneModel.postingModels[index].key,
+      onDismissed: (DismissDirection _) =>
+          coneModel.removeAtAndNotifyListeners(index),
+      child: PostingWidget(index),
+    );
   }
 }
 
 class PostingWidget extends StatelessWidget {
-  const PostingWidget({
-    this.context,
-    this.index,
-    this.postingModel,
-    this.nextPostingFocus,
-    this.amountHintText,
-  });
+  const PostingWidget(this.index);
 
-  final BuildContext context;
   final int index;
-  final PostingModel postingModel;
-  final FocusNode nextPostingFocus;
-  final String amountHintText;
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController accountController =
-        postingModel.accountController;
-    final FocusNode accountFocus = postingModel.accountFocus;
-    final FocusNode amountFocus = postingModel.amountFocus;
-    final bool currencyOnLeft =
-        Provider.of<SettingsModel>(context).currencyOnLeft;
-    final String ledgerFileUri =
-        Provider.of<SettingsModel>(context).ledgerFileUri;
-
-    final Widget amountWidget = AmountWidget(
-      context,
-      postingModel,
-      nextPostingFocus,
-      amountHintText,
+    final bool currencyOnLeft = ConeModel.of(context).currencyOnLeft;
+    final Widget accountWidget = Expanded(
+      child: AccountField(index),
     );
-    final Widget currencyWidget = CurrencyWidget(
-      context,
-      postingModel,
-      nextPostingFocus,
-      currencyOnLeft: currencyOnLeft,
-    );
-    return Row(
-      crossAxisAlignment: CrossAxisAlignment.baseline,
-      textBaseline: TextBaseline.alphabetic,
-      children: <Widget>[
-        Expanded(
-          child: TypeAheadFormField<String>(
-            getImmediateSuggestions: true,
-            textFieldConfiguration: TextFieldConfiguration<dynamic>(
-              controller: accountController,
-              focusNode: accountFocus,
-              textInputAction: TextInputAction.next,
-              onSubmitted: (dynamic _) {
-                accountFocus.unfocus();
-                FocusScope.of(context).requestFocus(amountFocus);
-              },
-            ),
-            itemBuilder: (BuildContext context, String suggestion) =>
-                ListTile(title: Text(suggestion)),
-            onSuggestionSelected: (String suggestion) {
-              accountController.text = suggestion;
-              accountFocus.unfocus();
-              FocusScope.of(context).requestFocus(amountFocus);
-            },
-            suggestionsBoxController: postingModel.suggestionsBoxController,
-            suggestionsCallback: (String text) {
-              return GetLines.getLines(ledgerFileUri).then(
-                (List<String> lines) {
-                  final Set<String> accounts =
-                      getAccountsAndSubAccountsFromLines(lines);
-                  return fuzzyMatch(text, accounts);
-                },
-              );
-            },
-            transitionBuilder: (BuildContext context, Widget suggestionsBox,
-                AnimationController controller) {
-              return suggestionsBox;
-            },
-          ),
-        ),
-        if (currencyOnLeft) currencyWidget,
-        amountWidget,
-        if (!currencyOnLeft) currencyWidget,
-      ],
-    );
-  }
-}
-
-class AmountWidget extends StatelessWidget {
-  const AmountWidget(
-    this.context,
-    this.postingModel,
-    this.nextPostingFocus,
-    this.amountHintText,
-  );
-
-  final BuildContext context;
-  final PostingModel postingModel;
-  final FocusNode nextPostingFocus;
-  final String amountHintText;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
+    final Widget amountWidget = Padding(
       padding: const EdgeInsets.only(left: 8),
       child: Container(
         width: 80,
-        child: TextFormField(
-          textAlign: TextAlign.center,
-          controller: postingModel.amountController,
-          decoration: InputDecoration(
-            hintText: amountHintText,
-          ),
-          keyboardType: TextInputType.number,
-          focusNode: postingModel.amountFocus,
-          textInputAction: TextInputAction.next,
-          onFieldSubmitted: (String term) {
-            postingModel.amountFocus.unfocus();
-            if (nextPostingFocus != null) {
-              FocusScope.of(context).requestFocus(nextPostingFocus);
-            }
-          },
-        ),
+        child: AmountField(index),
+      ),
+    );
+    final Widget currencyWidget = Padding(
+      padding: const EdgeInsets.only(left: 8),
+      child: Container(
+        width: 40,
+        child: CurrencyField(index),
+      ),
+    );
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+      child: Row(
+        children: <Widget>[
+          accountWidget,
+          if (currencyOnLeft) currencyWidget,
+          amountWidget,
+          if (!currencyOnLeft) currencyWidget,
+        ],
       ),
     );
   }
 }
 
-class CurrencyWidget extends StatelessWidget {
-  const CurrencyWidget(
-    this.context,
-    this.postingModel,
-    this.nextPostingFocus, {
-    this.currencyOnLeft,
-  });
+class AccountField extends StatelessWidget {
+  const AccountField(this.index);
 
-  final BuildContext context;
-  final PostingModel postingModel;
-  final FocusNode nextPostingFocus;
-  final bool currencyOnLeft;
+  final int index;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8),
-      child: Container(
-        width: 40,
-        child: TextFormField(
-          textAlign: TextAlign.center,
-          controller: postingModel.currencyController,
-          decoration: InputDecoration(
-            hintText: '',
-          ),
-          focusNode: postingModel.currencyFocus,
-          textInputAction: TextInputAction.next,
-          onFieldSubmitted: (String term) {
-            postingModel.currencyFocus.unfocus();
-            if (currencyOnLeft) {
-              FocusScope.of(context).requestFocus(postingModel.amountFocus);
-            } else if (nextPostingFocus != null) {
-              FocusScope.of(context).requestFocus(nextPostingFocus);
-            }
-          },
-        ),
+    final PostingModel pm = ConeModel.of(context).postingModels[index];
+    return TypeAheadField<String>(
+      getImmediateSuggestions: true,
+      textFieldConfiguration: TextFieldConfiguration<dynamic>(
+        controller: pm.accountController,
+        focusNode: pm.accountFocus,
+        textInputAction: TextInputAction.next,
+        onSubmitted: (dynamic _) {
+          pm.accountFocus.unfocus();
+          FocusScope.of(context).requestFocus(pm.amountFocus);
+        },
       ),
+      itemBuilder: (BuildContext _, String suggestion) =>
+          ListTile(title: Text(suggestion)),
+      onSuggestionSelected: (String suggestion) {
+        pm.accountController.text = suggestion;
+        pm.accountFocus.unfocus();
+        FocusScope.of(context).requestFocus(pm.amountFocus);
+      },
+      suggestionsBoxController: pm.suggestionsBoxController,
+      suggestionsCallback: ConeModel.of(context).accountSuggestions,
+      transitionBuilder:
+          (BuildContext _, Widget suggestionsBox, AnimationController __) =>
+              suggestionsBox,
+    );
+  }
+}
+
+class AmountField extends StatelessWidget {
+  const AmountField(this.index);
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final List<PostingModel> pms = ConeModel.of(context).postingModels;
+    final FocusNode nextPostingFocus =
+        (index < pms.length - 1) ? pms[index + 1].accountFocus : null;
+    final PostingModel pm = pms[index];
+    return TextField(
+      textAlign: TextAlign.center,
+      controller: pm.amountController,
+      decoration: InputDecoration(
+        hintText: ConeLocalizations.of(context)
+            .numberFormat
+            .format(ConeModel.of(context).amountHint(index)),
+      ),
+      keyboardType: TextInputType.number,
+      focusNode: pm.amountFocus,
+      textInputAction: TextInputAction.next,
+      onSubmitted: (String term) {
+        pm.amountFocus.unfocus();
+        if (nextPostingFocus != null) {
+          FocusScope.of(context).requestFocus(nextPostingFocus);
+        }
+      },
+    );
+  }
+}
+
+class CurrencyField extends StatelessWidget {
+  const CurrencyField(this.index);
+
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    final bool currencyOnLeft = ConeModel.of(context).currencyOnLeft;
+    final List<PostingModel> pms = ConeModel.of(context).postingModels;
+    final FocusNode nextPostingFocus =
+        (index < pms.length - 1) ? pms[index + 1].accountFocus : null;
+    final PostingModel pm = pms[index];
+    return TextField(
+      textAlign: TextAlign.center,
+      controller: pm.currencyController,
+      decoration: InputDecoration(
+        hintText: '¤',
+      ),
+      focusNode: pm.currencyFocus,
+      textInputAction: TextInputAction.next,
+      onSubmitted: (String term) {
+        pm.currencyFocus.unfocus();
+        if (currencyOnLeft) {
+          FocusScope.of(context).requestFocus(pm.amountFocus);
+        } else if (nextPostingFocus != null) {
+          FocusScope.of(context).requestFocus(nextPostingFocus);
+        }
+      },
+    );
+  }
+}
+
+class SaveButton extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final bool readyForSave = ConeModel.of(context).makeSaveButtonAvailable;
+    return FloatingActionButton(
+      child: readyForSave
+          ? const Icon(Icons.save)
+          : Icon(Icons.save, color: Colors.grey[600]),
+      onPressed: readyForSave ? () => submitTransaction(context) : null,
+      backgroundColor: readyForSave ? null : Colors.grey[400],
+    );
+  }
+}
+
+Future<void> submitTransaction(BuildContext context) async {
+  final ConeModel coneModel = ConeModel.of(context);
+  final String transaction = coneModel.formattedTransaction(
+    ConeLocalizations.of(context).locale.toString(),
+  );
+  try {
+    await coneModel.appendTransaction(transaction);
+    if (coneModel.debugMode) {
+      Scaffold.of(context).showSnackBar(coneModel.snackBar(transaction));
+    } else {
+      Navigator.of(context).pop(transaction);
+    }
+  } on PlatformException catch (e) {
+    final String ledgerFileUri = coneModel.ledgerFileUri;
+    await showGenericInfo(
+      context: context,
+      info: <String, String>{
+        'Code': e.code,
+        'Message': e.message,
+        'Uri authority component': Uri.tryParse(ledgerFileUri).authority,
+        'Uri path component': Uri.tryParse(Uri.decodeFull(ledgerFileUri)).path,
+        'Uri': Uri.decodeFull(ledgerFileUri),
+      },
     );
   }
 }
