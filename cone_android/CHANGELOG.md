@@ -1,3 +1,13 @@
+### 0.2.8 (2019-09-18)
+
+* Restructure codebase
+
+* Swipe to dismiss previous posting will lose focus of current field
+
+* Pull down to refresh home page, file contents
+
+* Introduce ModalBarrier to prevent interaction with form while saving
+
 ### 0.2.7 (2019-09-14)
 
 * Add Russian localization
