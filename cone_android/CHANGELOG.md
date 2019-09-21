@@ -1,3 +1,12 @@
+### 0.2.9 (2019-09-20)
+
+* Add Russian localization back
+
+* Add localizations via Google Translate for the following locales:
+  de, fr, hi, in, it, ja, th, tl, zh
+
+* Add localization for "Ledger file"
+
 ### 0.2.8 (2019-09-18)
 
 * Restructure codebase
