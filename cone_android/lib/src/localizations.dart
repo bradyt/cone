@@ -66,10 +66,19 @@ class ConeLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) => <String>[
+        'de',
         'en',
         'es',
+        'fr',
+        'hi',
+        'in',
+        'it',
+        'ja',
         'pt',
         'ru',
+        'th',
+        'tl',
+        'zh',
       ].contains(locale.languageCode);
 
   @override
