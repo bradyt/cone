@@ -47,6 +47,10 @@ class ConeLocalizations {
     return _localizedValues[locale.languageCode]['enterDefaultCurrency'];
   }
 
+  String get ledgerFile {
+    return _localizedValues[locale.languageCode]['ledgerFile'];
+  }
+
   String get settings {
     return _localizedValues[locale.languageCode]['settings'];
   }

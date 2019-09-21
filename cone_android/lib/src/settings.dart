@@ -59,7 +59,7 @@ class SettingsBody extends StatelessWidget {
                     ),
                     ListTile(
                       leading: const Icon(Icons.link),
-                      title: const Text('Ledger file'),
+                      title: Text(ConeLocalizations.of(context).ledgerFile),
                       subtitle: Text(coneModel.ledgerFileAlias),
                       onTap: coneModel.pickLedgerFileUri,
                       trailing: LedgerFileInfoButton(),
