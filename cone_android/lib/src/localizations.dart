@@ -31,24 +31,24 @@ class ConeLocalizations {
   static final Map<String, Map<String, String>> _localizedValues =
       localizedValues;
 
-  String get settings {
-    return _localizedValues[locale.languageCode]['settings'];
-  }
-
   String get addTransaction {
     return _localizedValues[locale.languageCode]['addTransaction'];
-  }
-
-  String get defaultCurrency {
-    return _localizedValues[locale.languageCode]['defaultCurrency'];
   }
 
   String get currencyOnLeft {
     return _localizedValues[locale.languageCode]['currencyOnLeft'];
   }
 
+  String get defaultCurrency {
+    return _localizedValues[locale.languageCode]['defaultCurrency'];
+  }
+
   String get enterDefaultCurrency {
     return _localizedValues[locale.languageCode]['enterDefaultCurrency'];
+  }
+
+  String get settings {
+    return _localizedValues[locale.languageCode]['settings'];
   }
 
   String get submit {
