@@ -7,7 +7,7 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('cone.dev'),
+        title: const Text('cone'),
         actions: <Widget>[SettingsButton()],
       ),
       body: Transactions(),

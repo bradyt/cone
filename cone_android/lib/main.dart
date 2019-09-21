@@ -58,7 +58,7 @@ class ConeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'cone.dev',
+      title: 'cone',
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
         ConeLocalizationsDelegate(),
         GlobalMaterialLocalizations.delegate,
