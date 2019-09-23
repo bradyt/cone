@@ -42,7 +42,7 @@ void main() {
         ),
         '''
 2000-01-01 hello world
-  a:b:c  20 null''',
+  a:b:c  20.00 null''',
       );
       expect(
         transactionToString(
@@ -97,7 +97,7 @@ void main() {
           justPostingsFormatted(abbreviatedPostings: [
             ['A', '1', 'EUR'],
           ]),
-          '  A  1 EUR',
+          '  A  1.00 EUR',
         );
       });
       test('Test printing of transaction', () {
@@ -117,7 +117,7 @@ void main() {
             ['C', '1', 'EUR'],
           ]),
           '  A:B  1.00 USD\n'
-          '  C    1 EUR',
+          '  C    1.00 EUR',
         );
       });
     });
@@ -148,7 +148,7 @@ void main() {
       testPadZeros('en_GB', '1', 'GBP', '1.00');
     });
     test('JPY', () {
-      testPadZeros('ja', '1', 'JPY', '1.00');
+      testPadZeros('ja', '1', 'JPY', '1');
     });
     test('Don\'t round', () {
       testPadZeros('en', '1.234', 'USD', '1.234');
@@ -156,14 +156,14 @@ void main() {
     test('Don\'t round JPY', () {
       testPadZeros('en', '1.2', 'JPY', '1.2');
     });
-    test('Doesn\'t round zero decimals of JPY', () {
-      testPadZeros('en', '1.0', 'JPY', '1.0');
+    test('Round zero decimals of JPY', () {
+      testPadZeros('en', '1.0', 'JPY', '1');
     });
     test('Euros in locale fr', () {
-      testPadZeros('fr', '1,0', 'EUR', '1,00\xa0');
+      testPadZeros('fr', '1,0', 'EUR', '1,00');
     });
     test('Rubles in locale ru', () {
-      testPadZeros('ru', '1,0', 'RUB', '1,00\xa0');
+      testPadZeros('ru', '1,0', 'RUB', '1,00');
     });
   });
 }

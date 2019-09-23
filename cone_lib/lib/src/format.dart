@@ -91,38 +91,19 @@ List<String> splitOnDecimalSeparator({
 }
 
 String padZeros({String locale, String amount, String currency}) {
-  // final symbols = numberFormatSymbols[locale];
-  final NumberFormat numberFormat =
-      NumberFormat.currency(locale: locale, decimalDigits: 2, name: '');
-  final num parsedNum =
-      parseAmountToNum(locale: locale, amount: amount, currency: currency);
-  if (parsedNum == null) {
+  final int decimalDigits = NumberFormat.currency(name: currency).decimalDigits;
+  final NumberFormat parser = NumberFormat.decimalPattern(locale);
+  NumberFormat formatter;
+
+  final num parsed = parser.parse(amount);
+  final int integerDigits = parsed.round().toString().length;
+
+  if (amount.length >= 16) {
     return amount;
   } else {
-    final String paddedAmount = numberFormat.format(parsedNum);
-    if (parseAmountToNum(
-            locale: locale, amount: paddedAmount, currency: currency) ==
-        parsedNum) {
-      return paddedAmount;
-    } else {
-      return amount;
-    }
-  }
-}
-
-num parseAmountToNum({String locale, String amount, String currency}) {
-  final NumberSymbols symbols = numberFormatSymbols[locale] as NumberSymbols;
-  final NumberFormat numberFormat = NumberFormat.currency(locale: locale);
-  if (symbols.DEF_CURRENCY_CODE == currency) {
-    try {
-      final num parsedAmount = numberFormat.parse(amount);
-      return parsedAmount;
-    } on FormatException catch (_) {
-      // ignore: avoid_returning_null
-      return null;
-    }
-  } else {
-    // ignore: avoid_returning_null
-    return null;
+    formatter = NumberFormat(
+        '0.${'0' * decimalDigits}${'#' * (16 - integerDigits - decimalDigits)}',
+        locale);
+    return formatter.format(parsed);
   }
 }
