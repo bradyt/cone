@@ -6,5 +6,8 @@ author: Brady Trainor <mail@bradyt.net>
 environment:
   sdk: '>=2.4.0 <3.0.0'
 
+dependencies:
+  intl:
+
 dev_dependencies:
   test:

@@ -1,3 +1,4 @@
+import 'package:cone_lib/cone_lib.dart' show Posting, Transaction;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -6,12 +7,11 @@ import 'package:provider/provider.dart' show Provider;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:cone/src/state_management/file_model.dart';
+import 'package:cone/src/state_management/format_model.dart';
 import 'package:cone/src/state_management/settings_model.dart';
 import 'package:cone/src/state_management/suggestions_model.dart';
 import 'package:cone/src/state_management/transaction_model.dart';
 import 'package:cone/src/state_management/posting_model.dart';
-import 'package:cone/src/transaction.dart' show Posting, Transaction;
-import 'package:cone/src/utils.dart' show transactionToString;
 
 class ConeModel extends ChangeNotifier {
   //
@@ -24,7 +24,8 @@ class ConeModel extends ChangeNotifier {
         _settings = SettingsModel(sharedPreferences: sharedPreferences),
         _file = FileModel(uri: sharedPreferences.getString('ledger_file_uri')),
         _suggestions = SuggestionsModel(),
-        _transaction = TransactionModel() {
+        _transaction = TransactionModel(),
+        _format = FormatModel() {
     refreshFileContents();
     resetTransaction();
   }
@@ -45,6 +46,7 @@ class ConeModel extends ChangeNotifier {
   final FileModel _file;
   final SuggestionsModel _suggestions;
   final TransactionModel _transaction;
+  final FormatModel _format;
 
   //
   // Settings
@@ -191,15 +193,15 @@ class ConeModel extends ChangeNotifier {
       );
 
   //
-  // Break this out into separate group of formatting utils
+  // Format
   //
 
-  String formattedTransaction(String locale) => transactionToString(
+  String formattedTransaction(String locale) => _format.formattedTransaction(
         locale: locale,
         transaction: Transaction(
-          dateController.text,
-          descriptionController.text,
-          postingModels
+          date: dateController.text,
+          description: descriptionController.text,
+          postings: postingModels
               .map((PostingModel pb) => Posting(
                     account: pb.accountController.text,
                     amount: pb.amountController.text,
