@@ -51,8 +51,16 @@ class ConeLocalizations {
     return _localizedValues[locale.languageCode]['ledgerFile'];
   }
 
+  String get numberLocale {
+    return _localizedValues[locale.languageCode]['numberLocale'];
+  }
+
   String get settings {
     return _localizedValues[locale.languageCode]['settings'];
+  }
+
+  String get spacing {
+    return _localizedValues[locale.languageCode]['spacing'];
   }
 
   String get submit {

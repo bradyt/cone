@@ -1,5 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' show NumberFormat;
+import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:provider/provider.dart' show Consumer;
 
 import 'package:cone/src/localizations.dart';
@@ -40,22 +42,60 @@ class SettingsBody extends StatelessWidget {
                         subtitle: Text(coneModel.debugMode.toString()),
                         onTap: coneModel.toggleDebugMode,
                       ),
-                    ListTile(
-                      leading: const Icon(Icons.attach_money),
-                      title:
-                          Text(ConeLocalizations.of(context).defaultCurrency),
-                      subtitle: Text(coneModel.defaultCurrency),
-                      onTap: () async {
-                        final String defaultCurrency =
-                            await _asyncDefaultCurrencyDialog(context);
-                        coneModel.setDefaultCurrency(defaultCurrency);
-                      },
-                    ),
-                    ListTile(
-                      leading: const Icon(Icons.compare_arrows),
-                      title: Text(ConeLocalizations.of(context).currencyOnLeft),
-                      subtitle: Text(coneModel.formattedExample),
-                      onTap: coneModel.toggleCurrencyOnLeft,
+                    ExpansionTile(
+                      leading: const Icon(
+                        Icons.text_format,
+                      ),
+                      title: Text(
+                        coneModel.formattedExample,
+                      ),
+                      initiallyExpanded: true,
+                      children: <Widget>[
+                        ListTile(
+                          leading: const Icon(Icons.attach_money),
+                          title: Text(
+                              ConeLocalizations.of(context).defaultCurrency),
+                          subtitle: Text(coneModel.defaultCurrency),
+                          onTap: () async {
+                            final String defaultCurrency =
+                                await _asyncDefaultCurrencyDialog(context);
+                            coneModel.setDefaultCurrency(defaultCurrency);
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.language),
+                          title:
+                              Text(ConeLocalizations.of(context).numberLocale),
+                          subtitle: Text(coneModel.numberLocale),
+                          onTap: () async {
+                            final String result = await showSearch<String>(
+                              context: context,
+                              delegate: NumberLocaleSearchDelegate(),
+                            );
+                            if (result != null) {
+                              coneModel.setNumberLocale(result);
+                            }
+                          },
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.compare_arrows),
+                          title: Text(
+                              ConeLocalizations.of(context).currencyOnLeft),
+                          trailing: Switch(
+                            value: coneModel.currencyOnLeft,
+                            onChanged: (bool _) =>
+                                coneModel.toggleCurrencyOnLeft(),
+                          ),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.space_bar),
+                          title: Text(ConeLocalizations.of(context).spacing),
+                          trailing: Switch(
+                            value: coneModel.spacing.index == 1,
+                            onChanged: (bool _) => coneModel.toggleSpacing(),
+                          ),
+                        ),
+                      ],
                     ),
                     ListTile(
                       leading: const Icon(Icons.link),
@@ -131,4 +171,65 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
       );
     },
   );
+}
+
+class NumberLocaleSearchDelegate extends SearchDelegate<String> {
+  @override
+  //ignore: missing_return
+  List<Widget> buildActions(BuildContext context) {}
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  //ignore: missing_return
+  Widget buildResults(BuildContext context) {}
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final List<String> matchedLocales = numberFormatSymbols.keys.where(
+      (dynamic locale) {
+        return (locale as String).toLowerCase().contains(query.toLowerCase());
+      },
+    ).toList() as List<String>;
+    String currentLocale;
+    return ListView.builder(
+      itemCount: matchedLocales.length,
+      itemBuilder: (BuildContext _, int index) {
+        currentLocale = matchedLocales[index];
+        return InkWell(
+          onTap: () => close(context, query = matchedLocales[index]),
+          child: Card(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: ListTile(
+                    title: Text(currentLocale),
+                  ),
+                ),
+                const Expanded(child: SizedBox()),
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: ListTile(
+                      title: Text(
+                        NumberFormat.decimalPattern(currentLocale).format(
+                          1234.56,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }

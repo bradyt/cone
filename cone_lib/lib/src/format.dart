@@ -1,5 +1,4 @@
 // ignore_for_file: avoid_as
-// ignore_for_file: prefer_interpolation_to_compose_strings
 // ignore_for_file: public_member_api_docs
 
 import 'dart:math' show max;
@@ -14,62 +13,64 @@ String transactionToString({
   String locale,
   Transaction transaction,
   bool currencyOnLeft = false,
+  bool spacing = true,
 }) {
-  // extract postings
-  final List<Posting> postings = transaction.postings;
+  final List<Posting> paddedPostings = transaction.postings
+      .map(
+        (Posting posting) => Posting(
+          account: posting.account,
+          amount: padZeros(
+            locale: locale,
+            amount: posting.amount,
+            currency: posting.currency,
+          ),
+          currency: posting.currency,
+        ),
+      )
+      .toList();
 
-  //
-  // first pass
-  //
-  final List<List<String>> postingsWithSplitAmounts = <List<String>>[];
-  int maxWidthOfAccounts = -1;
-  int maxWidthOfWholeNumberParts = -1;
-  int maxWidthOfDecimalParts = -1;
-  for (final Posting posting in postings) {
-    maxWidthOfAccounts = max(posting.account.length, maxWidthOfAccounts);
-    if (posting.amount.isNotEmpty) {
-      final String zeroPaddedAmount = padZeros(
-        locale: locale,
-        amount: posting.amount,
-        currency: posting.currency,
-      );
-      final List<String> splittedAmount = splitOnDecimalSeparator(
-        locale: locale,
-        amount: zeroPaddedAmount,
-      );
-      final String partBeforeDecimal =
-          (currencyOnLeft ? posting.currency + ' ' : '') + splittedAmount[0];
-      final String decimalAndAfter = splittedAmount[1];
-      maxWidthOfWholeNumberParts =
-          max(partBeforeDecimal.length, maxWidthOfWholeNumberParts);
-      maxWidthOfDecimalParts =
-          max(decimalAndAfter.length, maxWidthOfDecimalParts);
-      postingsWithSplitAmounts.add(<String>[
+  final List<List<String>> spreadPostings = paddedPostings.map(
+    (Posting posting) {
+      final List<String> splitAmount =
+          splitOnDecimalSeparator(locale: locale, amount: posting.amount);
+      return <String>[
         posting.account,
-        partBeforeDecimal,
-        decimalAndAfter,
-        posting.currency,
-      ]);
-    } else {
-      postingsWithSplitAmounts.add(<String>[posting.account, '', '', '']);
-    }
-  }
+        if (currencyOnLeft && (posting.currency != null))
+          posting.currency + (spacing ? ' ' : '')
+        else
+          '',
+        ...splitAmount,
+        if (!currencyOnLeft && posting.currency != null)
+          (spacing ? ' ' : '') + posting.currency
+        else
+          '',
+      ];
+    },
+  ).toList();
 
-  // header
-  // String result = '${transaction.date} ${transaction.description}';
+  final List<List<String>> postingsAboutDecimal = spreadPostings
+      .map(
+        (List<String> posting) => <String>[
+          posting[0],
+          posting[1] + posting[2],
+          posting[3] + posting[4],
+        ],
+      )
+      .toList();
+
+  final int maxWidthOfColumnOne = postingsAboutDecimal.fold(
+      0, (int prev, List<String> element) => max(prev, element[0].length));
+
+  final int maxWidthOfColumnTwo = postingsAboutDecimal.fold(
+      0, (int prev, List<String> element) => max(prev, element[1].length));
+
   final StringBuffer buffer = StringBuffer()
     ..write('${transaction.date} ${transaction.description}');
 
-  //
-  // second pass
-  //
-  for (final List<String> posting in postingsWithSplitAmounts) {
-    buffer.write(('\n  ' +
-            posting[0].padRight(maxWidthOfAccounts) +
-            '  ' +
-            posting[1].padLeft(maxWidthOfWholeNumberParts) +
-            posting[2] +
-            ((!currencyOnLeft) ? ' ${posting[3]}' : ''))
+  for (final List<String> posting in postingsAboutDecimal) {
+    buffer.write('''
+
+  ${posting[0].padRight(maxWidthOfColumnOne)}  ${posting[1].padLeft(maxWidthOfColumnTwo)}${posting[2]}'''
         .trimRight());
   }
 

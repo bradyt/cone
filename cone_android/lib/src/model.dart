@@ -1,4 +1,4 @@
-import 'package:cone_lib/cone_lib.dart' show Posting, Transaction;
+import 'package:cone_lib/cone_lib.dart' show padZeros, Posting, Transaction;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -53,17 +53,37 @@ class ConeModel extends ChangeNotifier {
   //
 
   bool get debugMode => _settings.debugMode;
+  String get numberLocale => _settings.numberLocale;
   String get defaultCurrency => _settings.defaultCurrency;
   bool get currencyOnLeft => _settings.currencyOnLeft;
+  Spacing get spacing => _settings.spacing;
   String get ledgerFileUri => _settings.ledgerFileUri;
   String get ledgerFileDisplayName => _settings.ledgerFileDisplayName;
   String get ledgerFileAlias => _file.alias;
-  String get formattedExample =>
-      currencyOnLeft ? '$defaultCurrency 5.00' : '5.00 $defaultCurrency';
+  String get formattedExample {
+    final String amount = padZeros(
+      locale: numberLocale,
+      amount: '5',
+      currency: defaultCurrency,
+    );
+    final String insertSpacing = (spacing == Spacing.zero) ? '' : ' ';
+    if (currencyOnLeft) {
+      return '$defaultCurrency$insertSpacing$amount';
+    } else {
+      return '$amount$insertSpacing$defaultCurrency';
+    }
+  }
 
   void toggleDebugMode() {
     _settings.toggleDebugMode();
     notifyListeners();
+  }
+
+  void setNumberLocale(String _numberLocale) {
+    if (_numberLocale != null) {
+      _settings.numberLocale = _numberLocale;
+      notifyListeners();
+    }
   }
 
   void setDefaultCurrency(String _defaultCurrency) {
@@ -75,6 +95,11 @@ class ConeModel extends ChangeNotifier {
 
   void toggleCurrencyOnLeft() {
     _settings.toggleCurrencyOnLeft();
+    notifyListeners();
+  }
+
+  void toggleSpacing() {
+    _settings.toggleSpacing();
     notifyListeners();
   }
 
@@ -211,5 +236,6 @@ class ConeModel extends ChangeNotifier {
               .toList(),
         ),
         currencyOnLeft: currencyOnLeft,
+        spacing: spacing.index == 1,
       );
 }

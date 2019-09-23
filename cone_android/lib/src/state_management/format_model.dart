@@ -5,10 +5,12 @@ class FormatModel {
     String locale,
     Transaction transaction,
     bool currencyOnLeft,
+    bool spacing,
   }) =>
       transactionToString(
         locale: locale,
         transaction: transaction,
         currencyOnLeft: currencyOnLeft,
+        spacing: spacing,
       );
 }

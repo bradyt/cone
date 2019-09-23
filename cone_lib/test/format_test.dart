@@ -10,6 +10,27 @@ void main() {
     test('Test basic printing of transaction', () {
       expect(
           transactionToString(
+            locale: 'en_US',
+            transaction: Transaction(
+              date: '2000-01-01',
+              postings: [
+                Posting(account: 'a', amount: '1000'),
+                Posting(account: 'a', amount: '1000', currency: 'hello'),
+                Posting(account: 'a', amount: '1', currency: 'EUR'),
+                Posting(account: 'abc', amount: '1', currency: 'JPY'),
+              ],
+            ),
+            spacing: false,
+            currencyOnLeft: true,
+          ),
+          '2000-01-01 null\n'
+          '  a         1000.00\n'
+          '  a    hello1000.00\n'
+          '  a         EUR1.00\n'
+          '  abc       JPY1'
+        );
+      expect(
+          transactionToString(
             transaction: Transaction(
               date: '2000-01-01',
               postings: [],
@@ -42,7 +63,7 @@ void main() {
         ),
         '''
 2000-01-01 hello world
-  a:b:c  20.00 null''',
+  a:b:c  20.00''',
       );
       expect(
         transactionToString(
