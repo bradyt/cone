@@ -69,6 +69,7 @@ class ConeLocalizationsDelegate
         'de',
         'en',
         'es',
+        'fil',
         'fr',
         'hi',
         'in',
@@ -77,7 +78,6 @@ class ConeLocalizationsDelegate
         'pt',
         'ru',
         'th',
-        'tl',
         'zh',
       ].contains(locale.languageCode);
 

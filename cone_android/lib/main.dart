@@ -68,6 +68,7 @@ class ConeApp extends StatelessWidget {
         Locale('de'),
         Locale('en', 'US'),
         Locale('es', 'MX'),
+        Locale('fil'),
         Locale('fr'),
         Locale('hi'),
         Locale('in'),
@@ -76,7 +77,6 @@ class ConeApp extends StatelessWidget {
         Locale('pt', 'BR'),
         Locale('ru', 'RU'),
         Locale('th'),
-        Locale('tl'),
         Locale('zh'),
       ],
       theme: ThemeData(

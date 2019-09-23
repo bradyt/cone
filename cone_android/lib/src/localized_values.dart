@@ -27,6 +27,15 @@ final Map<String, Map<String, String>> localizedValues =
     'settings': 'Ajustes',
     'submit': 'Enviar',
   },
+  'fil': <String, String>{
+    'addTransaction': 'Magdagdag ng transaksyon',
+    'currencyOnLeft': 'Pera sa kaliwa',
+    'defaultCurrency': 'default Pera',
+    'enterDefaultCurrency': 'Ipasok ang default ng pera',
+    'ledgerFile': 'ledger file',
+    'settings': 'Mga Setting',
+    'submit': 'Ipasa',
+  },
   'fr': <String, String>{
     'addTransaction': 'Ajouter transaction',
     'currencyOnLeft': 'Monnaie à gauche',
@@ -98,15 +107,6 @@ final Map<String, Map<String, String>> localizedValues =
     'ledgerFile': 'แฟ้มบัญชีแยกประเภท',
     'settings': 'การตั้งค่า',
     'submit': 'เสนอ',
-  },
-  'tl': <String, String>{
-    'addTransaction': 'Magdagdag ng transaksyon',
-    'currencyOnLeft': 'Pera sa kaliwa',
-    'defaultCurrency': 'default Pera',
-    'enterDefaultCurrency': 'Ipasok ang default ng pera',
-    'ledgerFile': 'ledger file',
-    'settings': 'Mga Setting',
-    'submit': 'Ipasa',
   },
   'zh': <String, String>{
     'addTransaction': '添加交易',
