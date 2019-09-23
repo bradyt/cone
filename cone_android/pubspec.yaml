@@ -15,6 +15,8 @@ environment:
   sdk: ">=2.2.2 <3.0.0"
 
 dependencies:
+  cone_lib:
+    path: ../cone_lib
   datetime_picker_formfield:
   flutter_typeahead:
   provider:

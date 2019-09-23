@@ -43,6 +43,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.14.11"
+  cone_lib:
+    dependency: "direct main"
+    description:
+      path: "../cone_lib"
+      relative: true
+    source: path
+    version: "0.0.0"
   convert:
     dependency: transitive
     description:
@@ -435,5 +442,5 @@ packages:
     source: hosted
     version: "2.1.16"
 sdks:
-  dart: ">=2.2.2 <3.0.0"
+  dart: ">=2.4.0 <3.0.0"
   flutter: ">=1.5.0 <2.0.0"
