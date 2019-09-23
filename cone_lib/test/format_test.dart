@@ -2,7 +2,7 @@
 
 import 'package:test/test.dart';
 
-import 'package:cone_lib/src/format.dart' show transactionToString;
+import 'package:cone_lib/src/format.dart' show transactionToString, padZeros;
 import 'package:cone_lib/src/types.dart' show Posting, Transaction;
 
 void main() {
@@ -120,6 +120,50 @@ void main() {
           '  C    1 EUR',
         );
       });
+    });
+  });
+  group('Test zero padding', () {
+    void testPadZeros(
+      String locale,
+      String amount,
+      String currency,
+      String result,
+    ) =>
+        expect(
+          padZeros(
+            locale: locale,
+            amount: amount,
+            currency: currency,
+          ),
+          result,
+        );
+
+    test('USD', () {
+      testPadZeros('en', '1', 'USD', '1.00');
+    });
+    test('USD', () {
+      testPadZeros('en', '1.0', 'USD', '1.00');
+    });
+    test('GBP', () {
+      testPadZeros('en_GB', '1', 'GBP', '1.00');
+    });
+    test('JPY', () {
+      testPadZeros('ja', '1', 'JPY', '1.00');
+    });
+    test('Don\'t round', () {
+      testPadZeros('en', '1.234', 'USD', '1.234');
+    });
+    test('Don\'t round JPY', () {
+      testPadZeros('en', '1.2', 'JPY', '1.2');
+    });
+    test('Doesn\'t round zero decimals of JPY', () {
+      testPadZeros('en', '1.0', 'JPY', '1.0');
+    });
+    test('Euros in locale fr', () {
+      testPadZeros('fr', '1,0', 'EUR', '1,00\xa0');
+    });
+    test('Rubles in locale ru', () {
+      testPadZeros('ru', '1,0', 'RUB', '1,00\xa0');
     });
   });
 }
