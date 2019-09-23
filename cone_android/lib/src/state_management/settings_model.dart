@@ -26,7 +26,7 @@ class SettingsModel {
       ..setBool(
           'currency_on_left',
           currencyOnLeft ??
-              numberFormatSymbols[numberLocale].CURRENCY_PATTERN.last == '0')
+              numberFormatSymbols[numberLocale].CURRENCY_PATTERN.endsWith('0'))
       ..setInt('spacing', spacing.index);
   }
 
