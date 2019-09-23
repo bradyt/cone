@@ -27,8 +27,7 @@ void main() {
           '  a         1000.00\n'
           '  a    hello1000.00\n'
           '  a         EUR1.00\n'
-          '  abc       JPY1'
-        );
+          '  abc       JPY1');
       expect(
           transactionToString(
             transaction: Transaction(
@@ -139,6 +138,16 @@ void main() {
           ]),
           '  A:B  1.00 USD\n'
           '  C    1.00 EUR',
+        );
+      });
+      test('Test printing of transaction', () {
+        expect(
+          justPostingsFormatted(abbreviatedPostings: [
+            ['A:B', '1', 'hello world'],
+            ['C', '1', 'XJ9'],
+          ]),
+          '  A:B  1.00 "hello world"\n'
+          '  C    1.00 "XJ9"',
         );
       });
     });

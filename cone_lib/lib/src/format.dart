@@ -33,15 +33,23 @@ String transactionToString({
     (Posting posting) {
       final List<String> splitAmount =
           splitOnDecimalSeparator(locale: locale, amount: posting.amount);
+      String currency;
+      if (posting.currency == null) {
+        currency = '';
+      } else if (posting.currency.contains(RegExp(r'[^A-Za-z]'))) {
+        currency = '"${posting.currency}"';
+      } else {
+        currency = posting.currency;
+      }
       return <String>[
         posting.account,
-        if (currencyOnLeft && (posting.currency != null))
-          posting.currency + (spacing ? ' ' : '')
+        if (currencyOnLeft && currency.isNotEmpty)
+          currency + (spacing ? ' ' : '')
         else
           '',
         ...splitAmount,
-        if (!currencyOnLeft && posting.currency != null)
-          (spacing ? ' ' : '') + posting.currency
+        if (!currencyOnLeft && currency.isNotEmpty)
+          (spacing ? ' ' : '') + currency
         else
           '',
       ];
