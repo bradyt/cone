@@ -1,3 +1,7 @@
+### 0.2.11 (2019-09-24)
+
+* Fix NoSuchMethodError
+
 ### 0.2.10 (2019-09-23)
 
 * Add zero padding according to new "number locale" option
