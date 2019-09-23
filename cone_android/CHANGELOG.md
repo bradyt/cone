@@ -1,3 +1,13 @@
+### 0.2.10 (2019-09-23)
+
+* Add zero padding according to new "number locale" option
+
+* Add option for spacing between amount and currency
+
+* Number of decimals is according to currency. E.g.,
+  * USD: 2
+  * JPY: 0
+
 ### 0.2.9 (2019-09-20)
 
 * Add Russian localization back
