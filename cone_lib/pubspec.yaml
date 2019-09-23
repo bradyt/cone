@@ -1,0 +1,7 @@
+name: cone_lib
+description: Library for cone app
+homepage: https://github.com/bradyt/cone
+author: Brady Trainor <mail@bradyt.net>
+
+environment:
+  sdk: '>=2.4.0 <3.0.0'
