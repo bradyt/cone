@@ -49,7 +49,6 @@ class SettingsBody extends StatelessWidget {
                       title: Text(
                         coneModel.formattedExample,
                       ),
-                      initiallyExpanded: true,
                       children: <Widget>[
                         ListTile(
                           leading: const Icon(Icons.attach_money),
