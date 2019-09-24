@@ -16,6 +16,8 @@ String getTransactionDescriptionFromLine(String line) {
         ? dateRemoved
         : dateRemoved.substring(0, commentStart);
     result = description.trim();
+  } else if (line.startsWith('payee')) {
+    result = line.replaceFirst('payee', '').trim();
   }
   return result;
 }

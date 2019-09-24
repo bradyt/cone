@@ -23,6 +23,7 @@ void main() {
           getTransactionDescriptionFromLine(
               '2019-07-14=2019-07-15 hello ; a comment'),
           'hello');
+      expect(getTransactionDescriptionFromLine('payee KFC'), 'KFC');
     });
   });
 }
