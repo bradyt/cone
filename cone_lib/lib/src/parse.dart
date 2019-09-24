@@ -1,5 +1,11 @@
 // ignore_for_file: public_member_api_docs
 
+List<String> payees(String fileContents) =>
+    (fileContents.split('\n').map(getTransactionDescriptionFromLine).toSet()
+          ..remove(null))
+        .toList()
+          ..sort();
+
 String getTransactionDescriptionFromLine(String line) {
   final RegExp re = RegExp(r'[-0-9=]{10,21}');
   String result;
@@ -13,6 +19,11 @@ String getTransactionDescriptionFromLine(String line) {
   }
   return result;
 }
+
+List<String> accounts(String fileContents) =>
+    (fileContents.split('\n').map(getAccountNameFromLine).toSet()..remove(null))
+        .toList()
+          ..sort();
 
 Set<String> getAccountsAndSubAccountsFromLines(List<String> lines) {
   final Set<String> accounts = lines.map(getAccountNameFromLine).toSet()
