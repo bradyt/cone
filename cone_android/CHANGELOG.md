@@ -1,3 +1,15 @@
+### 0.2.12 (2019-09-25)
+
+* Fix save button
+
+* Parse payee directives
+
+* Collapse settings expansion tile by default
+
+* Wrap non-alphabetic commodities in quotes
+
+* Add example cli to project
+
 ### 0.2.11 (2019-09-24)
 
 * Fix NoSuchMethodError
