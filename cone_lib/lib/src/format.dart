@@ -34,7 +34,7 @@ String transactionToString({
       final List<String> splitAmount =
           splitOnDecimalSeparator(locale: locale, amount: posting.amount);
       String currency;
-      if (posting.currency == null) {
+      if (posting.currency == null || posting.amount.isEmpty) {
         currency = '';
       } else if (posting.currency.contains(RegExp(r'[^A-Za-z]'))) {
         currency = '"${posting.currency}"';
@@ -104,15 +104,18 @@ String padZeros({String locale, String amount, String currency}) {
   final NumberFormat parser = NumberFormat.decimalPattern(locale);
   NumberFormat formatter;
 
-  final num parsed = parser.parse(amount);
-  final int integerDigits = parsed.round().toString().length;
-
   if (amount.length >= 16) {
     return amount;
   } else {
-    formatter = NumberFormat(
-        '0.${'0' * decimalDigits}${'#' * (16 - integerDigits - decimalDigits)}',
-        locale);
-    return formatter.format(parsed);
+    try {
+      final num parsed = parser.parse(amount);
+      final int integerDigits = parsed.round().toString().length;
+
+      formatter = NumberFormat(
+          '0.${'0' * decimalDigits}${'#' * (16 - integerDigits - decimalDigits)}',
+          locale);
+      return formatter.format(parsed);
+    } on FormatException catch (_) {}
+    return amount;
   }
 }

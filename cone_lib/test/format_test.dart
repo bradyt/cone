@@ -150,6 +150,16 @@ void main() {
           '  C    1.00 "XJ9"',
         );
       });
+      test('Test formatting of empty fields', () {
+        expect(
+          justPostingsFormatted(abbreviatedPostings: [
+            ['A:B', '1', 'USD'],
+            ['C', '', 'USD'],
+          ]),
+          '  A:B  1.00 USD\n'
+          '  C',
+        );
+      });
     });
   });
   group('Test zero padding', () {
