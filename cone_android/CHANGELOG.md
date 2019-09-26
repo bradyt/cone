@@ -1,3 +1,13 @@
+### 0.2.13 (2019-09-26)
+
+* Add option to reverse sort
+
+* Journal items are displayed as cards
+
+* Comment chunks have same color as comments in emacs
+
+* Use PetitParser to split file into chunks
+
 ### 0.2.12 (2019-09-25)
 
 * Fix save button
