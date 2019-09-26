@@ -3,8 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:cone_lib/cone_lib.dart';
 
 class SuggestionsModel {
-  Set<String> _accounts;
-  Set<String> _descriptions;
+  List<String> _accounts;
+  List<String> _descriptions;
 
   List<String> descriptionSuggestions(String text) {
     return fuzzyMatch(text, _descriptions);
@@ -20,23 +20,18 @@ class SuggestionsModel {
   }
 
   void _refreshAccounts(String fileContents) {
-    _accounts = getAccountsAndSubAccountsFromLines(fileContents.split('\n'));
+    _accounts = getAccountsAndSubAccounts(fileContents);
   }
 
   void _refreshDescriptions(String fileContents) {
-    _descriptions = fileContents
-        .split('\n')
-        .map(getTransactionDescriptionFromLine)
-        .toSet()
-          ..remove(null);
+    _descriptions = getPayees(fileContents);
   }
 }
-List<String> fuzzyMatch(String input, Set<String> candidates) {
+
+List<String> fuzzyMatch(String input, List<String> candidates) {
   final List<String> fuzzyText = input.split(' ');
   return candidates
       .where((String candidate) => fuzzyText.every((String subtext) =>
           candidate.toLowerCase().contains(subtext.toLowerCase())))
-      .toList()
-        ..sort();
+      .toList();
 }
-

@@ -60,10 +60,10 @@ void main() {
   });
   group('Test fuzzy match', () {
     test('Test fuzzy match', () {
-      expect(fuzzyMatch('as', <String>{'assets'}), <String>['assets']);
-      expect(fuzzyMatch('as', <String>{'Assets'}), <String>['Assets']);
-      expect(fuzzyMatch('As', <String>{'assets'}), <String>['assets']);
-      expect(fuzzyMatch('As', <String>{'Assets'}), <String>['Assets']);
+      expect(fuzzyMatch('as', <String>['assets']), <String>['assets']);
+      expect(fuzzyMatch('as', <String>['Assets']), <String>['Assets']);
+      expect(fuzzyMatch('As', <String>['assets']), <String>['assets']);
+      expect(fuzzyMatch('As', <String>['Assets']), <String>['Assets']);
     });
   });
 }

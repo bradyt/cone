@@ -1,50 +1,97 @@
 // ignore_for_file: public_member_api_docs
 
-List<String> payees(String fileContents) =>
-    (fileContents.split('\n').map(getTransactionDescriptionFromLine).toSet()
-          ..remove(null))
-        .toList()
-          ..sort();
+import 'package:petitparser/petitparser.dart';
 
-String getTransactionDescriptionFromLine(String line) {
-  final RegExp re = RegExp(r'[-0-9=]{10,21}');
-  String result;
-  if (line.startsWith(re)) {
-    final String dateRemoved = line.replaceFirst(re, '');
-    final int commentStart = dateRemoved.indexOf(';');
-    final String description = (commentStart == -1)
-        ? dateRemoved
-        : dateRemoved.substring(0, commentStart);
-    result = description.trim();
-  } else if (line.startsWith('payee')) {
-    result = line.replaceFirst('payee', '').trim();
-  }
-  return result;
+// import 'package:cone_lib/cone_lib.dart';
+
+class LedgerGrammarDefinition extends GrammarDefinition {
+  @override
+  Parser start() => journalItem()
+      .flatten()
+      .separatedBy<String>(
+        newline().star(),
+        includeSeparators: false,
+        optionalSeparatorAtEnd: true,
+      )
+      .end();
+
+  Parser journalItem() => directive() | transaction() | inert();
+
+  Parser directive() =>
+      letter() & restOfLine() & (newline() & indentedLine()).star();
+
+  Parser transaction() =>
+      digit() & restOfLine() & (newline() & indentedLine()).star();
+
+  Parser indentedLine() => anyOf(' \t').plus() & restOfLine();
+
+  Parser inert() => inertLine().separatedBy<dynamic>(newline().plus());
+
+  Parser inertLine() => pattern('A-Za-z0-9').neg() & restOfLine();
+
+  Parser newline() => char('\n');
+
+  Parser restOfLine() => newline().neg().star();
 }
 
-List<String> accounts(String fileContents) =>
-    (fileContents.split('\n').map(getAccountNameFromLine).toSet()..remove(null))
-        .toList()
-          ..sort();
+class LedgerParserDefinition extends LedgerGrammarDefinition {}
 
-Set<String> getAccountsAndSubAccountsFromLines(List<String> lines) {
-  final Set<String> accounts = lines.map(getAccountNameFromLine).toSet()
-    ..remove(null);
-  return accounts.union(getSubAccounts(accounts));
-}
+Parser parser = LedgerParserDefinition().build();
 
-String getAccountNameFromLine(String line) {
-  String result;
-  if (line.isNotEmpty) {
-    if (line.startsWith(RegExp('[ \t]+[^ \t;]'))) {
-      result = line.trim().split('  ').first;
-    } else if (line.startsWith('account')) {
-      result = line.replaceFirst('account', '').trim();
-    } else if (line.startsWith(RegExp(r'[-0-9]{10} open [A-Za-z]+:'))) {
-      result = line.trim().split(' ').last;
+List<String> getPayees(String fileContents) {
+  final List<String> payees = <String>[];
+
+  for (final String chunk in parser.parse(fileContents).value) {
+    if (chunk.startsWith('payee')) {
+      payees.add(chunk.replaceFirst(RegExp('payee '), ''));
+    } else if (chunk.startsWith(RegExp(r'[0-9]'))) {
+      final int beginning = chunk.indexOf(' ');
+      final int end = chunk.indexOf(RegExp(r'[;\n]'));
+      payees.add(
+        (end == -1)
+            ? chunk.substring(beginning).trim()
+            : chunk.substring(beginning, end).trim(),
+      );
     }
   }
-  return result;
+
+  return payees..sort();
+}
+
+List<String> getTransactions(String fileContents) {
+  final List<String> transactions = <String>[];
+
+  for (final String chunk in parser.parse(fileContents).value) {
+    if (chunk.startsWith(RegExp(r'[0-9]'))) {
+      transactions.add(chunk);
+    }
+  }
+  return transactions;
+}
+
+List<String> getAccounts(String fileContents) {
+  final Set<String> accounts = <String>{};
+
+  for (final String chunk in parser.parse(fileContents).value) {
+    if (chunk.startsWith('account')) {
+      accounts.add(chunk.replaceFirst(RegExp('account '), ''));
+    } else if (chunk.startsWith(RegExp(r'[0-9]'))) {
+      for (final String line in chunk.split('\n')) {
+        if (line.startsWith(RegExp(r'[ \t]+[^ \t;]'))) {
+          accounts.add(line.trim().split('  ')[0]);
+        } else if (line.startsWith(RegExp(r'[-0-9=]+ open [A-Za-z]+:'))) {
+          accounts.add(line.replaceFirst(RegExp(r'[-0-9=]+ open '), ''));
+        }
+      }
+    }
+  }
+
+  return accounts.toList()..sort();
+}
+
+List<String> getAccountsAndSubAccounts(String fileContents) {
+  final Set<String> accounts = getAccounts(fileContents).toSet();
+  return accounts.union(getSubAccounts(accounts)).toList();
 }
 
 Set<String> getSubAccounts(Set<String> accounts) {

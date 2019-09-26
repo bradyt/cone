@@ -63,7 +63,7 @@ class AccountsCommand extends Command {
   final List<String> aliases = ['a'];
   void run() {
     String fileContents = getFileContentsForCommands(globalResults);
-    for (String account in accounts(fileContents)) {
+    for (String account in getAccounts(fileContents)) {
       print(account);
     }
   }
@@ -75,7 +75,7 @@ class PayeesCommand extends Command {
   final List<String> aliases = ['p'];
   void run() {
     String fileContents = getFileContentsForCommands(globalResults);
-    for (String payee in payees(fileContents)) {
+    for (String payee in getPayees(fileContents)) {
       print(payee);
     }
   }
