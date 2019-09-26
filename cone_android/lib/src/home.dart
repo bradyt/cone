@@ -21,21 +21,14 @@ class Home extends StatelessWidget {
 class Transactions extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final String fileContents = ConeModel.of(context).fileContents;
+    final ConeModel coneModel = ConeModel.of(context);
 
-    String body(String fileContents) {
-      if (fileContents == null) {
-        return 'Please select a .txt file';
-      } else if (ConeModel.of(context).debugMode) {
-        return fileContents.replaceAll(' ', '·').replaceAll('\t', '» ');
-      } else {
-        return fileContents;
-      }
-    }
+    final List<String> chunks = ((coneModel.reverseSort)
+            ? coneModel.chunks?.reversed?.toList()
+            : coneModel.chunks) ??
+        <String>[];
 
-    final List<String> lines = body(fileContents).split('\n');
-
-    final bool loading = ConeModel.of(context).isRefreshingFileContents;
+    final bool loading = coneModel.isRefreshingFileContents;
 
     return Stack(
       children: <Widget>[
@@ -43,19 +36,35 @@ class Transactions extends StatelessWidget {
         Opacity(
           opacity: loading ? 0.5 : 1.0,
           child: RefreshIndicator(
-            onRefresh: () => ConeModel.of(context).refreshFileContents(),
+            onRefresh: coneModel.refreshFileContents,
             child: ListView.builder(
               physics: const AlwaysScrollableScrollPhysics(),
-              itemCount: lines.length,
+              itemCount: chunks.length,
               itemBuilder: (BuildContext context, int index) => Padding(
-                padding: EdgeInsets.fromLTRB(8, (index == 0) ? 8 : 0, 8,
-                    (index == lines.length - 1) ? 8 : 0),
-                child: Text.rich(
-                  TextSpan(
-                    text: lines[index],
-                  ),
-                  style: const TextStyle(
-                    fontFamily: 'IBMPlexMono',
+                padding: EdgeInsets.fromLTRB(4, (index == 0) ? 8 : 0, 4,
+                    (index == chunks.length - 1) ? 8 : 0),
+                child: Card(
+                  elevation: 3,
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: Text.rich(
+                        TextSpan(
+                          text: chunks[index].replaceAll('\n', '⏎\n') + '⏎',
+                        ),
+                        style: TextStyle(
+                          fontFamily: 'IBMPlexMono',
+                          color: (RegExp(r'[A-Za-z[0-9]')
+                                  .hasMatch(chunks[index][0]))
+                              ? null
+                              : ((MediaQuery.of(context).platformBrightness ==
+                                      Brightness.dark)
+                                  ? const Color(0xffff7f24)
+                                  : const Color(0xffb22222)),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

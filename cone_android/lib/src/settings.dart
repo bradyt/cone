@@ -103,6 +103,14 @@ class SettingsBody extends StatelessWidget {
                       onTap: coneModel.pickLedgerFileUri,
                       trailing: LedgerFileInfoButton(),
                     ),
+                    ListTile(
+                      leading: const Icon(Icons.sort),
+                      title: Text(ConeLocalizations.of(context).reverseSort),
+                      trailing: Switch(
+                        value: coneModel.reverseSort,
+                        onChanged: (bool _) => coneModel.toggleSort(),
+                      ),
+                    ),
                   ],
                 ),
               ),

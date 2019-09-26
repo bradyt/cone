@@ -55,6 +55,10 @@ class ConeLocalizations {
     return _localizedValues[locale.languageCode]['numberLocale'];
   }
 
+  String get reverseSort {
+    return _localizedValues[locale.languageCode]['reverseSort'];
+  }
+
   String get settings {
     return _localizedValues[locale.languageCode]['settings'];
   }

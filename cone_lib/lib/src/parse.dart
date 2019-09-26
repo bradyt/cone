@@ -69,6 +69,8 @@ List<String> getTransactions(String fileContents) {
   return transactions;
 }
 
+List<String> getChunks(String fileContents) => parser.parse(fileContents).value;
+
 List<String> getAccounts(String fileContents) {
   final Set<String> accounts = <String>{};
 

@@ -1,4 +1,5 @@
-import 'package:cone_lib/cone_lib.dart' show padZeros, Posting, Transaction;
+import 'package:cone_lib/cone_lib.dart'
+    show getChunks, padZeros, Posting, Transaction;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show PlatformException;
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -49,6 +50,13 @@ class ConeModel extends ChangeNotifier {
   final FormatModel _format;
 
   //
+  // Transactions (draft, todo)
+  //
+
+  List<String> _chunks;
+  List<String> get chunks => _chunks;
+
+  //
   // Settings
   //
 
@@ -73,6 +81,7 @@ class ConeModel extends ChangeNotifier {
       return '$amount$insertSpacing$defaultCurrency';
     }
   }
+  bool get reverseSort => _settings.reverseSort;
 
   void toggleDebugMode() {
     _settings.toggleDebugMode();
@@ -103,6 +112,11 @@ class ConeModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void toggleSort() {
+    _settings.toggleSort();
+    notifyListeners();
+  }
+
   void setLedgerFile(String _ledgerFileUri, String _ledgerFileDisplayName) {
     _settings.setLedgerFile(_ledgerFileUri, _ledgerFileDisplayName);
     notifyListeners();
@@ -126,6 +140,7 @@ class ConeModel extends ChangeNotifier {
   Future<void> refreshFileContents() async {
     await _file.refreshContents(notifyListeners: notifyListeners);
     _suggestions.updateSuggestions(fileContents: _file?.contents ?? '');
+    _chunks = getChunks(_file?.contents ?? '');
   }
 
   //

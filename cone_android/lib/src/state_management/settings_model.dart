@@ -28,7 +28,8 @@ class SettingsModel {
           currencyOnLeft ??
               numberFormatSymbols[numberLocale].CURRENCY_PATTERN.endsWith('0')
                   as bool)
-      ..setInt('spacing', spacing.index);
+      ..setInt('spacing', spacing.index)
+      ..setBool('reverse_sort', reverseSort ?? false);
   }
 
   SharedPreferences _prefs;
@@ -49,6 +50,8 @@ class SettingsModel {
     return Spacing.values[_prefs.getInt('spacing')];
   }
 
+  bool get reverseSort => _prefs.getBool('reverse_sort');
+
   String get ledgerFileUri => _prefs.getString('ledger_file_uri');
   String get ledgerFileDisplayName =>
       _prefs.getString('ledger_file_display_name');
@@ -67,6 +70,9 @@ class SettingsModel {
 
   void toggleSpacing() =>
       _prefs.setInt('spacing', (spacing == Spacing.zero) ? 1 : 0);
+
+  void toggleSort() =>
+      _prefs.setBool('reverse_sort', !_prefs.getBool('reverse_sort'));
 
   void setLedgerFile(String ledgerFileUri, String ledgerFileDisplayName) {
     _prefs
