@@ -52,7 +52,7 @@ more stuff
         'b',
       ]);
       expect(
-        parser.parse(testFile).value,
+        getChunks(testFile),
         [
           'account a:b:c',
           'payee KFC',

@@ -23,7 +23,7 @@ void main() {
   group('Test basic printing of transaction', () {
     test('Test basic printing of transaction', () {
       expect(
-        parser.parse(sampleJournal).value,
+        getChunks(sampleJournal),
         [
           'account a:b',
           'commodity 1,000.00 USD',
