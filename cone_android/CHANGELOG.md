@@ -1,3 +1,7 @@
+### 0.2.15 (2019-09-27)
+
+* Fix bug calling `where` on `null`
+
 ### 0.2.14 (2019-09-27)
 
 * View of file contents is updated
