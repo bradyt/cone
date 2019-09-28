@@ -28,8 +28,8 @@ class Transactions extends StatelessWidget {
     final List<String> chunks = ((coneModel.reverseSort)
                 ? coneModel.chunks?.reversed?.toList()
                 : coneModel.chunks)
-            .where((String chunk) => chunk.startsWith(RegExp(r'[0-9]')))
-            .toList() ??
+            ?.where((String chunk) => chunk.startsWith(RegExp(r'[0-9]')))
+            ?.toList() ??
         <String>[];
 
     final bool loading = coneModel.isRefreshingFileContents;
