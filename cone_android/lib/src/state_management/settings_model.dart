@@ -10,6 +10,12 @@ enum Spacing {
   one,
 }
 
+enum ConeBrightness {
+  auto,
+  light,
+  dark,
+}
+
 class SettingsModel {
   SettingsModel({@required SharedPreferences sharedPreferences})
       : assert(sharedPreferences != null,
@@ -29,7 +35,8 @@ class SettingsModel {
               numberFormatSymbols[numberLocale].CURRENCY_PATTERN.endsWith('0')
                   as bool)
       ..setInt('spacing', spacing.index)
-      ..setBool('reverse_sort', reverseSort ?? false);
+      ..setBool('reverse_sort', reverseSort ?? false)
+      ..setInt('brightness', brightness.index ?? 0);
   }
 
   SharedPreferences _prefs;
@@ -51,6 +58,8 @@ class SettingsModel {
   }
 
   bool get reverseSort => _prefs.getBool('reverse_sort');
+  ConeBrightness get brightness =>
+      ConeBrightness.values[_prefs.getInt('brightness') ?? 0];
 
   String get ledgerFileUri => _prefs.getString('ledger_file_uri');
   String get ledgerFileDisplayName =>
@@ -73,6 +82,9 @@ class SettingsModel {
 
   void toggleSort() =>
       _prefs.setBool('reverse_sort', !_prefs.getBool('reverse_sort'));
+
+  void setBrightness(ConeBrightness value) =>
+      _prefs.setInt('brightness', value.index);
 
   void setLedgerFile(String ledgerFileUri, String ledgerFileDisplayName) {
     _prefs

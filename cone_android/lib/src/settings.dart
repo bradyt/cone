@@ -6,6 +6,7 @@ import 'package:provider/provider.dart' show Consumer;
 
 import 'package:cone/src/localizations.dart';
 import 'package:cone/src/model.dart';
+import 'package:cone/src/state_management/settings_model.dart' show ConeBrightness;
 import 'package:cone/src/utils.dart';
 
 class Settings extends StatelessWidget {
@@ -76,23 +77,19 @@ class SettingsBody extends StatelessWidget {
                             }
                           },
                         ),
-                        ListTile(
-                          leading: const Icon(Icons.compare_arrows),
+                        SwitchListTile(
+                          secondary: const Icon(Icons.compare_arrows),
                           title: Text(
                               ConeLocalizations.of(context).currencyOnLeft),
-                          trailing: Switch(
-                            value: coneModel.currencyOnLeft,
-                            onChanged: (bool _) =>
-                                coneModel.toggleCurrencyOnLeft(),
-                          ),
+                          value: coneModel.currencyOnLeft,
+                          onChanged: (bool _) =>
+                              coneModel.toggleCurrencyOnLeft(),
                         ),
-                        ListTile(
-                          leading: const Icon(Icons.space_bar),
+                        SwitchListTile(
+                          secondary: const Icon(Icons.space_bar),
                           title: Text(ConeLocalizations.of(context).spacing),
-                          trailing: Switch(
-                            value: coneModel.spacing.index == 1,
-                            onChanged: (bool _) => coneModel.toggleSpacing(),
-                          ),
+                          value: coneModel.spacing.index == 1,
+                          onChanged: (bool _) => coneModel.toggleSpacing(),
                         ),
                       ],
                     ),
@@ -103,13 +100,47 @@ class SettingsBody extends StatelessWidget {
                       onTap: coneModel.pickLedgerFileUri,
                       trailing: LedgerFileInfoButton(),
                     ),
-                    ListTile(
-                      leading: const Icon(Icons.sort),
+                    SwitchListTile(
+                      secondary: const Icon(Icons.sort),
                       title: Text(ConeLocalizations.of(context).reverseSort),
-                      trailing: Switch(
-                        value: coneModel.reverseSort,
-                        onChanged: (bool _) => coneModel.toggleSort(),
-                      ),
+                      value: coneModel.reverseSort,
+                      onChanged: (bool _) => coneModel.toggleSort(),
+                    ),
+                    ExpansionTile(
+                      leading: const Icon(Icons.brightness_medium),
+                      title: const Text('Brightness'),
+                      children: [
+                        ListTile(
+                          leading: const Icon(Icons.brightness_auto),
+                          title: const Text('Auto'),
+                          trailing: Radio<ConeBrightness>(
+                            value: ConeBrightness.auto,
+                            groupValue: coneModel.brightness,
+                            onChanged: (ConeBrightness value) =>
+                                coneModel.setBrightness(value),
+                          ),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.brightness_high),
+                          title: const Text('Light'),
+                          trailing: Radio<ConeBrightness>(
+                            value: ConeBrightness.light,
+                            groupValue: coneModel.brightness,
+                            onChanged: (ConeBrightness value) =>
+                                coneModel.setBrightness(value),
+                          ),
+                        ),
+                        ListTile(
+                          leading: const Icon(Icons.brightness_low),
+                          title: const Text('Dark'),
+                          trailing: Radio<ConeBrightness>(
+                            value: ConeBrightness.dark,
+                            groupValue: coneModel.brightness,
+                            onChanged: (ConeBrightness value) =>
+                                coneModel.setBrightness(value),
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

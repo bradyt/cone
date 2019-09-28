@@ -8,6 +8,8 @@ import 'package:cone/src/home.dart';
 import 'package:cone/src/localizations.dart';
 import 'package:cone/src/model.dart';
 import 'package:cone/src/settings.dart';
+import 'package:cone/src/state_management/settings_model.dart'
+    show ConeBrightness;
 
 void main() {
   runApp(
@@ -57,6 +59,7 @@ class ConeProvider extends StatelessWidget {
 class ConeApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final ConeBrightness brightness = ConeModel.of(context).brightness;
     return MaterialApp(
       title: 'cone',
       localizationsDelegates: const <LocalizationsDelegate<dynamic>>[
@@ -79,14 +82,21 @@ class ConeApp extends StatelessWidget {
         Locale('th'),
         Locale('zh'),
       ],
-      theme: ThemeData(
-        primarySwatch: Colors.green,
-        accentColor: Colors.amberAccent,
-      ),
-      darkTheme: ThemeData(
-        brightness: Brightness.dark,
-        accentColor: Colors.greenAccent,
-      ),
+      theme: (brightness == ConeBrightness.dark)
+          ? ThemeData(
+              brightness: Brightness.dark,
+              accentColor: Colors.greenAccent,
+            )
+          : ThemeData(
+              primarySwatch: Colors.green,
+              accentColor: Colors.amberAccent,
+            ),
+      darkTheme: (brightness == ConeBrightness.auto)
+          ? ThemeData(
+              brightness: Brightness.dark,
+              accentColor: Colors.greenAccent,
+            )
+          : null,
       routes: <String, Widget Function(BuildContext)>{
         '/': (BuildContext context) => Home(),
         '/add-transaction': (BuildContext context) => AddTransaction(),

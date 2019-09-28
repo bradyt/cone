@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:cone/src/model.dart';
+import 'package:cone/src/state_management/settings_model.dart' show ConeBrightness;
 
 class Home extends StatelessWidget {
   @override
@@ -58,8 +59,7 @@ class Transactions extends StatelessWidget {
                           color: (RegExp(r'[A-Za-z[0-9]')
                                   .hasMatch(chunks[index][0]))
                               ? null
-                              : ((MediaQuery.of(context).platformBrightness ==
-                                      Brightness.dark)
+                              : ((coneModel.brightness == ConeBrightness.dark)
                                   ? const Color(0xffff7f24)
                                   : const Color(0xffb22222)),
                         ),

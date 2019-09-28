@@ -81,7 +81,9 @@ class ConeModel extends ChangeNotifier {
       return '$amount$insertSpacing$defaultCurrency';
     }
   }
+
   bool get reverseSort => _settings.reverseSort;
+  ConeBrightness get brightness => _settings.brightness;
 
   void toggleDebugMode() {
     _settings.toggleDebugMode();
@@ -119,6 +121,11 @@ class ConeModel extends ChangeNotifier {
 
   void setLedgerFile(String _ledgerFileUri, String _ledgerFileDisplayName) {
     _settings.setLedgerFile(_ledgerFileUri, _ledgerFileDisplayName);
+    notifyListeners();
+  }
+
+  void setBrightness(ConeBrightness value) {
+    _settings.setBrightness(value);
     notifyListeners();
   }
 
