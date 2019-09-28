@@ -1,3 +1,7 @@
+### 0.2.16 (2019-09-27)
+
+* Fixes bug, where currency symbols were wrapped in double quotes
+
 ### 0.2.15 (2019-09-27)
 
 * Fix bug calling `where` on `null`
