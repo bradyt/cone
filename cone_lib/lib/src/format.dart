@@ -112,7 +112,8 @@ String padZeros({String locale, String amount, String currency}) {
       final int integerDigits = parsed.round().toString().length;
 
       formatter = NumberFormat(
-          '0.${'0' * decimalDigits}${'#' * (16 - integerDigits - decimalDigits)}',
+          '0.${'0' * decimalDigits}'
+          '${'#' * (16 - integerDigits - decimalDigits)}',
           locale);
       return formatter.format(parsed);
     } on FormatException catch (_) {}

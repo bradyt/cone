@@ -2,6 +2,8 @@ analyzer:
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false
+  exclude:
+    - lib/src/version.dart
 
 linter:
   rules:

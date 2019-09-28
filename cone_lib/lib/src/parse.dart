@@ -2,13 +2,12 @@
 
 import 'package:petitparser/petitparser.dart';
 
-// import 'package:cone_lib/cone_lib.dart';
-
 class LedgerGrammarDefinition extends GrammarDefinition {
   @override
   Parser start() => journalItem()
       .flatten()
-      .separatedBy<String>(
+      .token()
+      .separatedBy<Token<String>>(
         newline().star(),
         includeSeparators: false,
         optionalSeparatorAtEnd: true,
@@ -36,12 +35,23 @@ class LedgerGrammarDefinition extends GrammarDefinition {
 
 class LedgerParserDefinition extends LedgerGrammarDefinition {}
 
-Parser parser = LedgerParserDefinition().build();
+class LedgerParser extends GrammarParser {
+  LedgerParser() : super(LedgerParserDefinition());
+}
+
+Parser parser = LedgerParser();
+
+List<Token<String>> getTokens(String fileContents) =>
+    // ignore: avoid_as
+    parser.parse(fileContents).value as List<Token<String>>;
+
+List<String> getChunks(String fileContents) =>
+    getTokens(fileContents).map((Token<String> token) => token.input).toList();
 
 List<String> getPayees(String fileContents) {
   final List<String> payees = <String>[];
 
-  for (final String chunk in parser.parse(fileContents).value) {
+  for (final String chunk in getChunks(fileContents)) {
     if (chunk.startsWith('payee')) {
       payees.add(chunk.replaceFirst(RegExp('payee '), ''));
     } else if (chunk.startsWith(RegExp(r'[0-9]'))) {
@@ -61,7 +71,7 @@ List<String> getPayees(String fileContents) {
 List<String> getTransactions(String fileContents) {
   final List<String> transactions = <String>[];
 
-  for (final String chunk in parser.parse(fileContents).value) {
+  for (final String chunk in getChunks(fileContents)) {
     if (chunk.startsWith(RegExp(r'[0-9]'))) {
       transactions.add(chunk);
     }
@@ -69,12 +79,10 @@ List<String> getTransactions(String fileContents) {
   return transactions;
 }
 
-List<String> getChunks(String fileContents) => parser.parse(fileContents).value;
-
 List<String> getAccounts(String fileContents) {
   final Set<String> accounts = <String>{};
 
-  for (final String chunk in parser.parse(fileContents).value) {
+  for (final String chunk in getChunks(fileContents)) {
     if (chunk.startsWith('account')) {
       accounts.add(chunk.replaceFirst(RegExp('account '), ''));
     } else if (chunk.startsWith(RegExp(r'[0-9]'))) {
