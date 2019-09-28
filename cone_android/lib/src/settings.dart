@@ -109,7 +109,7 @@ class SettingsBody extends StatelessWidget {
                     ExpansionTile(
                       leading: const Icon(Icons.brightness_medium),
                       title: const Text('Brightness'),
-                      children: [
+                      children: <Widget>[
                         ListTile(
                           leading: const Icon(Icons.brightness_auto),
                           title: const Text('Auto'),
