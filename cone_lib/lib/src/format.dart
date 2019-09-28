@@ -36,7 +36,7 @@ String transactionToString({
       String currency;
       if (posting.currency == null || posting.amount.isEmpty) {
         currency = '';
-      } else if (posting.currency.contains(RegExp(r'[^A-Za-z]'))) {
+      } else if (posting.currency.contains(RegExp(r'[ \t0-9]'))) {
         currency = '"${posting.currency}"';
       } else {
         currency = posting.currency;

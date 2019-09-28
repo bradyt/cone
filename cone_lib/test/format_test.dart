@@ -160,6 +160,26 @@ void main() {
           '  C',
         );
       });
+      test('Test formatting of non-alphabetic commodities', () {
+        expect(
+          justPostingsFormatted(abbreviatedPostings: [
+            ['A:B', '1', '\$'],
+            ['C', '', '\$'],
+          ]),
+          '  A:B  1.00 \$\n'
+          '  C',
+        );
+      });
+      test('Test formatting of non-ASCII commodities', () {
+        expect(
+          justPostingsFormatted(abbreviatedPostings: [
+            ['A:B', '1', '€'],
+            ['C', '', '€'],
+          ]),
+          '  A:B  1.00 €\n'
+          '  C',
+        );
+      });
     });
   });
   group('Test zero padding', () {
