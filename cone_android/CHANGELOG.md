@@ -1,3 +1,13 @@
+### 0.2.14 (2019-09-27)
+
+* View of file contents is updated
+  * Colors are taken from Emacs and ledger-mode.el
+  * Comments and directives are dropped from view
+
+* Dark theme option added to settings
+
+* Parser returns tokens, which provide location in buffer
+
 ### 0.2.13 (2019-09-26)
 
 * Add option to reverse sort
