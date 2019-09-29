@@ -1,3 +1,8 @@
+### 0.2.17 (2019-09-29)
+
+* Fix bug. Number locale is now used to zero pad amounts in hint text
+  and new transactions written to file.
+
 ### 0.2.16 (2019-09-27)
 
 * Fixes bug, where currency symbols were wrapped in double quotes
