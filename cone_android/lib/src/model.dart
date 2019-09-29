@@ -218,7 +218,10 @@ class ConeModel extends ChangeNotifier {
 
   bool get transactionIsNotValid => _transaction.transactionIsNotValid;
 
-  num amountHint(int i) => _transaction.amountHint(i);
+  String formattedAmountHint(int i) => _transaction.formattedAmountHint(
+        index: i,
+        locale: numberLocale,
+      );
 
   DateTime get initialDate {
     DateTime result;

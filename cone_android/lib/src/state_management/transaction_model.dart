@@ -1,3 +1,4 @@
+import 'package:cone_lib/cone_lib.dart' show padZeros;
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -119,6 +120,16 @@ class TransactionModel {
   //
   // Provide amount hint
   //
+
+  String formattedAmountHint({
+    @required String locale,
+    @required int index,
+  }) =>
+      padZeros(
+        locale: locale,
+        amount: amountHint(index).toString(),
+        currency: postingModels[index].currencyController.text,
+      );
 
   num amountHint(int i) => (i == firstRowWithEmptyAmount &&
           allCurrenciesMatch &&

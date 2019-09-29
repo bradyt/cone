@@ -267,9 +267,7 @@ class AmountField extends StatelessWidget {
       textAlign: TextAlign.center,
       controller: pm.amountController,
       decoration: InputDecoration(
-        hintText: ConeLocalizations.of(context)
-            .numberFormat
-            .format(ConeModel.of(context).amountHint(index)),
+        hintText: ConeModel.of(context).formattedAmountHint(index),
       ),
       keyboardType: TextInputType.number,
       focusNode: pm.amountFocus,
