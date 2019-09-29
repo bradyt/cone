@@ -332,9 +332,7 @@ class SaveButton extends StatelessWidget {
 
 Future<void> submitTransaction(BuildContext context) async {
   final ConeModel coneModel = ConeModel.of(context);
-  final String transaction = coneModel.formattedTransaction(
-    ConeLocalizations.of(context).locale.toString(),
-  );
+  final String transaction = coneModel.formattedTransaction();
   try {
     await coneModel.appendTransaction(transaction);
     if (coneModel.debugMode) {

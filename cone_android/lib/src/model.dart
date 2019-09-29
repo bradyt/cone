@@ -243,8 +243,8 @@ class ConeModel extends ChangeNotifier {
   // Format
   //
 
-  String formattedTransaction(String locale) => _format.formattedTransaction(
-        locale: locale,
+  String formattedTransaction() => _format.formattedTransaction(
+        locale: _settings.numberLocale,
         transaction: Transaction(
           date: dateController.text,
           description: descriptionController.text,
