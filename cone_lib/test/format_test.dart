@@ -180,6 +180,18 @@ void main() {
           '  C',
         );
       });
+      test('Test formatting of punctuation', () {
+        expect(
+          justPostingsFormatted(abbreviatedPostings: [
+            ['A:B', '1', 'no.forty-two'],
+            ['C', '2', '"no.forty-two"'],
+            ['D', '3', 'no."forty-two"'],
+          ]),
+          '  A:B  1.00 "no.forty-two"\n'
+          '  C    2.00 "no.forty-two"\n'
+          '  D    3.00 "no."forty-two""',
+        );
+      });
     });
   });
   group('Test zero padding', () {
