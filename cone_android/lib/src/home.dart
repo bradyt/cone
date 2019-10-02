@@ -253,6 +253,7 @@ class SettingsButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return IconButton(
+      key: const Key('Settings'),
       icon: const Icon(Icons.settings),
       onPressed: () {
         ConeModel.of(context).closeSuggestionBoxControllers();

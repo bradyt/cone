@@ -217,9 +217,15 @@ class PostingWidget extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class AccountField extends StatelessWidget {
-  const AccountField(this.index);
+  AccountField(this.index) {
+    key = Key('Account $index');
+  }
 
+  @override
+  // ignore: overridden_fields
+  Key key;
   final int index;
 
   @override
@@ -252,9 +258,15 @@ class AccountField extends StatelessWidget {
   }
 }
 
+// ignore: must_be_immutable
 class AmountField extends StatelessWidget {
-  const AmountField(this.index);
+  AmountField(this.index) {
+    key = Key('Amount $index');
+  }
 
+  @override
+  // ignore: overridden_fields
+  Key key;
   final int index;
 
   @override

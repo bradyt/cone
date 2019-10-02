@@ -2,11 +2,12 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
-import 'package:provider/provider.dart' show Consumer;
+import 'package:provider/provider.dart' show Consumer, Provider;
 
 import 'package:cone/src/localizations.dart';
 import 'package:cone/src/model.dart';
-import 'package:cone/src/state_management/settings_model.dart' show ConeBrightness;
+import 'package:cone/src/state_management/settings_model.dart'
+    show ConeBrightness;
 import 'package:cone/src/utils.dart';
 
 class Settings extends StatelessWidget {
@@ -36,7 +37,7 @@ class SettingsBody extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 child: Column(
                   children: <Widget>[
-                    if (!kReleaseMode)
+                    if (!kReleaseMode && !Provider.of<bool>(context))
                       ListTile(
                         leading: const Icon(Icons.developer_mode),
                         title: const Text('Debug mode'),
@@ -44,6 +45,7 @@ class SettingsBody extends StatelessWidget {
                         onTap: coneModel.toggleDebugMode,
                       ),
                     ExpansionTile(
+                      key: const Key('Formatting'),
                       leading: const Icon(
                         Icons.text_format,
                       ),
@@ -63,6 +65,7 @@ class SettingsBody extends StatelessWidget {
                           },
                         ),
                         ListTile(
+                          key: const Key('Locale'),
                           leading: const Icon(Icons.language),
                           title:
                               Text(ConeLocalizations.of(context).numberLocale),
@@ -78,6 +81,7 @@ class SettingsBody extends StatelessWidget {
                           },
                         ),
                         SwitchListTile(
+                          key: const Key('Currency on left'),
                           secondary: const Icon(Icons.compare_arrows),
                           title: Text(
                               ConeLocalizations.of(context).currencyOnLeft),
@@ -86,6 +90,7 @@ class SettingsBody extends StatelessWidget {
                               coneModel.toggleCurrencyOnLeft(),
                         ),
                         SwitchListTile(
+                          key: const Key('Spacing'),
                           secondary: const Icon(Icons.space_bar),
                           title: Text(ConeLocalizations.of(context).spacing),
                           value: coneModel.spacing.index == 1,
@@ -94,6 +99,7 @@ class SettingsBody extends StatelessWidget {
                       ],
                     ),
                     ListTile(
+                      key: const Key('Pick ledger file'),
                       leading: const Icon(Icons.link),
                       title: Text(ConeLocalizations.of(context).ledgerFile),
                       subtitle: Text(coneModel.ledgerFileAlias),
@@ -101,6 +107,7 @@ class SettingsBody extends StatelessWidget {
                       trailing: LedgerFileInfoButton(),
                     ),
                     SwitchListTile(
+                      key: const Key('Toggle reverse sort'),
                       secondary: const Icon(Icons.sort),
                       title: Text(ConeLocalizations.of(context).reverseSort),
                       value: coneModel.reverseSort,

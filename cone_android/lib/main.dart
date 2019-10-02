@@ -11,9 +11,12 @@ import 'package:cone/src/settings.dart';
 import 'package:cone/src/state_management/settings_model.dart'
     show ConeBrightness;
 
-void main() {
+void main({bool snapshots = false}) {
   runApp(
-    ConeSharedPreferences(),
+    Provider<bool>.value(
+      value: snapshots,
+      child: ConeSharedPreferences(),
+    ),
   );
 }
 
