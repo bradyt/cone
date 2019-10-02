@@ -1,5 +1,6 @@
 // ignore_for_file: always_specify_types
 
+import 'package:petitparser/petitparser.dart';
 import 'package:test/test.dart';
 
 import 'package:cone_lib/src/parse.dart';
@@ -42,6 +43,7 @@ void main() {
 
       expect(getAccounts(sampleJournal), ['a', 'a:b', 'b']);
       expect(getPayees(sampleJournal), ['bank fees', 'email']);
+      expect(getTokens(''), <Token<String>>[]);
     });
   });
 }

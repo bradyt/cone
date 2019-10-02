@@ -4,15 +4,17 @@ import 'package:petitparser/petitparser.dart';
 
 class LedgerGrammarDefinition extends GrammarDefinition {
   @override
-  Parser start() => journalItem()
-      .flatten()
-      .token()
-      .separatedBy<Token<String>>(
-        newline().star(),
-        includeSeparators: false,
-        optionalSeparatorAtEnd: true,
-      )
-      .end();
+  Parser start() =>
+      journalItem()
+          .flatten()
+          .token()
+          .separatedBy<Token<String>>(
+            newline().star(),
+            includeSeparators: false,
+            optionalSeparatorAtEnd: true,
+          )
+          .end() |
+      epsilon<dynamic>().map((dynamic _) => <Token<String>>[]).end();
 
   Parser journalItem() => directive() | transaction() | inert();
 
