@@ -53,7 +53,7 @@ void main() {
               ])),
           '-1,00');
     });
-    test('Test amount hint', () {
+    test('Test de locale with comma', () {
       expect(
           formattedAmountHint(
               locale: 'de',
@@ -62,9 +62,9 @@ void main() {
                 ['A', '17,50', 'EUR'],
                 ['B', '', 'EUR'],
               ])),
-          '0,00');
+          '-17,50');
     });
-    test('Test amount hint', () {
+    test('Test de locale with period', () {
       expect(
           formattedAmountHint(
               locale: 'de',
@@ -73,7 +73,40 @@ void main() {
                 ['A', '17.50', 'EUR'],
                 ['B', '', 'EUR'],
               ])),
-          '-175,00');
+          '-1750,00');
+    });
+    test('Test en locale with comma', () {
+      expect(
+          formattedAmountHint(
+              locale: 'en',
+              index: 1,
+              postings: expandPostings([
+                ['A', '17,50', 'USD'],
+                ['B', '', 'USD'],
+              ])),
+          '-1750.00');
+    });
+    test('Test with non-matching currency', () {
+      expect(
+          formattedAmountHint(
+              locale: 'de',
+              index: 1,
+              postings: expandPostings([
+                ['A', '17,50', 'USD'],
+                ['B', '', 'USD'],
+              ])),
+          '-17,50');
+    });
+    test('Test with de locale and JPY currency', () {
+      expect(
+          formattedAmountHint(
+              locale: 'de',
+              index: 1,
+              postings: expandPostings([
+                ['A', '17,50', 'JPY'],
+                ['B', '', 'JPY'],
+              ])),
+          '-17,5');
     });
   });
 }

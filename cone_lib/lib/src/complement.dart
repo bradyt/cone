@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart' show NumberFormat;
+
 import 'package:cone_lib/cone_lib.dart' show padZeros, Posting;
 
 String formattedAmountHint({
@@ -5,6 +7,7 @@ String formattedAmountHint({
   int index,
   List<Posting> postings,
 }) {
+  final NumberFormat numberFormat = NumberFormat.decimalPattern(locale);
   final bool moreThanOneAccountWithNoAmount = postings
           .where((Posting posting) =>
               posting.account.isNotEmpty && posting.amount.isEmpty)
@@ -16,7 +19,13 @@ String formattedAmountHint({
 
   final num total = postings
       .map(
-        (Posting posting) => num.tryParse(posting.amount),
+        (Posting posting) {
+          num result;
+          try {
+            result = numberFormat.parse(posting.amount);
+          } on FormatException catch (_) {}
+          return result;
+        },
       )
       .where((num x) => x != null)
       .fold(0, (num x, num y) => x + y);
@@ -31,9 +40,11 @@ String formattedAmountHint({
       ? -total
       : 0;
 
-  return padZeros(
+  final String formattedAmountHint = numberFormat.format(amountHint);
+  final String result = padZeros(
     locale: locale,
-    amount: amountHint.toString(),
+    amount: formattedAmountHint,
     currency: postings[index].currency,
   );
+  return result;
 }
