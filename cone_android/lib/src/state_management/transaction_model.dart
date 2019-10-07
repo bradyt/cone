@@ -1,4 +1,5 @@
-import 'package:cone_lib/cone_lib.dart' show padZeros;
+import 'package:cone_lib/cone_lib.dart' as lib
+    show formattedAmountHint, Posting;
 import 'package:flutter/material.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:intl/intl.dart' show DateFormat;
@@ -125,38 +126,17 @@ class TransactionModel {
     @required String locale,
     @required int index,
   }) =>
-      padZeros(
+      lib.formattedAmountHint(
         locale: locale,
-        amount: amountHint(index).toString(),
-        currency: postingModels[index].currencyController.text,
+        index: index,
+        postings: postingModels.map(
+          (PostingModel postingModel) {
+            return lib.Posting(
+              account: postingModel.accountController.text,
+              amount: postingModel.amountController.text,
+              currency: postingModel.currencyController.text,
+            );
+          },
+        ).toList(),
       );
-
-  num amountHint(int i) => (i == firstRowWithEmptyAmount &&
-          allCurrenciesMatch &&
-          !moreThanOneAccountWithNoAmount &&
-          firstRowWithEmptyAmount != -1)
-      ? -total
-      : 0;
-  bool get moreThanOneAccountWithNoAmount =>
-      postingModels
-          .where((PostingModel postingModel) =>
-              postingModel.accountController.text.isNotEmpty &&
-              postingModel.amountController.text.isEmpty)
-          .length >
-      1;
-  int get firstRowWithEmptyAmount =>
-      postingModels.indexWhere((PostingModel postingModel) =>
-          postingModel.amountController.text.isEmpty);
-  num get total => postingModels
-      .map((PostingModel postingModel) =>
-          num.tryParse(postingModel.amountController.text))
-      .where((num x) => x != null)
-      .fold(0, (num x, num y) => x + y);
-  bool get allCurrenciesMatch =>
-      postingModels
-          .map((PostingModel postingModel) =>
-              postingModel.currencyController.text)
-          .toSet()
-          .length ==
-      1;
 }
