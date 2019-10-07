@@ -1,3 +1,7 @@
+### 0.2.18 (2019-10-06)
+
+* Fix amount hint for locales with comma decimal separator
+
 ### 0.2.17 (2019-09-29)
 
 * Fix bug. Number locale is now used to zero pad amounts in hint text

@@ -9,7 +9,7 @@ author: Brady Trainor <mail@bradyt.com>
 # Both the version and the builder number may be overridden in flutter
 # build by specifying --build-name and --build-number, respectively.
 # Read more about versioning at semver.org.
-version: 0.2.17+25
+version: 0.2.18+26
 
 environment:
   sdk: ">=2.2.2 <3.0.0"
