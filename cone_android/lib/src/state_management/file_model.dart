@@ -13,6 +13,7 @@ class FileModel {
   String _uri;
   String _displayName;
   String _contents;
+  String _dateFormat;
   bool _isRefreshingContents;
   bool _saveInProgress;
 
@@ -20,6 +21,7 @@ class FileModel {
   String get displayName => _displayName;
   String get alias => generateAlias(uri, displayName);
   String get contents => _contents;
+  String get dateFormat => _dateFormat;
   bool get isRefreshingContents => _isRefreshingContents;
   bool get saveInProgress => _saveInProgress;
 
@@ -47,6 +49,13 @@ class FileModel {
         _isRefreshingContents = true;
         notifyListeners();
         _contents = await UriPicker.readTextFromUri(_uri);
+        // Get the date format by matching the date in the file
+        RegExp slashRegExp = RegExp(r'^[0-9]+/', multiLine: true);
+        if (slashRegExp.hasMatch(_contents)) {
+          _dateFormat = "yyyy/MM/dd";
+        } else {
+          _dateFormat = "yyyy-MM-dd";
+        }
       } catch (_) {} finally {
         _isRefreshingContents = false;
         notifyListeners();
