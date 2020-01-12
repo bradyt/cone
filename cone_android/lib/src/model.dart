@@ -134,6 +134,7 @@ class ConeModel extends ChangeNotifier {
   //
 
   String get fileContents => _file.contents;
+  String get dateFormat => _file.dateFormat;
   bool get isRefreshingFileContents => _file.isRefreshingContents;
   bool get hideAddTransactionButton =>
       (fileContents == null) || isRefreshingFileContents;
@@ -190,6 +191,7 @@ class ConeModel extends ChangeNotifier {
     _transaction.reset(
       notifyListeners: notifyListeners,
       defaultCurrency: defaultCurrency,
+      dateFormat: dateFormat,
     );
   }
 
@@ -226,7 +228,8 @@ class ConeModel extends ChangeNotifier {
   DateTime get initialDate {
     DateTime result;
     try {
-      result = DateFormat('yyyy-MM-dd').parseStrict(dateController.text);
+      // dateFormat is from file_model
+      result = DateFormat(dateFormat).parseStrict(dateController.text);
     } catch (_) {
       result = DateTime.now();
     }

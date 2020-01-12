@@ -109,7 +109,7 @@ class DateField extends StatelessWidget {
             );
             if (result != null) {
               coneModel.dateController.text =
-                  DateFormat('yyyy-MM-dd').format(result);
+                  DateFormat(coneModel.dateFormat).format(result);
               coneModel.dateFocus.unfocus();
               FocusScope.of(context).requestFocus(coneModel.descriptionFocus);
             } else {

@@ -55,9 +55,10 @@ class TransactionModel {
   void reset({
     @required void Function() notifyListeners,
     @required String defaultCurrency,
+    @required String dateFormat,
   }) {
     dateController = TextEditingController(
-      text: DateFormat('yyyy-MM-dd').format(DateTime.now()),
+      text: DateFormat(dateFormat).format(DateTime.now()),
     );
     descriptionController = TextEditingController();
     dateFocus = FocusNode();
