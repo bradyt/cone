@@ -256,7 +256,7 @@ class SettingsButton extends StatelessWidget {
       key: const Key('Settings'),
       icon: const Icon(Icons.settings),
       onPressed: () {
-        ConeModel.of(context).closeSuggestionBoxControllers();
+        ConeModel.of(context, listen: false).closeSuggestionBoxControllers();
         Navigator.pushNamed(context, '/settings');
       },
     );
@@ -270,13 +270,14 @@ class AddTransactionButton extends StatelessWidget {
         heroTag: '''the only floating action button here \
 ${DateTime.now().millisecondsSinceEpoch}''',
         onPressed: () async {
-          ConeModel.of(context).resetTransaction();
+          ConeModel.of(context, listen: false).resetTransaction();
           final dynamic transaction =
               await Navigator.pushNamed<dynamic>(context, '/add-transaction');
           if (transaction != null) {
             Scaffold.of(context).showSnackBar(
-                ConeModel.of(context).snackBar(transaction as String));
-            await ConeModel.of(context).refreshFileContents();
+                ConeModel.of(context, listen: false)
+                    .snackBar(transaction as String));
+            await ConeModel.of(context, listen: false).refreshFileContents();
           }
         },
         child: const Icon(Icons.add));

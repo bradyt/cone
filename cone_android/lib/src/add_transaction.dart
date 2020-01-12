@@ -341,7 +341,7 @@ class SaveButton extends StatelessWidget {
 }
 
 Future<void> submitTransaction(BuildContext context) async {
-  final ConeModel coneModel = ConeModel.of(context);
+  final ConeModel coneModel = ConeModel.of(context, listen: false);
   final String transaction = coneModel.formattedTransaction();
   try {
     await coneModel.appendTransaction(transaction);

@@ -49,7 +49,7 @@ class ConeProvider extends StatelessWidget {
     }
 
     return ChangeNotifierProvider<ConeModel>(
-      builder: (BuildContext context) {
+      create: (BuildContext context) {
         return ConeModel(
           sharedPreferences: prefs,
         );
