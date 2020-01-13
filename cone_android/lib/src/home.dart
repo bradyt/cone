@@ -53,7 +53,7 @@ class Transactions extends StatelessWidget {
                     padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
                     child: FormattedChunk(
                       chunk: chunks[index],
-                      dark: coneModel.brightness == ConeBrightness.dark,
+                      dark: Theme.of(context).brightness == Brightness.dark,
                     ),
                   ),
                 ),
