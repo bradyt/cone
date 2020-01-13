@@ -71,8 +71,8 @@ class ConeApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
       ],
       supportedLocales: const <Locale>[
-        Locale('de'),
         Locale('en', 'US'),
+        Locale('de'),
         Locale('es', 'MX'),
         Locale('fil'),
         Locale('fr'),
