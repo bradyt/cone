@@ -5,6 +5,8 @@ import 'package:uri_picker/uri_picker.dart';
 void main() {
   const MethodChannel channel = MethodChannel('uri_picker');
 
+  TestWidgetsFlutterBinding.ensureInitialized();
+
   setUp(() {
     channel.setMockMethodCallHandler((MethodCall methodCall) async {
       return '42';
