@@ -114,9 +114,14 @@ String padZeros({String locale, String amount, String currency}) {
 
       formatter = NumberFormat(
           '0.${'0' * decimalDigits}'
-          '${'#' * (16 - integerDigits - decimalDigits)}',
+          '${'#' * (15 - integerDigits - decimalDigits)}',
           locale);
-      return formatter.format(parsed);
+      var result = formatter.format(parsed);
+      if (parser.parse(amount) == parser.parse(result)) {
+        return result;
+      } else {
+        return amount;
+      }
     } on FormatException catch (_) {}
     return amount;
   }

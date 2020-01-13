@@ -237,5 +237,8 @@ void main() {
     test('Rubles in locale ru', () {
       testPadZeros('ru', '1,0', 'RUB', '1,00');
     });
+    test('Floating point', () {
+      testPadZeros('de', '83,29', '€', '83,29');
+    });
   });
 }
