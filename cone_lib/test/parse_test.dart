@@ -6,11 +6,20 @@ import 'package:test/test.dart';
 import 'package:cone_lib/src/parse.dart';
 
 String sampleJournal = '''
-account a:b
+account a:b ; a comment
+account Expenses:Food
+    note This account is all about the chicken!
+    alias food
+    payee ^(KFC|Popeyes)\$
+    check commodity == "\$"
+    assert commodity == "\$"
+    eval print("Hello!")
+    default
 commodity 1,000.00 USD
 commodity EUR
   format 1.000,00
 payee bank fees
+payee email
 
 # hello world
 
@@ -26,10 +35,20 @@ void main() {
       expect(
         getChunks(sampleJournal),
         [
-          'account a:b',
+          'account a:b ; a comment',
+          '''
+account Expenses:Food
+    note This account is all about the chicken!
+    alias food
+    payee ^(KFC|Popeyes)\$
+    check commodity == "\$"
+    assert commodity == "\$"
+    eval print("Hello!")
+    default''',
           'commodity 1,000.00 USD',
           'commodity EUR\n  format 1.000,00',
           'payee bank fees',
+          'payee email',
           '''
 # hello world
 
@@ -41,7 +60,7 @@ void main() {
         ],
       );
 
-      expect(getAccounts(sampleJournal), ['a', 'a:b', 'b']);
+      expect(getAccounts(sampleJournal), ['Expenses:Food', 'a', 'a:b', 'b']);
       expect(getPayees(sampleJournal), ['bank fees', 'email']);
       expect(getTokens(''), <Token<String>>[]);
     });

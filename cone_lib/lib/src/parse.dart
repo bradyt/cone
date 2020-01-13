@@ -51,7 +51,7 @@ List<String> getChunks(String fileContents) =>
     getTokens(fileContents).map((Token<String> token) => token.input).toList();
 
 List<String> getPayees(String fileContents) {
-  final List<String> payees = <String>[];
+  final Set<String> payees = <String>{};
 
   for (final String chunk in getChunks(fileContents)) {
     if (chunk.startsWith('payee')) {
@@ -67,7 +67,7 @@ List<String> getPayees(String fileContents) {
     }
   }
 
-  return payees..sort();
+  return payees.toList()..sort();
 }
 
 List<String> getTransactions(String fileContents) {
@@ -86,7 +86,11 @@ List<String> getAccounts(String fileContents) {
 
   for (final String chunk in getChunks(fileContents)) {
     if (chunk.startsWith('account')) {
-      accounts.add(chunk.replaceFirst(RegExp('account '), ''));
+      accounts.add(chunk
+          .split('\n')[0]
+          .split(';')[0]
+          .replaceFirst(RegExp('account '), '')
+          .trim());
     } else if (chunk.startsWith(RegExp(r'[0-9]'))) {
       for (final String line in chunk.split('\n')) {
         if (line.startsWith(RegExp(r'[ \t]+[^ \t;]'))) {
