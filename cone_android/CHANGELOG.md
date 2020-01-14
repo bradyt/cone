@@ -1,3 +1,13 @@
+### 0.2.19 (2020-01-14)
+
+* Remove duplicates in description suggestions
+
+* Remove comments and newlines from account suggestions
+
+* Fix amounts like 83,29 being formatted as 83,29000000000001
+
+* Fix text is too dark in Android 10's auto brightness
+
 ### 0.2.18 (2019-10-06)
 
 * Fix amount hint for locales with comma decimal separator
