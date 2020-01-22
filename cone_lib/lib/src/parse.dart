@@ -82,7 +82,7 @@ List<String> getTransactions(String fileContents) {
 }
 
 List<String> getAccounts(String fileContents) {
-  final Set<String> accounts = <String>{};
+  final List<String> accounts = <String>[];
 
   for (final String chunk in getChunks(fileContents)) {
     if (chunk.startsWith('account')) {
@@ -102,7 +102,29 @@ List<String> getAccounts(String fileContents) {
     }
   }
 
-  return accounts.toList()..sort();
+  Map<String, int> frequencyMap = <String, int>{};
+  for (String account in accounts) {
+    frequencyMap.update(
+      account,
+      (frequency) => frequency + 1,
+      ifAbsent: () => 1,
+    );
+  }
+
+  return frequencyMap.keys.toList()
+    ..sort((a, b) {
+      if (frequencyMap[a] > frequencyMap[b]) {
+        return -1;
+      } else if (frequencyMap[a] < frequencyMap[b]) {
+        return 1;
+      } else if (accounts.lastIndexOf(a) > accounts.lastIndexOf(b)) {
+        return -1;
+      } else if (accounts.lastIndexOf(a) < accounts.lastIndexOf(b)) {
+        return 1;
+      } else {
+        return 0;
+      }
+    });
 }
 
 List<String> getAccountsAndSubAccounts(String fileContents) {

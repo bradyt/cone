@@ -60,7 +60,7 @@ account Expenses:Food
         ],
       );
 
-      expect(getAccounts(sampleJournal), ['Expenses:Food', 'a', 'a:b', 'b']);
+      expect(getAccounts(sampleJournal), ['b', 'a', 'Expenses:Food', 'a:b']);
       expect(getPayees(sampleJournal), ['bank fees', 'email']);
       expect(getTokens(''), <Token<String>>[]);
     });

@@ -46,10 +46,10 @@ more stuff
 ''';
     test('Get transaction description from line', () {
       expect(getAccounts(testFile), [
-        'a',
         'a:b',
-        'a:b:c',
         'b',
+        'a',
+        'a:b:c',
       ]);
       expect(
         getChunks(testFile),
