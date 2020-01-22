@@ -1,3 +1,7 @@
+### 0.2.20 (2010-01-21)
+
+* Sort account suggestions by frequency and recency
+
 ### 0.2.19 (2020-01-14)
 
 * Remove duplicates in description suggestions
