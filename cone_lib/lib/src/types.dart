@@ -96,13 +96,12 @@ class Transaction extends JournalItem {
     String date,
     String description,
     List<Posting> postings,
-  }) {
-    return Transaction(
-      date: date ?? this.date,
-      description: description ?? this.description,
-      postings: postings ?? this.postings,
-    );
-  }
+  }) =>
+      Transaction(
+        date: date ?? this.date,
+        description: description ?? this.description,
+        postings: postings ?? this.postings,
+      );
 }
 
 class Posting {

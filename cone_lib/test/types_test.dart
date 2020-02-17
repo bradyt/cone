@@ -12,7 +12,9 @@ account a
 2020-01-01 example
   b    2.00 EUR
   c    EUR3.00
-  d''';
+  d
+
+random_directive blah''';
     final Journal journal = Journal(contents: journalContents);
     final List<JournalItem> journalItems = journal.journalItems;
 
@@ -39,10 +41,13 @@ account a
     });
     test('A posting.', () {
       expect('${transaction.postings[0]}',
-          '    b                                       2.00 EUR');
+          '    b                                           2.00 EUR');
     });
     test('A directive.', () {
-      expect('${journalItems[1]}', 'account a');
+      expect('${journalItems[1]}', 'a');
+    });
+    test('A random directive.', () {
+      expect('${journalItems[5]}', 'random_directive blah');
     });
     test('A comment.', () {
       expect('${journalItems[0]}', '; a comment');
@@ -51,7 +56,7 @@ account a
       expect(
         '$transaction',
         '2020-01-01 example\n'
-            '    b                                       2.00 EUR\n'
+            '    b                                           2.00 EUR\n'
             '    c                                        EUR3.00\n'
             '    d',
       );
@@ -60,11 +65,11 @@ account a
   group('Test of two transactions.', () {
     const String contents = '''
 2020-01-01 an example
-    a                                       2.00 EUR
+    a                                           2.00 EUR
     b
 
 2020-01-02 another example
-    a                                       3.00 EUR
+    a                                           3.00 EUR
     b''';
 
     test('Roundtrip.', () {
@@ -79,6 +84,10 @@ account a
               .quantity,
           '3.00');
     });
+  });
+  test('Copy a transaction', () {
+    expect(Transaction().copyWith(date: '2000').date, '2000');
+    expect(Transaction().copyWith(description: 'pb&j').date, null);
   });
   group('Copying a posting.', () {
     const Posting posting0 = Posting(key: 0, account: 'a');
