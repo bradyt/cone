@@ -203,7 +203,6 @@ class DateFieldState extends State<DateField> {
             filled: true,
             suffixIcon: IconButton(
               icon: const Icon(Icons.calendar_today),
-              focusNode: FocusNode(skipTraversal: true),
               onPressed: () async {
                 final DateTime result = await showDatePicker(
                   context: context,
