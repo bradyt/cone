@@ -1,5 +1,7 @@
 // ignore_for_file: public_member_api_docs
 
+import 'dart:math' show max;
+
 import 'package:petitparser/petitparser.dart';
 
 import 'package:cone_lib/parse.dart';
@@ -130,8 +132,15 @@ class Posting {
     if (amount == null) {
       return '    $account';
     } else {
-      final int padding =
-          52 - 4 - account.length - 2 - amount.toString().length;
+      final int padding = max(
+          2,
+          (amount.commodityOnLeft)
+              ? 52 - 4 - account.length - 2 - amount.toString().length
+              : 52 -
+                  4 -
+                  account.length -
+                  2 -
+                  amount.quantity.toString().length);
       return '    $account  ${' ' * padding}$amount'.trimRight();
     }
   }
