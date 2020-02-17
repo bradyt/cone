@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:uri_picker/uri_picker.dart';
 
 void main() {
-  const MethodChannel channel = MethodChannel('uri_picker');
+  const MethodChannel channel = MethodChannel('tangential.info/uri_picker');
 
   TestWidgetsFlutterBinding.ensureInitialized();
 

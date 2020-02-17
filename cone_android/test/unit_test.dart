@@ -1,8 +1,10 @@
 import 'package:test/test.dart';
 
-import 'package:cone/src/state_management/suggestions_model.dart'
-    show fuzzyMatch;
-import 'package:cone/src/utils.dart'
+// import 'package:cone/src/add_transaction.dart'
+
+// import 'package:cone/src/state_management/suggestions_model.dart'
+//     show fuzzyMatch;
+import 'package:cone/src/services.dart'
     show MeasureNewlines, combineContentsWithLinebreak;
 
 void main() {
@@ -58,12 +60,12 @@ void main() {
           'hello world\n\n', 'Taco Time!', 'hello world\n\nTaco Time!\n');
     });
   });
-  group('Test fuzzy match', () {
-    test('Test fuzzy match', () {
-      expect(fuzzyMatch('as', <String>['assets']), <String>['assets']);
-      expect(fuzzyMatch('as', <String>['Assets']), <String>['Assets']);
-      expect(fuzzyMatch('As', <String>['assets']), <String>['assets']);
-      expect(fuzzyMatch('As', <String>['Assets']), <String>['Assets']);
-    });
-  });
+  // group('Test fuzzy match', () {
+  //   test('Test fuzzy match', () {
+  //     expect(fuzzyMatch('as', <String>['assets']), <String>['assets']);
+  //     expect(fuzzyMatch('as', <String>['Assets']), <String>['Assets']);
+  //     expect(fuzzyMatch('As', <String>['assets']), <String>['assets']);
+  //     expect(fuzzyMatch('As', <String>['Assets']), <String>['Assets']);
+  //   });
+  // });
 }

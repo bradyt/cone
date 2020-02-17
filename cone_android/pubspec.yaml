@@ -22,8 +22,13 @@ dependencies:
   cone_lib:
     path: ../cone_lib
   datetime_picker_formfield:
+  edit_distance:
+  flutter_redux:
   flutter_typeahead:
   provider:
+  redux:
+  redux_logging:
+  reselect:
   shared_preferences:
   uri_picker:
     path: ../uri_picker
@@ -37,7 +42,11 @@ dependencies:
   cupertino_icons:
 
 dev_dependencies:
+  flutter_redux_dev_tools:
+  redux_dev_tools:
   test:
+  test_coverage:
+    git: https://github.com/pulyaevskiy/test-coverage.git
   flutter_test:
     sdk: flutter
   flutter_driver:

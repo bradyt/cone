@@ -23,7 +23,8 @@ void main() {
 
     test('first screenshot', () async {
       await Future<void>.delayed(const Duration(seconds: 2));
-      await Directory('./android/fastlane/screenshots/').create(recursive: true);
+      await Directory('./android/fastlane/screenshots/')
+          .create(recursive: true);
       await takeScreenshot(1);
     });
 

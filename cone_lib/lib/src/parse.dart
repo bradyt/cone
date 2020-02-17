@@ -2,143 +2,123 @@
 
 import 'package:petitparser/petitparser.dart';
 
-class LedgerGrammarDefinition extends GrammarDefinition {
+import 'package:cone_lib/src/types.dart';
+
+class _JournalGrammarDefinition extends GrammarDefinition {
   @override
-  Parser start() =>
-      journalItem()
-          .flatten()
-          .token()
-          .separatedBy<Token<String>>(
-            newline().star(),
-            includeSeparators: false,
-            optionalSeparatorAtEnd: true,
-          )
-          .end() |
-      epsilon<dynamic>().map((dynamic _) => <Token<String>>[]).end();
+  Parser<List<Token<String>>> start() => journalItem()
+      .flatten()
+      .map((String string) => string.trim())
+      .token()
+      .star()
+      .end();
 
-  Parser journalItem() => directive() | transaction() | inert();
+  Parser<dynamic> journalItem() => block() | inert();
 
-  Parser directive() =>
-      letter() & restOfLine() & (newline() & indentedLine()).star();
+  Parser<List<dynamic>> block() =>
+      (pattern('A-Za-z0-9~')) &
+      restOfLine() &
+      (newline() & restOfBlock()).optional();
 
-  Parser transaction() =>
-      digit() & restOfLine() & (newline() & indentedLine()).star();
+  Parser<List<dynamic>> restOfBlock() => indentedLine()
+      .separatedBy<dynamic>(newline(), optionalSeparatorAtEnd: true);
 
-  Parser indentedLine() => anyOf(' \t').plus() & restOfLine();
+  Parser<List<dynamic>> indentedLine() => anyOf(' \t').plus() & restOfLine();
 
-  Parser inert() => inertLine().separatedBy<dynamic>(newline().plus());
+  Parser<List<dynamic>> inert() =>
+      (newline() | (pattern('A-Za-z0-9~').not() & any() & restOfLine())).plus();
 
-  Parser inertLine() => pattern('A-Za-z0-9').neg() & restOfLine();
+  Parser<String> newline() => char('\n');
 
-  Parser newline() => char('\n');
-
-  Parser restOfLine() => newline().neg().star();
+  Parser<List<String>> restOfLine() => newline().neg().star();
 }
 
-class LedgerParserDefinition extends LedgerGrammarDefinition {}
+class _JournalParserDefinition extends _JournalGrammarDefinition {}
 
-class LedgerParser extends GrammarParser {
-  LedgerParser() : super(LedgerParserDefinition());
+class JournalParser extends GrammarParser {
+  JournalParser() : super(_JournalParserDefinition());
 }
 
-Parser parser = LedgerParser();
+JournalItem parseJournalItem(Token<String> token) {
+  if (token.value.startsWith(RegExp(r'[0-9~]'))) {
+    return _parseTransaction(token);
+  } else if (token.value.startsWith(RegExp(r'[A-Za-z]'))) {
+    if (token.value.startsWith('account')) {
+      return AccountDirective(
+        firstLine: token.line,
+        lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
+        account: token.value.split('account ')[1].split(';')[0].trim(),
+      );
+    } else {
+      return Directive(
+        firstLine: token.line,
+        lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
+        directive: token.value,
+      );
+    }
+  } else {
+    return Comment(
+      firstLine: token.line,
+      lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
+      comment: token.value,
+    );
+  }
+}
 
-List<Token<String>> getTokens(String fileContents) =>
-    // ignore: avoid_as
-    parser.parse(fileContents).value as List<Token<String>>;
-
-List<String> getChunks(String fileContents) =>
-    getTokens(fileContents).map((Token<String> token) => token.input).toList();
-
-List<String> getPayees(String fileContents) {
-  final Set<String> payees = <String>{};
-
-  for (final String chunk in getChunks(fileContents)) {
-    if (chunk.startsWith('payee')) {
-      payees.add(chunk.replaceFirst(RegExp('payee '), ''));
-    } else if (chunk.startsWith(RegExp(r'[0-9]'))) {
-      final int beginning = chunk.indexOf(' ');
-      final int end = chunk.indexOf(RegExp(r'[;\n]'));
-      payees.add(
-        (end == -1)
-            ? chunk.substring(beginning).trim()
-            : chunk.substring(beginning, end).trim(),
+Transaction _parseTransaction(Token<String> token) {
+  final String chunk = token.value;
+  final List<String> lines = chunk.split('\n');
+  final String date = '${lines[0].split(' ')[0]}';
+  final int splitAt = lines[0].indexOf(' ');
+  final String description = lines[0].substring(splitAt).trim();
+  final List<Posting> postings = <Posting>[];
+  for (final String line in lines.sublist(1)) {
+    if (!line.startsWith(RegExp(r'[ \t]*;'))) {
+      final String account = '${line.trim().split('  ')[0]}';
+      final int splitAt2 = line.trim().indexOf('  ');
+      Amount amount;
+      if (splitAt2 != -1) {
+        amount = _parseAmount(line.trim().substring(splitAt2).trim());
+      }
+      postings.add(
+        Posting(
+          account: account,
+          amount: amount,
+        ),
       );
     }
   }
-
-  return payees.toList()..sort();
+  return Transaction(
+    firstLine: token.line,
+    lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
+    date: date,
+    description: description,
+    postings: postings,
+  );
 }
 
-List<String> getTransactions(String fileContents) {
-  final List<String> transactions = <String>[];
+Amount _parseAmount(String amount) {
+  String commodity;
+  String quantity;
+  bool commodityOnLeft;
+  int spacing;
 
-  for (final String chunk in getChunks(fileContents)) {
-    if (chunk.startsWith(RegExp(r'[0-9]'))) {
-      transactions.add(chunk);
-    }
-  }
-  return transactions;
-}
-
-List<String> getAccounts(String fileContents) {
-  final List<String> accounts = <String>[];
-
-  for (final String chunk in getChunks(fileContents)) {
-    if (chunk.startsWith('account')) {
-      accounts.add(chunk
-          .split('\n')[0]
-          .split(';')[0]
-          .replaceFirst(RegExp('account '), '')
-          .trim());
-    } else if (chunk.startsWith(RegExp(r'[0-9]'))) {
-      for (final String line in chunk.split('\n')) {
-        if (line.startsWith(RegExp(r'[ \t]+[^ \t;]'))) {
-          accounts.add(line.trim().split('  ')[0]);
-        } else if (line.startsWith(RegExp(r'[-0-9=]+ open [A-Za-z]+:'))) {
-          accounts.add(line.replaceFirst(RegExp(r'[-0-9=]+ open '), ''));
-        }
-      }
-    }
+  if (amount.startsWith(RegExp(r'[-+0-9.,]+'))) {
+    commodityOnLeft = false;
+    quantity = RegExp(r'^[-+0-9.,]+').stringMatch(amount);
+    commodity = amount.split(RegExp(r'^[-+0-9.,]+'))[1].trim();
+    spacing = (amount.startsWith(RegExp(r'[-+0-9.,]+ '))) ? 1 : 0;
+  } else if (amount.startsWith(RegExp(r'[A-Za-z]+'))) {
+    commodity = RegExp(r'^[A-Za-z]+').stringMatch(amount);
+    quantity = amount.split(RegExp(r'^[A-Za-z]+'))[1].trim();
+    spacing = (amount.startsWith(RegExp(r'[A-Za-z]+ '))) ? 1 : 0;
+    commodityOnLeft = true;
   }
 
-  Map<String, int> frequencyMap = <String, int>{};
-  for (String account in accounts) {
-    frequencyMap.update(
-      account,
-      (frequency) => frequency + 1,
-      ifAbsent: () => 1,
-    );
-  }
-
-  return frequencyMap.keys.toList()
-    ..sort((a, b) {
-      if (frequencyMap[a] > frequencyMap[b]) {
-        return -1;
-      } else if (frequencyMap[a] < frequencyMap[b]) {
-        return 1;
-      } else if (accounts.lastIndexOf(a) > accounts.lastIndexOf(b)) {
-        return -1;
-      } else if (accounts.lastIndexOf(a) < accounts.lastIndexOf(b)) {
-        return 1;
-      } else {
-        return 0;
-      }
-    });
-}
-
-List<String> getAccountsAndSubAccounts(String fileContents) {
-  final Set<String> accounts = getAccounts(fileContents).toSet();
-  return accounts.union(getSubAccounts(accounts)).toList();
-}
-
-Set<String> getSubAccounts(Set<String> accounts) {
-  final Set<String> subAccounts = <String>{};
-  for (String account in accounts) {
-    while (account.lastIndexOf(':') != -1) {
-      account = account.substring(0, account.lastIndexOf(':'));
-      subAccounts.add(account);
-    }
-  }
-  return subAccounts;
+  return Amount(
+    commodity: commodity,
+    commodityOnLeft: commodityOnLeft,
+    quantity: quantity,
+    spacing: spacing,
+  );
 }

@@ -54,7 +54,9 @@ class ConeCommandRunner extends CommandRunner<dynamic> {
 }
 
 String getFileContentsForCommands(ArgResults res) {
+  // ignore: avoid_as
   final String filename =
+      // ignore: avoid_as
       res['file'] as String ?? Platform.environment['CONE_LEDGER_FILE'];
   if (filename == null) {
     print('Error: No journal file was specified'

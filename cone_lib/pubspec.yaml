@@ -12,3 +12,6 @@ dependencies:
 
 dev_dependencies:
   test:
+  test_coverage:
+    git: https://github.com/pulyaevskiy/test-coverage.git
+    version: 0.4.2

@@ -1,13 +1,16 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide Actions;
+import 'package:flutter_redux/flutter_redux.dart'
+    show StoreBuilder, StoreConnector;
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
-import 'package:provider/provider.dart' show Consumer, Provider;
+import 'package:redux/redux.dart' show Store;
 
 import 'package:cone/src/localizations.dart';
-import 'package:cone/src/model.dart';
-import 'package:cone/src/state_management/settings_model.dart'
-    show ConeBrightness;
+import 'package:cone/src/redux/actions.dart';
+import 'package:cone/src/redux/state.dart';
+import 'package:cone/src/reselect.dart' show formattedExample;
+import 'package:cone/src/types.dart';
 import 'package:cone/src/utils.dart';
 
 class Settings extends StatelessWidget {
@@ -25,172 +28,163 @@ class Settings extends StatelessWidget {
 class SettingsBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer<ConeModel>(
-      builder: (BuildContext _, ConeModel coneModel, Widget __) {
-        final bool loading = coneModel.isRefreshingFileContents;
-        return Stack(
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8),
+      child: SettingsColumn(),
+    );
+  }
+}
+
+class SettingsColumn extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StoreBuilder<ConeState>(
+      rebuildOnChange: false,
+      builder: (BuildContext context, Store<ConeState> store) {
+        final ConeState state = store.state;
+        return Column(
           children: <Widget>[
-            if (loading) const Center(child: CircularProgressIndicator()),
-            Opacity(
-              opacity: loading ? 0.5 : 1.0,
-              child: SingleChildScrollView(
-                padding: const EdgeInsets.all(8),
-                child: Column(
-                  children: <Widget>[
-                    if (!kReleaseMode && !Provider.of<bool>(context))
-                      ListTile(
-                        leading: const Icon(Icons.developer_mode),
-                        title: const Text('Debug mode'),
-                        subtitle: Text(coneModel.debugMode.toString()),
-                        onTap: coneModel.toggleDebugMode,
-                      ),
-                    ExpansionTile(
-                      key: const Key('Formatting'),
-                      leading: const Icon(
-                        Icons.text_format,
-                      ),
-                      title: Text(
-                        coneModel.formattedExample,
-                      ),
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(Icons.attach_money),
-                          title: Text(
-                              ConeLocalizations.of(context).defaultCurrency),
-                          subtitle: Text(coneModel.defaultCurrency),
-                          onTap: () async {
-                            final String defaultCurrency =
-                                await _asyncDefaultCurrencyDialog(context);
-                            coneModel.setDefaultCurrency(defaultCurrency);
-                          },
-                        ),
-                        ListTile(
-                          key: const Key('Locale'),
-                          leading: const Icon(Icons.language),
-                          title:
-                              Text(ConeLocalizations.of(context).numberLocale),
-                          subtitle: Text(coneModel.numberLocale),
-                          onTap: () async {
-                            final String result = await showSearch<String>(
-                              context: context,
-                              delegate: NumberLocaleSearchDelegate(),
-                            );
-                            if (result != null) {
-                              coneModel.setNumberLocale(result);
-                            }
-                          },
-                        ),
-                        SwitchListTile(
-                          key: const Key('Currency on left'),
-                          secondary: const Icon(Icons.compare_arrows),
-                          title: Text(
-                              ConeLocalizations.of(context).currencyOnLeft),
-                          value: coneModel.currencyOnLeft,
-                          onChanged: (bool _) =>
-                              coneModel.toggleCurrencyOnLeft(),
-                        ),
-                        SwitchListTile(
-                          key: const Key('Spacing'),
-                          secondary: const Icon(Icons.space_bar),
-                          title: Text(ConeLocalizations.of(context).spacing),
-                          value: coneModel.spacing.index == 1,
-                          onChanged: (bool _) => coneModel.toggleSpacing(),
-                        ),
-                      ],
-                    ),
-                    ListTile(
-                      key: const Key('Pick ledger file'),
-                      leading: const Icon(Icons.link),
-                      title: Text(ConeLocalizations.of(context).ledgerFile),
-                      subtitle: Text(coneModel.ledgerFileAlias),
-                      onTap: coneModel.pickLedgerFileUri,
-                      trailing: LedgerFileInfoButton(),
-                    ),
-                    SwitchListTile(
-                      key: const Key('Toggle reverse sort'),
-                      secondary: const Icon(Icons.sort),
-                      title: Text(ConeLocalizations.of(context).reverseSort),
-                      value: coneModel.reverseSort,
-                      onChanged: (bool _) => coneModel.toggleSort(),
-                    ),
-                    ExpansionTile(
-                      leading: const Icon(Icons.brightness_medium),
-                      title: const Text('Brightness'),
-                      children: <Widget>[
-                        ListTile(
-                          leading: const Icon(Icons.brightness_auto),
-                          title: const Text('Auto'),
-                          trailing: Radio<ConeBrightness>(
-                            value: ConeBrightness.auto,
-                            groupValue: coneModel.brightness,
-                            onChanged: (ConeBrightness value) =>
-                                coneModel.setBrightness(value),
-                          ),
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.brightness_high),
-                          title: const Text('Light'),
-                          trailing: Radio<ConeBrightness>(
-                            value: ConeBrightness.light,
-                            groupValue: coneModel.brightness,
-                            onChanged: (ConeBrightness value) =>
-                                coneModel.setBrightness(value),
-                          ),
-                        ),
-                        ListTile(
-                          leading: const Icon(Icons.brightness_low),
-                          title: const Text('Dark'),
-                          trailing: Radio<ConeBrightness>(
-                            value: ConeBrightness.dark,
-                            groupValue: coneModel.brightness,
-                            onChanged: (ConeBrightness value) =>
-                                coneModel.setBrightness(value),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
+            if (!kReleaseMode)
+              ListTile(
+                leading: const Icon(Icons.developer_mode),
+                title: const Text('Debug mode'),
+                subtitle: StoreConnector<ConeState, String>(
+                  converter: (Store<ConeState> store) =>
+                      '${store.state.debugMode}',
+                  builder: (_, String debugMode) => Text(debugMode),
+                  distinct: true,
+                ),
+                onTap: () => store.dispatch(
+                  UpdateSettingsAction(
+                      'debug_mode', !(store.state.debugMode ?? true)),
                 ),
               ),
+            ExpansionTile(
+              key: const Key('Formatting'),
+              leading: const Icon(
+                Icons.text_format,
+              ),
+              title: Text(
+                formattedExample(state),
+              ),
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.attach_money),
+                  title: Text(ConeLocalizations.of(context).defaultCurrency),
+                  subtitle: Text(state.defaultCurrency),
+                  onTap: () async {
+                    final String defaultCurrency =
+                        await _asyncDefaultCurrencyDialog(context);
+                    store.dispatch(
+                      UpdateSettingsAction('default_currency', defaultCurrency),
+                    );
+                  },
+                ),
+                ListTile(
+                  key: const Key('Locale'),
+                  leading: const Icon(Icons.language),
+                  title: Text(ConeLocalizations.of(context).numberLocale),
+                  subtitle: Text(state.numberLocale),
+                  onTap: () async {
+                    final String numberLocale = await showSearch<String>(
+                      context: context,
+                      delegate: NumberLocaleSearchDelegate(),
+                    );
+                    if (numberLocale != null) {
+                      store.dispatch(
+                        UpdateSettingsAction('number_locale', numberLocale),
+                      );
+                    }
+                  },
+                ),
+                SwitchListTile(
+                  key: const Key('Currency on left'),
+                  secondary: const Icon(Icons.compare_arrows),
+                  title: Text(ConeLocalizations.of(context).currencyOnLeft),
+                  value: state.currencyOnLeft,
+                  onChanged: (bool _) => store.dispatch(
+                    UpdateSettingsAction(
+                        'currency_on_left', !state.currencyOnLeft),
+                  ),
+                ),
+                SwitchListTile(
+                    key: const Key('Spacing'),
+                    secondary: const Icon(Icons.space_bar),
+                    title: Text(ConeLocalizations.of(context).spacing),
+                    value: state.spacing.index == 1,
+                    onChanged: (bool _) {
+                      store.dispatch(
+                        UpdateSettingsAction(
+                            'spacing',
+                            (state.spacing == Spacing.one)
+                                ? Spacing.zero
+                                : Spacing.one),
+                      );
+                    }),
+              ],
+            ),
+            ListTile(
+              key: const Key('Pick ledger file'),
+              leading: const Icon(Icons.link),
+              title: Text(ConeLocalizations.of(context).ledgerFile),
+              subtitle: Text(
+                generateAlias(
+                  state.ledgerFileUri,
+                  state.ledgerFileDisplayName,
+                ),
+              ),
+              onTap: () => store.dispatch(Actions.pickLedgerFileUri),
+            ),
+            SwitchListTile(
+              key: const Key('Toggle reverse sort'),
+              secondary: const Icon(Icons.sort),
+              title: Text(ConeLocalizations.of(context).reverseSort),
+              value: state.reverseSort,
+              onChanged: (bool _) => store.dispatch(
+                UpdateSettingsAction('reverse_sort', !state.reverseSort),
+              ),
+            ),
+            ExpansionTile(
+              leading: const Icon(Icons.brightness_medium),
+              title: const Text('Brightness'),
+              children: <Widget>[
+                ListTile(
+                  leading: const Icon(Icons.brightness_auto),
+                  title: const Text('Auto'),
+                  trailing: Radio<ConeBrightness>(
+                    value: ConeBrightness.auto,
+                    groupValue: state.brightness,
+                    onChanged: (ConeBrightness value) =>
+                        store.dispatch(SetBrightness(value)),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.brightness_high),
+                  title: const Text('Light'),
+                  trailing: Radio<ConeBrightness>(
+                    value: ConeBrightness.light,
+                    groupValue: state.brightness,
+                    onChanged: (ConeBrightness value) =>
+                        store.dispatch(SetBrightness(value)),
+                  ),
+                ),
+                ListTile(
+                  leading: const Icon(Icons.brightness_low),
+                  title: const Text('Dark'),
+                  trailing: Radio<ConeBrightness>(
+                    value: ConeBrightness.dark,
+                    groupValue: state.brightness,
+                    onChanged: (ConeBrightness value) =>
+                        store.dispatch(SetBrightness(value)),
+                  ),
+                ),
+              ],
             ),
           ],
         );
       },
     );
   }
-}
-
-class LedgerFileInfoButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final ConeModel coneModel = ConeModel.of(context);
-    return IconButton(
-      icon: const Icon(Icons.info),
-      onPressed: (coneModel.ledgerFileDisplayName == null)
-          ? null
-          : () => showLedgerFileInfo(
-                context: context,
-                ledgerFileUri: coneModel.ledgerFileUri,
-                ledgerFileDisplayName: coneModel.ledgerFileDisplayName,
-              ),
-    );
-  }
-}
-
-Future<int> showLedgerFileInfo({
-  BuildContext context,
-  String ledgerFileUri,
-  String ledgerFileDisplayName,
-  bool ledgerFilePersistablePermission,
-}) {
-  final Map<String, String> info = <String, String>{
-    'Display name': ledgerFileDisplayName,
-    'Persistable permission': ledgerFilePersistablePermission.toString(),
-    'Uri authority component': Uri.tryParse(ledgerFileUri).authority,
-    'Uri path component': Uri.tryParse(Uri.decodeFull(ledgerFileUri)).path,
-    'Uri': Uri.decodeFull(ledgerFileUri),
-  };
-  return showGenericInfo(context: context, info: info);
 }
 
 Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
