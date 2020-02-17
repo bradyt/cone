@@ -86,8 +86,8 @@ random_directive blah''';
     });
   });
   test('Copy a transaction', () {
-    expect(Transaction().copyWith(date: '2000').date, '2000');
-    expect(Transaction().copyWith(description: 'pb&j').date, null);
+    expect(const Transaction().copyWith(date: '2000').date, '2000');
+    expect(const Transaction().copyWith(description: 'pb&j').date, null);
   });
   group('Copying a posting.', () {
     const Posting posting0 = Posting(key: 0, account: 'a');

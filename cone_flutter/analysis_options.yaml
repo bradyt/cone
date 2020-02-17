@@ -1,6 +1,7 @@
 analyzer:
   exclude:
     - test/.test_coverage.dart
+    - lib/generated_plugin_registrant.dart
   strong-mode:
     implicit-casts: false
     implicit-dynamic: false
