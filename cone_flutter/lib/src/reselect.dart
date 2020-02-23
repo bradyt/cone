@@ -21,7 +21,9 @@ final Selector<ConeState, DateFormat> reselectDateFormat = createSelector1(
   reselectTransactions,
   (List<Transaction> transactions) => (transactions.last.date.contains('/'))
       ? DateFormat('yyyy/MM/dd')
-      : DateFormat('yyyy-MM-dd'),
+      : ((transactions.last.date.contains('.'))
+          ? DateFormat('yyyy.MM.dd')
+          : DateFormat('yyyy-MM-dd')),
 );
 
 final Selector<ConeState, Journal> reselectJournal = createSelector1(
