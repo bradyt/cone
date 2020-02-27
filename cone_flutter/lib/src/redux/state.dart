@@ -131,8 +131,8 @@ class ConeState {
 List<Middleware<ConeState>> coneMiddleware = <Middleware<ConeState>>[
   firstConeMiddleware,
   LoggingMiddleware<ConeState>.printer(
-    // formatter: coneLogFormatter,
-  ),
+      // formatter: coneLogFormatter,
+      ),
 ];
 
 String coneLogFormatter(
