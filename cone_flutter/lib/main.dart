@@ -13,7 +13,24 @@ import 'package:cone/src/redux/state.dart';
 import 'package:cone/src/settings.dart';
 import 'package:cone/src/types.dart';
 
-void main({bool snapshots = false}) {
+class ConeWidgetTest extends InheritedWidget {
+  const ConeWidgetTest({Key key, this.widgetTest, Widget child})
+      : super(key: key, child: child);
+
+  final bool widgetTest;
+
+  static bool of(BuildContext context) {
+    return context
+        .dependOnInheritedWidgetOfExactType<ConeWidgetTest>()
+        .widgetTest;
+  }
+
+  @override
+  bool updateShouldNotify(ConeWidgetTest oldWidget) =>
+      widgetTest != oldWidget.widgetTest;
+}
+
+void main({bool widgetTest = false, bool snapshots = false}) {
   final Store<ConeState> store = Store<ConeState>(
     coneReducer,
     initialState: coneInitialState,
@@ -26,11 +43,14 @@ void main({bool snapshots = false}) {
     ..dispatch(Actions.getPersistentSettings);
 
   runApp(
-    Provider<Store<ConeState>>.value(
-      value: store,
-      child: StoreProvider<ConeState>(
-        store: store,
-        child: ConeInitializing(),
+    ConeWidgetTest(
+      widgetTest: widgetTest,
+      child: Provider<Store<ConeState>>.value(
+        value: store,
+        child: StoreProvider<ConeState>(
+          store: store,
+          child: ConeInitializing(),
+        ),
       ),
     ),
   );

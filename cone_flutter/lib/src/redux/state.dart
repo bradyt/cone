@@ -130,35 +130,36 @@ class ConeState {
 
 List<Middleware<ConeState>> coneMiddleware = <Middleware<ConeState>>[
   firstConeMiddleware,
-  // LoggingMiddleware<ConeState>.printer(),
   LoggingMiddleware<ConeState>.printer(
-    formatter: (
-      dynamic state,
-      dynamic action,
-      DateTime timestamp,
-    ) {
-      return '{\n'
-          '  Action: $action,\n'
-          // '  State: $state,\n'
-          '  Transaction: Transaction(\n'
-          '      date: ${state.transaction.date},\n'
-          '      description: ${state.transaction.description},\n'
-          '      postings: <Posting>[\n'
-          // ignore: lines_longer_than_80_chars
-          '${state.transaction.postings.map((Posting posting) => '          Posting(\n'
-              '              account: ${posting.account}\n'
-              '              amount: Amount(\n'
-              '                  quantity: ${posting.amount?.quantity}\n'
-              '                  commodity: ${posting.amount?.commodity}\n'
-              '              ),\n'
-              '          ),\n').join('')}'
-          '      ],\n'
-          '  );\n'
-          '  Timestamp: ${DateTime.now()}\n'
-          '}';
-    },
+    // formatter: coneLogFormatter,
   ),
 ];
+
+String coneLogFormatter(
+  dynamic state,
+  dynamic action,
+  DateTime timestamp,
+) {
+  return '{\n'
+      '  Action: $action,\n'
+      // '  State: $state,\n'
+      '  Transaction: Transaction(\n'
+      '      date: ${state.transaction.date},\n'
+      '      description: ${state.transaction.description},\n'
+      '      postings: <Posting>[\n'
+      // ignore: lines_longer_than_80_chars
+      '${state.transaction.postings.map((Posting posting) => '          Posting(\n'
+          '              account: ${posting.account}\n'
+          '              amount: Amount(\n'
+          '                  quantity: ${posting.amount?.quantity}\n'
+          '                  commodity: ${posting.amount?.commodity}\n'
+          '              ),\n'
+          '          ),\n').join('')}'
+      '      ],\n'
+      '  );\n'
+      '  Timestamp: $timestamp\n'
+      '}';
+}
 
 ConeState coneReducer(ConeState state, dynamic action) {
   return firstConeReducer(state, action);

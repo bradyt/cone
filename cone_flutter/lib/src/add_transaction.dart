@@ -6,6 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:redux/redux.dart' show Store;
 
+import 'package:cone/main.dart' show ConeWidgetTest;
 import 'package:cone/src/localizations.dart' show ConeLocalizations;
 import 'package:cone/src/redux/actions.dart'
     show
@@ -299,7 +300,7 @@ class DescriptionFieldState extends State<DescriptionField> {
           getImmediateSuggestions: true,
           textFieldConfiguration: TextFieldConfiguration<dynamic>(
             controller: controller,
-            autofocus: true,
+            autofocus: !ConeWidgetTest.of(context),
             textInputAction: TextInputAction.next,
             onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
             decoration: const InputDecoration(
