@@ -16,7 +16,7 @@ author: Brady Trainor <mail@bradyt.com>
 version: 0.2.20+28
 
 environment:
-  sdk: ">=2.2.2 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
   cone_lib:

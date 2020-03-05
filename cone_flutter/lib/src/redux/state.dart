@@ -1,22 +1,28 @@
-import 'package:cone_lib/cone_lib.dart' show Posting, Transaction;
+import 'package:built_collection/built_collection.dart';
+import 'package:cone_lib/cone_lib.dart'
+    show Posting, PostingBuilder, Transaction, TransactionBuilder;
 import 'package:redux/redux.dart';
+// ignore: unused_import
 import 'package:redux_logging/redux_logging.dart' show LoggingMiddleware;
 
 import 'package:cone/src/redux/middleware.dart';
 import 'package:cone/src/redux/reducers.dart';
 import 'package:cone/src/types.dart' show ConeBrightness, Spacing;
 
-const ConeState coneInitialState = ConeState(
+ConeState coneInitialState = ConeState(
   initialized: false,
   isRefreshing: false,
   postingKey: 2,
   refreshCount: 0,
   saveInProgress: false,
   transaction: Transaction(
-    postings: <Posting>[
-      Posting(key: 0),
-      Posting(key: 1),
-    ],
+    (TransactionBuilder tb) => tb
+      ..postings = BuiltList<Posting>(
+        <Posting>[
+          Posting((PostingBuilder b) => b..key = 0),
+          Posting((PostingBuilder b) => b..key = 1),
+        ],
+      ).toBuilder(),
   ),
 );
 
@@ -85,6 +91,7 @@ class ConeState {
       brightness: brightness ?? this.brightness,
       contents: contents ?? this.contents,
       currencyOnLeft: currencyOnLeft ?? this.currencyOnLeft,
+      date: date ?? this.date,
       debugMode: debugMode ?? this.debugMode,
       defaultCurrency: defaultCurrency ?? this.defaultCurrency,
       initialized: initialized ?? this.initialized,
@@ -130,9 +137,9 @@ class ConeState {
 
 List<Middleware<ConeState>> coneMiddleware = <Middleware<ConeState>>[
   firstConeMiddleware,
-  LoggingMiddleware<ConeState>.printer(
-      // formatter: coneLogFormatter,
-      ),
+  // LoggingMiddleware<ConeState>.printer(
+  //     // formatter: coneLogFormatter,
+  //     ),
 ];
 
 String coneLogFormatter(

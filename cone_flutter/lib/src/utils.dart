@@ -1,9 +1,85 @@
+import 'package:built_collection/built_collection.dart';
+import 'package:meta/meta.dart';
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:intl/number_symbols.dart' show NumberSymbols;
 import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 
 import 'package:cone_lib/cone_lib.dart'
-    show AccountDirective, Journal, JournalItem, Posting, Transaction;
+    show
+        AccountDirective,
+        AmountBuilder,
+        Journal,
+        JournalItem,
+        Posting,
+        PostingBuilder,
+        Transaction,
+        TransactionBuilder;
+
+Transaction blendHintTransaction({
+  Transaction transaction,
+  Transaction hint,
+}) =>
+    transaction.rebuild(
+      (TransactionBuilder b) => b
+        ..date = (b.date.isEmpty) ? hint.date : b.date
+        ..description =
+            (b.description.isEmpty) ? hint.description : b.description
+        ..postings = blendHintPostings(
+          postings: b.postings,
+          hintPostings: hint.postings,
+        ),
+    );
+
+ListBuilder<Posting> blendHintPostings({
+  ListBuilder<Posting> postings,
+  BuiltList<Posting> hintPostings,
+}) =>
+    postings..update((ListBuilder<Posting> b) => b);
+
+Posting blendHintPosting({
+  Posting posting,
+  Posting hintPosting,
+}) =>
+    posting.rebuild(
+      (PostingBuilder b) => b
+        ..account = (b.account.isEmpty) ? hintPosting.account : b.account
+        ..amount = (b.amount
+          ..commodity = (b.amount.commodity.isEmpty)
+              ? hintPosting.amount.commodity
+              : b.amount.commodity),
+    );
+
+Transaction implicitTransaction({
+  @required Transaction transaction,
+  @required String date,
+  @required String defaultCommodity,
+  @required String Function({String quantity, String commodity}) padZeros,
+}) =>
+    transaction.rebuild((TransactionBuilder tb) => tb
+      ..date = (tb.date.isEmpty) ? date : tb.date
+      ..postings = (tb.postings
+        ..where(
+          (Posting posting) =>
+              posting.account.isNotEmpty || posting.amount.quantity.isNotEmpty,
+        )
+        ..map(
+          (Posting posting) => posting.rebuild(
+            (PostingBuilder pb) => pb
+              ..amount = (pb.amount
+                ..update(
+                  (AmountBuilder ab) => ab
+                    ..commodity =
+                        (ab.quantity.isNotEmpty && ab.commodity.isEmpty)
+                            ? defaultCommodity
+                            : ab.commodity,
+                )
+                ..update(
+                  (AmountBuilder ab) => ab
+                    ..quantity = padZeros(
+                        quantity: ab.quantity, commodity: ab.commodity),
+                )),
+          ),
+        )));
 
 int reducePostingFields(Posting posting) =>
     ((posting.account?.isEmpty ?? true) ? 0 : 1) +

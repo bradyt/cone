@@ -1,6 +1,9 @@
 analyze:
 	ls lib/**/*.dart test/*.dart | entr -s 'dartanalyzer .'
 
+watch:
+	pub run build_runner watch
+
 docs:
 	ls lib/**/*.dart | entr dartdoc
 

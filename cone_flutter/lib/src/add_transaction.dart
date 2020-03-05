@@ -199,7 +199,7 @@ class DateFieldState extends State<DateField> {
           textInputAction: TextInputAction.next,
           onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
           decoration: InputDecoration(
-            hintText: 'Today',
+            hintText: store.state.date,
             border: const OutlineInputBorder(),
             filled: true,
             suffixIcon: IconButton(
@@ -629,10 +629,10 @@ class SaveButton extends StatelessWidget {
           onPressed: readyForSave
               ? () {
                   final Transaction transaction =
-                      implicitTransaction(store.state);
+                      reselectImplicitTransaction(store.state);
                   appendFile(
                     store.state.ledgerFileUri,
-                    '${implicitTransaction(store.state)}',
+                    '$transaction',
                   ).then((_) {
                     if (store.state.debugMode) {
                       Scaffold.of(context).showSnackBar(

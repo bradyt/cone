@@ -1,7 +1,13 @@
 // ignore_for_file: prefer_function_declarations_over_variables
 
 import 'package:cone_lib/cone_lib.dart'
-    show Amount, Journal, Posting, Transaction;
+    show
+        Amount,
+        AmountBuilder,
+        Journal,
+        Posting,
+        Transaction,
+        TransactionBuilder;
 import 'package:cone_lib/pad_zeros.dart' show padZeros;
 import 'package:intl/intl.dart' show DateFormat;
 import 'package:reselect/reselect.dart'
@@ -14,16 +20,19 @@ import 'package:cone/src/utils.dart'
         descriptions,
         emptyPostingFields,
         filterSuggestions,
+        implicitTransaction,
         reducePostingFields,
         sortSuggestions;
 
 final Selector<ConeState, DateFormat> reselectDateFormat = createSelector1(
   reselectTransactions,
-  (List<Transaction> transactions) => (transactions.last.date.contains('/'))
-      ? DateFormat('yyyy/MM/dd')
-      : ((transactions.last.date.contains('.'))
-          ? DateFormat('yyyy.MM.dd')
-          : DateFormat('yyyy-MM-dd')),
+  (List<Transaction> transactions) => (transactions.isEmpty)
+      ? DateFormat('yyyy-MM-dd')
+      : ((transactions.last.date.contains('/'))
+          ? DateFormat('yyyy/MM/dd')
+          : ((transactions.last.date.contains('.'))
+              ? DateFormat('yyyy.MM.dd')
+              : DateFormat('yyyy-MM-dd'))),
 );
 
 final Selector<ConeState, Journal> reselectJournal = createSelector1(
@@ -38,12 +47,12 @@ final Selector<ConeState, bool> descriptionIsEmpty = createSelector1(
 
 final Selector<ConeState, List<List<bool>>> emptyPostingsFields =
     createSelector1(
-  (ConeState state) => state.transaction.postings,
+  (ConeState state) => state.transaction.postings.toList(),
   (List<Posting> postings) => postings.map(emptyPostingFields).toList(),
 );
 
 final Selector<ConeState, List<int>> reducePostingsFields = createSelector1(
-  (ConeState state) => state.transaction.postings,
+  (ConeState state) => state.transaction.postings.toList(),
   (List<Posting> postings) => postings.map(reducePostingFields).toList(),
 );
 
@@ -103,47 +112,34 @@ final Selector<ConeState, bool> makeSaveButtonAvailable = createSelector2(
 
 final Selector<ConeState, String> formattedExample =
     (ConeState state) => Amount(
-          commodity: state.defaultCurrency,
-          commodityOnLeft: state.currencyOnLeft,
-          quantity: padZeros(
-            locale: state.numberLocale,
-            quantity: '5',
-            commodity: state.defaultCurrency,
-          ),
-          spacing: state.spacing.index,
+          (AmountBuilder b) => b
+            ..commodity = state.defaultCurrency
+            ..commodityOnLeft = state.currencyOnLeft
+            ..quantity = padZeros(
+              locale: state.numberLocale,
+              quantity: '5',
+              commodity: state.defaultCurrency,
+            )
+            ..spacing = state.spacing.index,
         ).toString();
 
 final Selector<ConeState, String> formattedTransaction = (ConeState state) {
   final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  return '${state.transaction.copyWith(date: state.transaction.date ?? today)}';
+  //ignore: lines_longer_than_80_chars
+  return '${state.transaction.rebuild((TransactionBuilder b) => b..date = state.transaction.date ?? today)}';
 };
 
-final Selector<ConeState, Transaction> implicitTransaction = (ConeState state) {
-  final Transaction transaction = state.transaction;
-  final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
-  return state.transaction.copyWith(
-    date: (transaction.date?.isEmpty ?? true) ? today : transaction.date,
-    postings: transaction.postings
-        .where((Posting posting) => posting.account?.isNotEmpty ?? false)
-        .map((Posting posting) {
-      final String commodity = (posting.amount?.commodity?.isEmpty ?? true)
-          ? state.defaultCurrency
-          : posting.amount.commodity;
-      return posting.copyWith(
-        amount: (posting.amount?.quantity?.isEmpty ?? true)
-            ? null
-            : Amount(
-                quantity: padZeros(
-                  locale: state.numberLocale,
-                  quantity: posting.amount.quantity,
-                  commodity: commodity,
-                ),
-                commodity: commodity,
-                commodityOnLeft: state.currencyOnLeft,
-                spacing: state.spacing.index,
-              ),
-      );
-    }).toList(),
+final Selector<ConeState, Transaction> reselectImplicitTransaction =
+    (ConeState state) {
+  return implicitTransaction(
+    date: state.date,
+    defaultCommodity: state.defaultCurrency,
+    padZeros: ({String quantity, String commodity}) => padZeros(
+      locale: state.numberLocale,
+      quantity: quantity,
+      commodity: commodity,
+    ),
+    transaction: state.transaction,
   );
 };
 

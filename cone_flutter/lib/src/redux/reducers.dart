@@ -1,7 +1,10 @@
-import 'package:cone_lib/cone_lib.dart' show Amount, Posting;
+import 'package:built_collection/built_collection.dart';
+import 'package:cone_lib/cone_lib.dart'
+    show Posting, PostingBuilder, Transaction, TransactionBuilder;
 
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
+import 'package:cone/src/reselect.dart';
 import 'package:cone/src/types.dart' show ConeBrightness, Spacing;
 import 'package:cone/src/utils.dart'
     show localeCurrency, localeCurrencyOnLeft, localeSpacing;
@@ -30,90 +33,82 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
   } else if (action == Actions.addPosting) {
     return state.copyWith(
       postingKey: state.postingKey + 1,
-      transaction: state.transaction.copyWith(
-        postings: state.transaction.postings.toList()
-          ..add(Posting(
-            key: state.postingKey,
-          )),
+      transaction: state.transaction.rebuild(
+        (TransactionBuilder tb) => tb.postings = tb.postings
+          ..add(
+            Posting(
+              (PostingBuilder pb) => pb.key = state.postingKey,
+            ),
+          ),
       ),
     );
   } else if (action is RemovePostingAtAction) {
     return state.copyWith(
-      transaction: state.transaction.copyWith(
-        postings: state.transaction.postings.toList()..removeAt(action.index),
+      transaction: state.transaction.rebuild(
+        (TransactionBuilder tb) => tb.postings = tb.postings
+          ..removeAt(
+            action.index,
+          ),
       ),
     );
   } else if (action == Actions.resetTransaction) {
     return state.copyWith(
       postingKey: state.postingKey + 2,
-      transaction: state.transaction.copyWith(
-        date: '',
-        description: '',
-        postings: <Posting>[
-          Posting(
-            key: state.postingKey,
-          ),
-          Posting(
-            key: state.postingKey + 1,
-          ),
-        ],
-      ),
-    );
-  } else if (action is UpdateDateAction) {
-    return state.copyWith(
-      transaction: state.transaction.copyWith(
-        date: action.date,
-      ),
-    );
-  } else if (action is UpdateDescriptionAction) {
-    return state.copyWith(
-      transaction: state.transaction.copyWith(
-        description: action.description,
-      ),
-    );
-  } else if (action is UpdateAccountAction) {
-    return state.copyWith(
-      transaction: state.transaction.copyWith(
-        postings: state.transaction.postings.toList()
-          ..[action.index] = state.transaction.postings[action.index].copyWith(
-            account: action.account,
-          ),
-      ),
-    );
-  } else if (action is UpdateQuantityAction) {
-    final ConeState newState = state.copyWith(
-      transaction: state.transaction.copyWith(
-        postings: state.transaction.postings
-          ..[action.index] = state.transaction.postings[action.index].copyWith(
-            amount: Amount(
-              quantity: action.quantity,
-              commodity:
-                  state.transaction.postings[action.index].amount?.commodity,
-            ),
-          ),
-      ),
-    );
-    return newState;
-  } else if (action is UpdateCommodityAction) {
-    final ConeState newState = state.copyWith(
-      transaction: state.transaction.copyWith(
-        postings: state.transaction.postings
-          ..replaceRange(
-            action.index,
-            action.index + 1,
+      transaction: Transaction(
+        (TransactionBuilder tb) => tb
+          ..postings = ListBuilder<Posting>(
             <Posting>[
-              state.transaction.postings[action.index].copyWith(
-                amount: Amount(
-                  quantity:
-                      state.transaction.postings[action.index].amount?.quantity,
-                  commodity: action?.commodity,
-                ),
-              ),
+              Posting((PostingBuilder b) => b..key = state.postingKey),
+              Posting((PostingBuilder b) => b..key = state.postingKey + 1),
             ],
           ),
       ),
     );
-    return newState;
+  } else if (action is UpdateHintDateAction) {
+    return state.copyWith(
+      date: reselectDateFormat(state).format(action.date),
+    );
+  } else if (action is UpdateDateAction) {
+    return state.copyWith(
+      transaction: state.transaction.rebuild(
+        (TransactionBuilder b) => b..date = action.date,
+      ),
+    );
+  } else if (action is UpdateDescriptionAction) {
+    return state.copyWith(
+      transaction: state.transaction.rebuild(
+        (TransactionBuilder b) => b..description = action.description,
+      ),
+    );
+  } else if (action is UpdateAccountAction) {
+    return state.copyWith(
+      transaction: state.transaction.rebuild(
+        (TransactionBuilder tb) =>
+            tb.postings[action.index] = tb.postings[action.index].rebuild(
+          (PostingBuilder pb) => pb.account = action.account,
+        ),
+      ),
+    );
+  } else if (action is UpdateQuantityAction) {
+    return state.copyWith(
+      transaction: state.transaction.rebuild(
+        (TransactionBuilder tb) =>
+            tb.postings[action.index] = tb.postings[action.index].rebuild(
+          (PostingBuilder pb) =>
+              pb.amount = pb.amount..quantity = action.quantity,
+        ),
+      ),
+    );
+  } else if (action is UpdateCommodityAction) {
+    return state.copyWith(
+      transaction: state.transaction.rebuild(
+        (TransactionBuilder tb) =>
+            tb.postings[action.index] = tb.postings[action.index].rebuild(
+          (PostingBuilder pb) =>
+              pb.amount = pb.amount..commodity = action.commodity,
+        ),
+      ),
+    );
   } else if (action is UpdateSettingsAction) {
     ConeState newState;
     switch (action.key) {

@@ -11,6 +11,7 @@ enum Actions {
   snackBar,
   snackBarProcessing,
   submitTransaction,
+  today,
 }
 
 class InitializeSettingsAction {
@@ -58,6 +59,12 @@ class UpdateContentsAction {
   String toString() {
     return 'UpdateContentsAction(\'${contents.split('\n')[0]}...\')';
   }
+}
+
+class UpdateHintDateAction {
+  UpdateHintDateAction(this.date);
+
+  final DateTime date;
 }
 
 class UpdateDateAction {

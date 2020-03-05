@@ -287,6 +287,7 @@ class AddTransactionButton extends StatelessWidget {
             heroTag: '''the only floating action button here \
 ${DateTime.now().millisecondsSinceEpoch}''',
             onPressed: () {
+              store.dispatch(Actions.today);
               Navigator.pushNamed<dynamic>(context, '/add-transaction')
                   .then((dynamic transaction) {
                 if (transaction != null) {

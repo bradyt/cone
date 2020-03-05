@@ -11,7 +11,6 @@ import 'package:cone/main.dart';
 import 'package:cone/src/add_transaction.dart';
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
-import 'package:cone/src/reselect.dart';
 
 void main() {
   testWidgets('MyWidget has a title and message', (WidgetTester tester) async {
@@ -110,7 +109,8 @@ void main() {
     final Finder addTransactionTitleFinder = find.text('Add transaction');
     expect(addTransactionTitleFinder, findsOneWidget);
 
-    final Finder todayTextFinder = find.text('Today');
+    final Finder todayTextFinder =
+        find.text(DateFormat('yyyy-MM-dd').format(DateTime.now()));
     expect(todayTextFinder, findsOneWidget);
 
     final Finder calendarIconFinder =
@@ -137,7 +137,8 @@ void main() {
     final Finder dismissibleFinder = find.byType(Dismissible);
     expect(dismissibleFinder, findsNWidgets(2));
 
-    final Finder dateFieldFinder = find.widgetWithText(DateField, 'Today');
+    final Finder dateFieldFinder = find.widgetWithText(
+        DateField, DateFormat('yyyy-MM-dd').format(DateTime.now()));
     expect(dateFieldFinder, findsOneWidget);
 
     store
@@ -148,8 +149,6 @@ void main() {
     await tester.enterText(textFieldFinder.at(4), '5');
 
     await tester.pumpAndSettle();
-
-    print(validTransaction(store.state));
 
     expect(
       (tester.widget(fabFinder) as FloatingActionButton).onPressed,

@@ -1,6 +1,16 @@
+import 'package:built_collection/built_collection.dart';
 import 'package:test/test.dart';
 
-import 'package:cone_lib/cone_lib.dart' show Journal;
+import 'package:cone_lib/cone_lib.dart'
+    show
+        Amount,
+        AmountBuilder,
+        Journal,
+        Posting,
+        PostingBuilder,
+        Transaction,
+        TransactionBuilder;
+import 'package:cone_lib/pad_zeros.dart' show padZeros;
 
 import 'package:cone/src/utils.dart'
     show
@@ -10,7 +20,8 @@ import 'package:cone/src/utils.dart'
         localeSpacing,
         localeCurrency,
         localeCurrencyOnLeft,
-        sortSuggestions;
+        sortSuggestions,
+        implicitTransaction;
 
 void main() {
   test('Test localeSpacing.', () {
@@ -65,4 +76,126 @@ void main() {
     expect(filterSuggestions('a b', <String>['abc']), <String>['abc']);
     expect(filterSuggestions('a z', <String>['abc']), <String>[]);
   });
+  group('Test implicit transaction for add entry UI.', () {
+    test('Test one.', () {
+      expect(
+        implicitTransaction(
+          date: '1970-01-01',
+          defaultCommodity: '¤',
+          padZeros: ({String quantity, String commodity}) => padZeros(
+            locale: 'en',
+            quantity: quantity,
+            commodity: commodity,
+          ),
+          transaction: Transaction().copyWith(date: ''),
+        ),
+        Transaction().copyWith(date: '1970-01-01'),
+      );
+      expect(
+        implicitTransaction(
+          date: '1970-01-01',
+          defaultCommodity: '¤',
+          padZeros: ({String quantity, String commodity}) => padZeros(
+            locale: 'en',
+            quantity: quantity,
+            commodity: commodity,
+          ),
+          transaction: Transaction().addPosting(Posting()),
+        ),
+        Transaction().copyWith(date: '1970-01-01'),
+      );
+
+      final Transaction transactionWithNonEmptyPostings =
+          Transaction().addAllPostings(
+        <Posting>[
+          Posting().copyWith(account: 'assets:cash'),
+          Posting().copyWith(amount: Amount().copyWith(quantity: '7')),
+        ],
+      );
+      expect(
+        implicitTransaction(
+          date: '1970-01-01',
+          defaultCommodity: '¤',
+          padZeros: ({String quantity, String commodity}) => padZeros(
+            locale: 'en',
+            quantity: quantity,
+            commodity: commodity,
+          ),
+          transaction: transactionWithNonEmptyPostings,
+        ),
+        transactionWithNonEmptyPostings.copyWith(date: '1970-01-01').rebuild(
+              (TransactionBuilder tb) => tb
+                ..postings = (tb.postings
+                  ..update(
+                    (ListBuilder<Posting> plb) => plb
+                      ..[1] = plb[1].rebuild(
+                        (PostingBuilder pb) => pb
+                          ..amount = (pb.amount
+                            ..update(
+                              (AmountBuilder ab) => ab
+                                ..quantity = '7.00'
+                                ..commodity = '¤',
+                            )),
+                      ),
+                  )),
+            ),
+      );
+    });
+  });
+}
+
+extension CopyTransaction on Transaction {
+  Transaction addPosting(Posting posting) => rebuild(
+        (TransactionBuilder b) => b..postings = (b.postings..add(posting)),
+      );
+
+  Transaction addAllPostings(List<Posting> postings) => rebuild(
+        (TransactionBuilder b) => b
+          ..postings = (b.postings
+            ..addAll(
+              BuiltList<Posting>(postings),
+            )),
+      );
+
+  Transaction copyWith({
+    String date,
+    String description,
+    BuiltList<Posting> postings,
+  }) =>
+      rebuild(
+        (TransactionBuilder b) => b
+          ..date = date ?? b.date
+          ..description = description ?? b.description
+          ..postings = postings?.toBuilder() ?? b.postings,
+      );
+}
+
+extension CopyPosting on Posting {
+  Posting copyWith({
+    int key,
+    String account,
+    Amount amount,
+  }) =>
+      rebuild(
+        (PostingBuilder b) => b
+          ..key = key ?? b.key
+          ..account = account ?? b.account
+          ..amount = amount?.toBuilder() ?? b.amount,
+      );
+}
+
+extension CopyAmount on Amount {
+  Amount copyWith({
+    String quantity,
+    String commodity,
+    bool commodityOnLeft,
+    int spacing,
+  }) =>
+      rebuild(
+        (AmountBuilder b) => b
+          ..quantity = quantity ?? b.quantity
+          ..commodity = commodity ?? b.commodity
+          ..commodityOnLeft = commodityOnLeft ?? b.commodityOnLeft
+          ..spacing = spacing ?? b.spacing,
+      );
 }

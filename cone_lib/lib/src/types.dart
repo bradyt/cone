@@ -2,9 +2,13 @@
 
 import 'dart:math' show max;
 
+import 'package:built_collection/built_collection.dart';
+import 'package:built_value/built_value.dart';
 import 'package:petitparser/petitparser.dart';
 
 import 'package:cone_lib/parse.dart';
+
+part 'types.g.dart';
 
 class Journal {
   Journal({String contents}) {
@@ -24,146 +28,119 @@ class Journal {
       ].join('\n');
 }
 
-abstract class JournalItem {
-  const JournalItem({
-    this.firstLine,
-    this.lastLine,
-  });
+abstract class JournalItem {}
 
-  final int firstLine;
-  final int lastLine;
-}
+abstract class Comment implements JournalItem, Built<Comment, CommentBuilder> {
+  factory Comment([void Function(CommentBuilder) updates]) = _$Comment;
+  Comment._();
 
-class Comment extends JournalItem {
-  const Comment({
-    int firstLine,
-    int lastLine,
-    this.comment,
-  }) : super(firstLine: firstLine, lastLine: lastLine);
-
-  final String comment;
+  int get firstLine;
+  int get lastLine;
+  String get comment;
 
   @override
   String toString() => '$comment';
 }
 
-class Directive extends JournalItem {
-  const Directive({
-    int firstLine,
-    int lastLine,
-    this.directive,
-  }) : super(firstLine: firstLine, lastLine: lastLine);
+abstract class Directive implements JournalItem {}
 
-  final String directive;
+abstract class AccountDirective
+    implements Directive, Built<AccountDirective, AccountDirectiveBuilder> {
+  factory AccountDirective([void Function(AccountDirectiveBuilder) updates]) =
+      _$AccountDirective;
+  AccountDirective._();
 
-  @override
-  String toString() => '$directive';
-}
-
-class AccountDirective extends Directive {
-  const AccountDirective({
-    int firstLine,
-    int lastLine,
-    this.account,
-  }) : super(firstLine: firstLine, lastLine: lastLine);
-
-  final String account;
+  int get firstLine;
+  int get lastLine;
+  String get account;
 
   @override
   String toString() => '$account';
 }
 
-class Transaction extends JournalItem {
-  const Transaction({
-    int firstLine,
-    int lastLine,
-    this.date,
-    this.description,
-    this.postings,
-  }) : super(firstLine: firstLine, lastLine: lastLine);
+abstract class OtherDirective
+    implements Directive, Built<OtherDirective, OtherDirectiveBuilder> {
+  factory OtherDirective([void Function(OtherDirectiveBuilder) updates]) =
+      _$OtherDirective;
+  OtherDirective._();
 
-  final String date;
-  final String description;
-  final List<Posting> postings;
+  int get firstLine;
+  int get lastLine;
+  String get other;
+
+  @override
+  String toString() => '$other';
+}
+
+abstract class Transaction
+    implements JournalItem, Built<Transaction, TransactionBuilder> {
+  factory Transaction([void Function(TransactionBuilder) updates]) =
+      _$Transaction;
+  Transaction._();
+
+  int get firstLine;
+  int get lastLine;
+  String get date;
+  String get description;
+  BuiltList<Posting> get postings;
+
+  static void _initializeBuilder(TransactionBuilder b) => b
+    ..firstLine = -1
+    ..lastLine = -1
+    ..date = ''
+    ..description = '';
 
   @override
   String toString() => <String>[
-        '$date $description',
+        '$date $description'.trimRight(),
         for (Posting posting in postings) '$posting',
       ].join('\n');
-
-  Transaction copyWith({
-    String date,
-    String description,
-    List<Posting> postings,
-  }) =>
-      Transaction(
-        date: date ?? this.date,
-        description: description ?? this.description,
-        postings: postings ?? this.postings,
-      );
 }
 
-class Posting {
-  const Posting({
-    this.key,
-    this.account,
-    this.amount,
-  });
+abstract class Posting implements Built<Posting, PostingBuilder> {
+  factory Posting([void Function(PostingBuilder) updates]) = _$Posting;
+  Posting._();
 
-  final int key;
-  final String account;
-  final Amount amount;
+  int get key;
+  String get account;
+  Amount get amount;
 
-  Posting copyWith({
-    int key,
-    String account,
-    Amount amount,
-  }) =>
-      Posting(
-        key: key ?? this.key,
-        account: account ?? this.account,
-        amount: amount ?? this.amount,
-      );
+  static void _initializeBuilder(PostingBuilder b) => b
+    ..key = -1
+    ..account = '';
 
   @override
   String toString() {
-    if (amount == null) {
-      return '    $account';
-    } else {
-      final int padding = max(
-          2,
-          (amount.commodityOnLeft)
-              ? 52 - 4 - account.length - 2 - amount.toString().length
-              : 52 -
-                  4 -
-                  account.length -
-                  2 -
-                  amount.quantity.toString().length);
-      return '    $account  ${' ' * padding}$amount'.trimRight();
-    }
+    final int padding = max(
+        2,
+        (amount?.commodityOnLeft ?? true)
+            ? 52 - 4 - account.length - 2 - amount.toString().length
+            : 52 - 4 - account.length - 2 - amount.quantity.toString().length);
+    return '    $account  ${' ' * padding}$amount'.trimRight();
   }
 }
 
-class Amount {
-  const Amount({
-    this.commodity,
-    this.commodityOnLeft,
-    this.quantity,
-    this.spacing,
-  });
+abstract class Amount implements Built<Amount, AmountBuilder> {
+  factory Amount([void Function(AmountBuilder) updates]) = _$Amount;
+  Amount._();
 
-  final String commodity;
-  final String quantity;
-  final bool commodityOnLeft;
-  final int spacing;
+  String get commodity;
+  String get quantity;
+  @nullable
+  bool get commodityOnLeft;
+  @nullable
+  int get spacing;
+
+  static void _initializeBuilder(AmountBuilder b) => b
+    ..quantity = ''
+    ..commodity = '';
 
   @override
   String toString() {
     if (commodityOnLeft ?? true) {
-      return '$commodity${' ' * (spacing ?? 0)}$quantity';
+      return '${commodity ?? ''}${' ' * (spacing ?? 0)}$quantity';
     } else {
-      return '$quantity${' ' * (spacing ?? 0)}$commodity';
+      return '$quantity${' ' * (spacing ?? 0)}${commodity ?? ''}';
     }
   }
 }

@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs
 
+import 'package:built_collection/built_collection.dart';
 import 'package:petitparser/petitparser.dart';
 
 import 'package:cone_lib/src/types.dart';
@@ -45,22 +46,25 @@ JournalItem parseJournalItem(Token<String> token) {
   } else if (token.value.startsWith(RegExp(r'[A-Za-z]'))) {
     if (token.value.startsWith('account')) {
       return AccountDirective(
-        firstLine: token.line,
-        lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
-        account: token.value.split('account ')[1].split(';')[0].trim(),
+        (AccountDirectiveBuilder b) => b
+          ..account = token.value.split('account ')[1].split(';')[0].trim()
+          ..firstLine = token.line
+          ..lastLine = Token.lineAndColumnOf(token.buffer, token.stop)[0],
       );
     } else {
-      return Directive(
-        firstLine: token.line,
-        lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
-        directive: token.value,
+      return OtherDirective(
+        (OtherDirectiveBuilder b) => b
+          ..other = token.value
+          ..firstLine = token.line
+          ..lastLine = Token.lineAndColumnOf(token.buffer, token.stop)[0],
       );
     }
   } else {
     return Comment(
-      firstLine: token.line,
-      lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
-      comment: token.value,
+      (CommentBuilder b) => b
+        ..comment = token.value
+        ..firstLine = token.line
+        ..lastLine = Token.lineAndColumnOf(token.buffer, token.stop)[0],
     );
   }
 }
@@ -70,30 +74,32 @@ Transaction _parseTransaction(Token<String> token) {
   final List<String> lines = chunk.split('\n');
   final String date = '${lines[0].split(' ')[0]}';
   final int splitAt = lines[0].indexOf(' ');
-  final String description = lines[0].substring(splitAt).trim();
-  final List<Posting> postings = <Posting>[];
+  final String description =
+      (splitAt == -1) ? '' : lines[0].substring(splitAt).trim();
+  final ListBuilder<Posting> postingsBuilder = BuiltList<Posting>().toBuilder();
   for (final String line in lines.sublist(1)) {
     if (!line.startsWith(RegExp(r'[ \t]*;'))) {
       final String account = '${line.trim().split('  ')[0]}';
       final int splitAt2 = line.trim().indexOf('  ');
-      Amount amount;
-      if (splitAt2 != -1) {
-        amount = _parseAmount(line.trim().substring(splitAt2).trim());
-      }
-      postings.add(
+      final AmountBuilder amountBuilder = (splitAt2 == -1)
+          ? (AmountBuilder()..quantity = '')
+          : _parseAmount(line.trim().substring(splitAt2).trim()).toBuilder();
+      postingsBuilder.add(
         Posting(
-          account: account,
-          amount: amount,
+          (PostingBuilder pb) => pb
+            ..account = account
+            ..amount = amountBuilder,
         ),
       );
     }
   }
   return Transaction(
-    firstLine: token.line,
-    lastLine: Token.lineAndColumnOf(token.buffer, token.stop)[0],
-    date: date,
-    description: description,
-    postings: postings,
+    (TransactionBuilder tb) => tb
+      ..date = date
+      ..description = description
+      ..postings = postingsBuilder
+      ..firstLine = token.line
+      ..lastLine = Token.lineAndColumnOf(token.buffer, token.stop)[0],
   );
 }
 
@@ -116,9 +122,10 @@ Amount _parseAmount(String amount) {
   }
 
   return Amount(
-    commodity: commodity,
-    commodityOnLeft: commodityOnLeft,
-    quantity: quantity,
-    spacing: spacing,
+    (AmountBuilder b) => b
+      ..commodity = commodity
+      ..commodityOnLeft = commodityOnLeft
+      ..quantity = quantity
+      ..spacing = spacing,
   );
 }

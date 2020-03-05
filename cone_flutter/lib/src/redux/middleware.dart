@@ -70,6 +70,8 @@ dynamic firstConeMiddleware(
     SharedPreferences.getInstance().then((SharedPreferences prefs) {
       prefs.setInt('brightness', action.brightness.index);
     });
+  } else if (action == Actions.today) {
+    store.dispatch(UpdateHintDateAction(DateTime.now()));
   }
   next(action);
 }
