@@ -43,7 +43,7 @@ void main() {
 
     final Store<ConeState> store = Store<ConeState>(
       coneReducer,
-      initialState: coneInitialState,
+      initialState: ConeState(),
       middleware: coneMiddleware,
     );
 

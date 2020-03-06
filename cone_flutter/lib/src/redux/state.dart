@@ -1,3 +1,4 @@
+import 'package:built_value/built_value.dart';
 import 'package:built_collection/built_collection.dart';
 import 'package:cone_lib/cone_lib.dart'
     show Posting, PostingBuilder, Transaction, TransactionBuilder;
@@ -9,130 +10,58 @@ import 'package:cone/src/redux/middleware.dart';
 import 'package:cone/src/redux/reducers.dart';
 import 'package:cone/src/types.dart' show ConeBrightness, Spacing;
 
-ConeState coneInitialState = ConeState(
-  initialized: false,
-  isRefreshing: false,
-  postingKey: 2,
-  refreshCount: 0,
-  saveInProgress: false,
-  transaction: Transaction(
-    (TransactionBuilder tb) => tb
-      ..postings = BuiltList<Posting>(
-        <Posting>[
-          Posting((PostingBuilder b) => b..key = 0),
-          Posting((PostingBuilder b) => b..key = 1),
-        ],
-      ).toBuilder(),
-  ),
-);
+part 'state.g.dart';
 
-class ConeState {
-  const ConeState({
-    this.brightness,
-    this.contents,
-    this.currencyOnLeft,
-    this.date,
-    this.debugMode,
-    this.defaultCurrency,
-    this.initialized,
-    this.isRefreshing,
-    this.ledgerFileDisplayName,
-    this.ledgerFileUri,
-    this.numberLocale,
-    this.postingKey,
-    this.refreshCount,
-    this.reverseSort,
-    this.saveInProgress,
-    this.spacing,
-    this.systemLocale,
-    this.transaction,
-  });
+abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
+  factory ConeState([void Function(ConeStateBuilder) updates]) = _$ConeState;
+  ConeState._();
 
-  final ConeBrightness brightness;
-  final Spacing spacing;
-  final String contents;
-  final String date;
-  final String defaultCurrency;
-  final String ledgerFileDisplayName;
-  final String ledgerFileUri;
-  final String numberLocale;
-  final String systemLocale;
-  final Transaction transaction;
-  final bool currencyOnLeft;
-  final bool debugMode;
-  final bool initialized;
-  final bool isRefreshing;
-  final bool reverseSort;
-  final bool saveInProgress;
-  final int postingKey;
-  final int refreshCount;
+  @nullable
+  ConeBrightness get brightness;
+  @nullable
+  Spacing get spacing;
+  @nullable
+  String get contents;
+  @nullable
+  String get date;
+  @nullable
+  String get defaultCurrency;
+  @nullable
+  String get ledgerFileDisplayName;
+  @nullable
+  String get ledgerFileUri;
+  @nullable
+  String get numberLocale;
+  @nullable
+  String get systemLocale;
+  Transaction get transaction;
+  @nullable
+  bool get currencyOnLeft;
+  @nullable
+  bool get debugMode;
+  bool get initialized;
+  bool get isRefreshing;
+  @nullable
+  bool get reverseSort;
+  bool get saveInProgress;
+  int get postingKey;
+  int get refreshCount;
 
-  ConeState copyWith({
-    ConeBrightness brightness,
-    Spacing spacing,
-    String contents,
-    String date,
-    String defaultCurrency,
-    String ledgerFileDisplayName,
-    String ledgerFileUri,
-    String numberLocale,
-    String systemLocale,
-    Transaction transaction,
-    bool currencyOnLeft,
-    bool debugMode,
-    bool initialized,
-    bool isRefreshing,
-    bool reverseSort,
-    bool saveInProgress,
-    int postingKey,
-    int refreshCount,
-  }) {
-    return ConeState(
-      brightness: brightness ?? this.brightness,
-      contents: contents ?? this.contents,
-      currencyOnLeft: currencyOnLeft ?? this.currencyOnLeft,
-      date: date ?? this.date,
-      debugMode: debugMode ?? this.debugMode,
-      defaultCurrency: defaultCurrency ?? this.defaultCurrency,
-      initialized: initialized ?? this.initialized,
-      isRefreshing: isRefreshing ?? this.isRefreshing,
-      ledgerFileDisplayName:
-          ledgerFileDisplayName ?? this.ledgerFileDisplayName,
-      ledgerFileUri: ledgerFileUri ?? this.ledgerFileUri,
-      numberLocale: numberLocale ?? this.numberLocale,
-      postingKey: postingKey ?? this.postingKey,
-      refreshCount: refreshCount ?? this.refreshCount,
-      reverseSort: reverseSort ?? this.reverseSort,
-      saveInProgress: saveInProgress ?? this.saveInProgress,
-      spacing: spacing ?? this.spacing,
-      systemLocale: systemLocale ?? this.systemLocale,
-      transaction: transaction ?? this.transaction,
-    );
-  }
-
-//   @override
-//   String toString() {
-//     return '''
-// ConeState(
-//       brightness: '$brightness',
-//       contents: '${contents?.split('\n')?.elementAt(0)}...',
-//       currencyOnLeft: '$currencyOnLeft',
-//       debugMode: '$debugMode',
-//       defaultCurrency: '$defaultCurrency',
-//       initialized: '$initialized',
-//       isRefreshing: '$isRefreshing',
-//       ledgerFileDisplayName:'$ledgerFileDisplayName',
-//       ledgerFileUri: '$ledgerFileUri',
-//       numberLocale: '$numberLocale',
-//       postingKey: '$postingKey',
-//       refreshCount: '$refreshCount',
-//       reverseSort: '$reverseSort',
-//       saveInProgress: '$saveInProgress',
-//       spacing: '$spacing',
-//       systemLocale: '$systemLocale',
-//       transaction: '$transaction',
-//   );''';
-//   }
+  static void _initializeBuilder(ConeStateBuilder b) => b
+    ..initialized = false
+    ..isRefreshing = false
+    ..postingKey = 2
+    ..refreshCount = 0
+    ..saveInProgress = false
+    ..transaction = Transaction(
+      (TransactionBuilder tb) => tb
+        ..postings = BuiltList<Posting>(
+          <Posting>[
+            Posting((PostingBuilder b) => b..key = 0),
+            Posting((PostingBuilder b) => b..key = 1),
+          ],
+        ).toBuilder(),
+    ).toBuilder();
 }
 
 List<Middleware<ConeState>> coneMiddleware = <Middleware<ConeState>>[

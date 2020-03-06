@@ -22,7 +22,8 @@ echo "--- Running dartfmt in uri_picker... ---"
 (cd uri_picker && flutter packages get)
 
 # Build runner
-(cd cone_lib && flutter pub run build_runner build)
+(cd cone_lib && pub run build_runner build)
+(cd cone_flutter && flutter pub run build_runner build)
 
 # Analyze
 echo "--- Running dartanalyzer in cone_lib... ---"

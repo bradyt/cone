@@ -19,6 +19,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
+  built_value:
   cone_lib:
     path: ../cone_lib
   datetime_picker_formfield:
@@ -42,6 +43,8 @@ dependencies:
   cupertino_icons:
 
 dev_dependencies:
+  build_runner:
+  built_value_generator:
   flutter_redux_dev_tools:
   redux_dev_tools:
   test:

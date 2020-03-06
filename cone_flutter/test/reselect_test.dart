@@ -12,7 +12,7 @@ import 'package:cone_lib/cone_lib.dart'
         Transaction,
         TransactionBuilder;
 
-import 'package:cone/src/redux/state.dart' show ConeState;
+import 'package:cone/src/redux/state.dart' show ConeState, ConeStateBuilder;
 import 'package:cone/src/reselect.dart'
     show
         formattedExample,
@@ -28,11 +28,12 @@ import 'package:cone/src/types.dart' show Spacing;
 import '../test/utils_test.dart';
 
 void main() {
-  const ConeState state = ConeState(
-    numberLocale: 'en',
-    spacing: Spacing.zero,
-    contents: '',
-    defaultCurrency: '',
+  final ConeState state = ConeState(
+    (ConeStateBuilder b) => b
+      ..numberLocale = 'en'
+      ..spacing = Spacing.zero
+      ..contents = ''
+      ..defaultCurrency = '',
   );
   test('Test formattedExample.', () {
     expect(formattedExample(state), '5.00');
@@ -57,42 +58,46 @@ void main() {
   });
   group('Test validTransaction.', () {
     test('Test an invalid transaction.', () {
-      expect(validTransaction(ConeState(transaction: Transaction())), false);
+      expect(
+          validTransaction(ConeState(
+              (ConeStateBuilder b) => b..transaction = TransactionBuilder())),
+          false);
     });
     test('Test a valid transaction.', () {
       expect(
-          validTransaction(ConeState(
-              transaction: Transaction()
-                  .copyWith(
-            date: '1970-01-01',
-            description: 'example transaction',
-          )
-                  .addAllPostings(<Posting>[
-            Posting().copyWith(
-                account: 'a', amount: Amount().copyWith(quantity: '0')),
-            Posting().copyWith(account: 'a'),
-            Posting(),
-          ]))),
+          validTransaction(ConeState((ConeStateBuilder b) => b
+            ..transaction = Transaction()
+                .copyWith(
+              date: '1970-01-01',
+              description: 'example transaction',
+            )
+                .addAllPostings(<Posting>[
+              Posting().copyWith(
+                  account: 'a', amount: Amount().copyWith(quantity: '0')),
+              Posting().copyWith(account: 'a'),
+              Posting(),
+            ]).toBuilder())),
           true);
     });
     test('Test atLeastTwoAccounts.', () {
       expect(
           validTransaction(
             ConeState(
-              transaction: Transaction(
-                (TransactionBuilder tb) => tb
-                  ..postings = BuiltList<Posting>(
-                    <Posting>[
-                      Posting(
-                        (PostingBuilder b) => b
-                          ..account = 'a'
-                          ..amount = Amount(
-                            (AmountBuilder b) => b..quantity = '0',
-                          ).toBuilder(),
-                      ),
-                    ],
-                  ).toBuilder(),
-              ),
+              (ConeStateBuilder b) => b
+                ..transaction = Transaction(
+                  (TransactionBuilder tb) => tb
+                    ..postings = BuiltList<Posting>(
+                      <Posting>[
+                        Posting(
+                          (PostingBuilder b) => b
+                            ..account = 'a'
+                            ..amount = Amount(
+                              (AmountBuilder b) => b..quantity = '0',
+                            ).toBuilder(),
+                        ),
+                      ],
+                    ).toBuilder(),
+                ).toBuilder(),
             ),
           ),
           false);
@@ -101,16 +106,17 @@ void main() {
       expect(
           validTransaction(
             ConeState(
-              transaction: Transaction(
-                (TransactionBuilder tb) => tb
-                  ..postings = BuiltList<Posting>(
-                    <Posting>[
-                      Posting(
-                        (PostingBuilder b) => b..account = 'a',
-                      ),
-                    ],
-                  ).toBuilder(),
-              ),
+              (ConeStateBuilder b) => b
+                ..transaction = Transaction(
+                  (TransactionBuilder tb) => tb
+                    ..postings = BuiltList<Posting>(
+                      <Posting>[
+                        Posting(
+                          (PostingBuilder b) => b..account = 'a',
+                        ),
+                      ],
+                    ).toBuilder(),
+                ).toBuilder(),
             ),
           ),
           false);
@@ -119,19 +125,20 @@ void main() {
       expect(
           validTransaction(
             ConeState(
-              transaction: Transaction(
-                (TransactionBuilder tb) => tb
-                  ..postings = BuiltList<Posting>(
-                    <Posting>[
-                      Posting(
-                        (PostingBuilder b) => b
-                          ..amount = Amount(
-                            (AmountBuilder b) => b..quantity = '0',
-                          ).toBuilder(),
-                      ),
-                    ],
-                  ).toBuilder(),
-              ),
+              (ConeStateBuilder b) => b
+                ..transaction = Transaction(
+                  (TransactionBuilder tb) => tb
+                    ..postings = ListBuilder<Posting>(
+                      <Posting>[
+                        Posting(
+                          (PostingBuilder b) => b
+                            ..amount = Amount(
+                              (AmountBuilder b) => b..quantity = '0',
+                            ).toBuilder(),
+                        ),
+                      ],
+                    ),
+                ).toBuilder(),
             ),
           ),
           false);
@@ -140,15 +147,16 @@ void main() {
       expect(
           validTransaction(
             ConeState(
-              transaction: Transaction(
-                (TransactionBuilder tb) => tb
-                  ..postings = BuiltList<Posting>(
-                    <Posting>[
-                      Posting((PostingBuilder b) => b..account = 'a'),
-                      Posting((PostingBuilder b) => b..account = 'a'),
-                    ],
-                  ).toBuilder(),
-              ),
+              (ConeStateBuilder b) => b
+                ..transaction = Transaction(
+                  (TransactionBuilder tb) => tb
+                    ..postings = ListBuilder<Posting>(
+                      <Posting>[
+                        Posting((PostingBuilder b) => b..account = 'a'),
+                        Posting((PostingBuilder b) => b..account = 'a'),
+                      ],
+                    ),
+                ).toBuilder(),
             ),
           ),
           false);

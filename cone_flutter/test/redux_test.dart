@@ -12,15 +12,14 @@ import 'package:cone/src/types.dart';
 void main() {
   group('Test state.dart.', () {
     test('Test ConeState.', () {
-      expect(const ConeState().copyWith() is ConeState, true);
+      expect(ConeState() is ConeState, true);
     });
     test('Test coneMiddleWare.', () {
       expect(coneMiddleware is List, true);
     });
     test('Test coneReducer.', () {
       expect(
-          coneReducer(const ConeState(), Actions.markInitialized) is ConeState,
-          true);
+          coneReducer(ConeState(), Actions.markInitialized) is ConeState, true);
     });
   });
   group('Test action.dart.', () {
@@ -78,7 +77,7 @@ void main() {
       Actions.refreshFileContents,
       UpdateContentsAction(''),
       SetBrightness(ConeBrightness.auto),
-    ].fold<ConeState>(coneInitialState, firstConeReducer);
+    ].fold<ConeState>(ConeState(), firstConeReducer);
 
     test('Test reduction is a state.', () {
       expect(coneFinalState is ConeState, true);
@@ -87,7 +86,7 @@ void main() {
   group('Test middleware.dart.', () {
     final Store<ConeState> store = Store<ConeState>(
       coneReducer,
-      initialState: coneInitialState,
+      initialState: ConeState(),
       middleware: coneMiddleware,
     );
 

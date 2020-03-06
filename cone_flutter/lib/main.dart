@@ -33,7 +33,7 @@ class ConeWidgetTest extends InheritedWidget {
 void main({bool widgetTest = false, bool snapshots = false}) {
   final Store<ConeState> store = Store<ConeState>(
     coneReducer,
-    initialState: coneInitialState,
+    initialState: ConeState(),
     middleware: coneMiddleware,
   );
 

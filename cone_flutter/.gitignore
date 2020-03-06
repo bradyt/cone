@@ -39,3 +39,5 @@ lib/generated_plugin_registrant.dart
 # Coverage
 coverage/
 test/.test_coverage.dart
+
+*.g.dart
