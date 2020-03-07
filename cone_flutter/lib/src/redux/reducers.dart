@@ -1,6 +1,5 @@
-import 'package:built_collection/built_collection.dart';
 import 'package:cone_lib/cone_lib.dart'
-    show Posting, PostingBuilder, Transaction, TransactionBuilder;
+    show Posting, PostingBuilder, TransactionBuilder;
 
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
@@ -40,7 +39,11 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
               (TransactionBuilder tb) => tb.postings = tb.postings
                 ..add(
                   Posting(
-                    (PostingBuilder pb) => pb.key = state.postingKey,
+                    (PostingBuilder pb) => pb
+                      ..key = state.postingKey
+                      ..amount = (pb.amount
+                        ..commodityOnLeft = state.currencyOnLeft
+                        ..spacing = state.spacing.index),
                   ),
                 ),
             )
@@ -49,6 +52,10 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
   } else if (action is RemovePostingAtAction) {
     return state.rebuild(
       (ConeStateBuilder b) => b
+        ..hintTransaction.postings =
+            ((action.index < b.hintTransaction.postings.length)
+                ? (b.hintTransaction.postings..removeAt(action.index))
+                : b.hintTransaction.postings)
         ..transaction = state.transaction
             .rebuild(
               (TransactionBuilder tb) => tb.postings = tb.postings
@@ -60,22 +67,23 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
     );
   } else if (action == Actions.resetTransaction) {
     return state.rebuild(
-      (ConeStateBuilder b) => b
-        ..postingKey = state.postingKey + 2
-        ..transaction = Transaction(
-          (TransactionBuilder tb) => tb
-            ..postings = ListBuilder<Posting>(
-              <Posting>[
-                Posting((PostingBuilder b) => b..key = state.postingKey),
-                Posting((PostingBuilder b) => b..key = state.postingKey + 1),
-              ],
-            ),
-        ).toBuilder(),
+      (ConeStateBuilder b) => b..transaction = TransactionBuilder(),
     );
-  } else if (action is UpdateHintDateAction) {
+  } else if (action is UpdateTransactionIndexAction) {
     return state.rebuild(
-      (ConeStateBuilder b) =>
-          b..date = reselectDateFormat(state).format(action.date),
+      (ConeStateBuilder b) => b
+        ..transactionIndex =
+            (b.transactionIndex == action.index) ? -1 : action.index,
+    );
+  } else if (action == Actions.updateHintTransaction) {
+    return state.rebuild(
+      (ConeStateBuilder csb) => csb
+        ..hintTransaction = reselectHintTransaction(state).toBuilder()
+        ..hintTransaction.date = reselectDateFormat(state).format(state.today),
+    );
+  } else if (action is UpdateTodayAction) {
+    return state.rebuild(
+      (ConeStateBuilder b) => b..today = action.today,
     );
   } else if (action is UpdateDateAction) {
     return state.rebuild(

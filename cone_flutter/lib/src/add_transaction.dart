@@ -6,7 +6,7 @@ import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:redux/redux.dart' show Store;
 
-import 'package:cone/main.dart' show ConeWidgetTest;
+// import 'package:cone/main.dart' show ConeWidgetTest;
 import 'package:cone/src/localizations.dart' show ConeLocalizations;
 import 'package:cone/src/redux/actions.dart'
     show
@@ -16,6 +16,7 @@ import 'package:cone/src/redux/actions.dart'
         UpdateCommodityAction,
         UpdateDateAction,
         UpdateDescriptionAction,
+        UpdateTransactionIndexAction,
         UpdateQuantityAction;
 import 'package:cone/src/redux/state.dart' show ConeState;
 import 'package:cone/src/reselect.dart';
@@ -199,7 +200,7 @@ class DateFieldState extends State<DateField> {
           textInputAction: TextInputAction.next,
           onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
           decoration: InputDecoration(
-            hintText: store.state.date,
+            hintText: store.state.hintTransaction.date,
             border: const OutlineInputBorder(),
             filled: true,
             suffixIcon: IconButton(
@@ -300,11 +301,11 @@ class DescriptionFieldState extends State<DescriptionField> {
           getImmediateSuggestions: true,
           textFieldConfiguration: TextFieldConfiguration<dynamic>(
             controller: controller,
-            autofocus: !ConeWidgetTest.of(context),
             textInputAction: TextInputAction.next,
             onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
-            decoration: const InputDecoration(
-              border: OutlineInputBorder(),
+            decoration: InputDecoration(
+              hintText: reselectHintTransaction(store.state).description,
+              border: const OutlineInputBorder(),
               filled: true,
             ),
           ),
@@ -437,6 +438,13 @@ class AccountFieldState extends State<AccountField> {
         controller: controller,
         textInputAction: TextInputAction.next,
         onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
+        decoration: InputDecoration(
+          hintText: (widget.index <
+                  widget.store.state.hintTransaction.postings.length)
+              ? widget
+                  .store.state.hintTransaction.postings[widget.index].account
+              : null,
+        ),
       ),
       itemBuilder: (BuildContext context, String suggestion) {
         return ListTile(title: Text(suggestion));
@@ -526,7 +534,14 @@ class QuantityFieldState extends State<QuantityField> {
       textAlign: TextAlign.center,
       controller: controller,
       decoration: InputDecoration(
-        hintText: hint,
+        hintText:
+            (widget.index < widget.store.state.hintTransaction.postings.length)
+                ? ((widget.store.state.hintTransaction.postings[widget.index]
+                        .amount.quantity.isNotEmpty)
+                    ? widget.store.state.hintTransaction.postings[widget.index]
+                        .amount.quantity
+                    : hint)
+                : hint,
       ),
       keyboardType: TextInputType.number,
       textInputAction: lastField ? null : TextInputAction.next,
@@ -608,7 +623,14 @@ class CommodityFieldState extends State<CommodityField> {
       textAlign: TextAlign.center,
       controller: controller,
       decoration: InputDecoration(
-        hintText: defaultCurrency,
+        hintText:
+            (widget.index < widget.store.state.hintTransaction.postings.length)
+                ? ((widget.store.state.hintTransaction.postings[widget.index]
+                        .amount.commodity.isNotEmpty)
+                    ? widget.store.state.hintTransaction.postings[widget.index]
+                        .amount.commodity
+                    : defaultCurrency)
+                : defaultCurrency,
       ),
       textInputAction: lastField ? null : TextInputAction.next,
       onSubmitted: lastField ? null : (_) => FocusScope.of(context).nextFocus(),
@@ -639,6 +661,7 @@ class SaveButton extends StatelessWidget {
                         transactionSnackBar(transaction: transaction),
                       );
                     } else {
+                      store.dispatch(UpdateTransactionIndexAction(index: -1));
                       Navigator.of(context).pop(transaction);
                     }
                   });

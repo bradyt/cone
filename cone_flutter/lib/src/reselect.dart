@@ -17,12 +17,21 @@ import 'package:cone/src/redux/state.dart';
 import 'package:cone/src/utils.dart'
     show
         accounts,
+        blendHintTransaction,
         descriptions,
         emptyPostingFields,
         filterSuggestions,
         implicitTransaction,
         reducePostingFields,
         sortSuggestions;
+
+final Selector<ConeState, Transaction> reselectHintTransaction =
+    createSelector1(
+  (ConeState state) => state,
+  (ConeState state) => (state.transactionIndex == -1)
+      ? Transaction()
+      : reselectTransactions(state).elementAt(state.transactionIndex),
+);
 
 final Selector<ConeState, DateFormat> reselectDateFormat = createSelector1(
   reselectTransactions,
@@ -47,25 +56,34 @@ final Selector<ConeState, bool> descriptionIsEmpty = createSelector1(
 
 final Selector<ConeState, List<List<bool>>> emptyPostingsFields =
     createSelector1(
-  (ConeState state) => state.transaction.postings.toList(),
+  (ConeState state) => blendHintTransaction(
+    transaction: state.transaction,
+    hintTransaction: state.hintTransaction,
+  ).postings.toList(),
   (List<Posting> postings) => postings.map(emptyPostingFields).toList(),
 );
 
 final Selector<ConeState, List<int>> reducePostingsFields = createSelector1(
-  (ConeState state) => state.transaction.postings.toList(),
+  (ConeState state) => blendHintTransaction(
+    transaction: state.transaction,
+    hintTransaction: state.hintTransaction,
+  ).postings.toList(),
   (List<Posting> postings) => postings.map(reducePostingFields).toList(),
 );
 
-final Selector<ConeState, bool> needsNewPosting = createSelector1(
+final Selector<ConeState, bool> needsNewPosting = createSelector2(
   reducePostingsFields,
-  (List<int> reduction) => reduction.every((int row) => row > 0),
+  (ConeState state) => state.transaction.postings.length < 2,
+  (List<int> reduction, bool tooFew) =>
+      tooFew || reduction.every((int row) => row > 0),
 );
 
 bool validTransaction(ConeState state) {
-  final List<int> reduction = state.transaction.postings
-      .map(
-        reducePostingFields,
-      )
+  final List<int> reduction = blendHintTransaction(
+          transaction: state.transaction,
+          hintTransaction: state.hintTransaction)
+      .postings
+      .map(reducePostingFields)
       .toList();
   final bool atLeastTwoAccounts =
       reduction.where((int n) => n % 2 == 1).toList().length >= 2;
@@ -79,29 +97,13 @@ bool validTransaction(ConeState state) {
       atMostOneEmptyQuantity;
 }
 
-// final Selector<ConeState, bool> validTransaction = createSelector2(
-//   descriptionIsEmpty,
-//   reducePostingsFields,
-//   (bool descriptionIsEmpty, List<int> reduction) {
-//     print(reduction);
-//     final bool atLeastTwoAccounts =
-//         reduction.where((int n) => n % 2 == 1).toList().length >= 2;
-//     final bool atLeastOneQuantity = reduction.any((int n) => n >= 2);
-//     final bool allQuantitiesHaveAccounts = !reduction.contains(2);
-//     final bool atMostOneEmptyQuantity =
-//         reduction.where((int n) => n == 1).toList().length <= 1;
-//     return !descriptionIsEmpty &&
-//         atLeastTwoAccounts &&
-//         atLeastOneQuantity &&
-//         allQuantitiesHaveAccounts &&
-//         atMostOneEmptyQuantity;
-//   },
-// );
-
 final Selector<ConeState, List<Transaction>> reselectTransactions =
-    createSelector1(
+    createSelector2(
   reselectJournal,
-  (Journal journal) => journal.journalItems.whereType<Transaction>().toList(),
+  (ConeState state) => state.reverseSort,
+  (Journal journal, bool reverseSort) => reverseSort
+      ? journal.journalItems.whereType<Transaction>().toList().reversed.toList()
+      : journal.journalItems.whereType<Transaction>().toList(),
 );
 
 final Selector<ConeState, bool> makeSaveButtonAvailable = createSelector2(
@@ -132,8 +134,8 @@ final Selector<ConeState, String> formattedTransaction = (ConeState state) {
 final Selector<ConeState, Transaction> reselectImplicitTransaction =
     (ConeState state) {
   return implicitTransaction(
-    date: state.date,
     defaultCommodity: state.defaultCurrency,
+    hintTransaction: state.hintTransaction,
     padZeros: ({String quantity, String commodity}) => padZeros(
       locale: state.numberLocale,
       quantity: quantity,

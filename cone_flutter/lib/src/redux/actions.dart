@@ -12,6 +12,15 @@ enum Actions {
   snackBarProcessing,
   submitTransaction,
   today,
+  updateHintTransaction,
+}
+
+class UpdateTransactionIndexAction {
+  UpdateTransactionIndexAction({
+    this.index,
+  });
+
+  final int index;
 }
 
 class InitializeSettingsAction {
@@ -61,10 +70,10 @@ class UpdateContentsAction {
   }
 }
 
-class UpdateHintDateAction {
-  UpdateHintDateAction(this.date);
+class UpdateTodayAction {
+  UpdateTodayAction(this.today);
 
-  final DateTime date;
+  final DateTime today;
 }
 
 class UpdateDateAction {

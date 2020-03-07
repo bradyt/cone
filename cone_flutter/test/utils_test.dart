@@ -15,6 +15,7 @@ import 'package:cone_lib/pad_zeros.dart' show padZeros;
 import 'package:cone/src/utils.dart'
     show
         accounts,
+        blendHintTransaction,
         descriptions,
         filterSuggestions,
         localeSpacing,
@@ -80,7 +81,6 @@ void main() {
     test('Test one.', () {
       expect(
         implicitTransaction(
-          date: '1970-01-01',
           defaultCommodity: '¤',
           padZeros: ({String quantity, String commodity}) => padZeros(
             locale: 'en',
@@ -88,12 +88,12 @@ void main() {
             commodity: commodity,
           ),
           transaction: Transaction().copyWith(date: ''),
+          hintTransaction: Transaction().copyWith(date: '1970-01-01'),
         ),
         Transaction().copyWith(date: '1970-01-01'),
       );
       expect(
         implicitTransaction(
-          date: '1970-01-01',
           defaultCommodity: '¤',
           padZeros: ({String quantity, String commodity}) => padZeros(
             locale: 'en',
@@ -101,6 +101,7 @@ void main() {
             commodity: commodity,
           ),
           transaction: Transaction().addPosting(Posting()),
+          hintTransaction: Transaction().copyWith(date: '1970-01-01'),
         ),
         Transaction().copyWith(date: '1970-01-01'),
       );
@@ -114,7 +115,6 @@ void main() {
       );
       expect(
         implicitTransaction(
-          date: '1970-01-01',
           defaultCommodity: '¤',
           padZeros: ({String quantity, String commodity}) => padZeros(
             locale: 'en',
@@ -122,6 +122,7 @@ void main() {
             commodity: commodity,
           ),
           transaction: transactionWithNonEmptyPostings,
+          hintTransaction: Transaction().copyWith(date: '1970-01-01'),
         ),
         transactionWithNonEmptyPostings.copyWith(date: '1970-01-01').rebuild(
               (TransactionBuilder tb) => tb
@@ -139,6 +140,17 @@ void main() {
                       ),
                   )),
             ),
+      );
+    });
+  });
+  group('Test transaction hint blending.', () {
+    test('Test transaction hint blending.', () {
+      expect(
+        blendHintTransaction(
+          transaction: Transaction(),
+          hintTransaction: Transaction(),
+        ),
+        Transaction(),
       );
     });
   });

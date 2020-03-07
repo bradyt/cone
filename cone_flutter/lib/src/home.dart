@@ -38,10 +38,7 @@ class Transactions extends StatelessWidget {
 
       final List<Transaction> transactions = (state.contents == null)
           ? <Transaction>[]
-          : ((state.reverseSort ?? false)
-                  ? reselectTransactions(state).reversed
-                  : reselectTransactions(state))
-              .toList();
+          : reselectTransactions(state).toList();
 
       final bool loading = state.isRefreshing;
 
@@ -63,12 +60,22 @@ class Transactions extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(4, (index == 0) ? 8 : 0, 4,
                       (index == transactions.length - 1) ? 8 : 0),
                   child: Card(
+                    color: (index == store.state.transactionIndex &&
+                            store.state.transactionIndex != -1)
+                        ? ((Theme.of(context).brightness == Brightness.dark)
+                            ? const Color(0xff556b2f) // darkolivegreen
+                            : const Color(0xff8fbc8f)) // darkseagreen2
+                        : null,
                     elevation: 3,
-                    child: Padding(
-                      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
-                      child: FormattedJournalItem(
-                        transaction: transactions[index],
-                        dark: Theme.of(context).brightness == Brightness.dark,
+                    child: InkWell(
+                      onTap: () => store
+                          .dispatch(UpdateTransactionIndexAction(index: index)),
+                      child: Padding(
+                        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
+                        child: FormattedJournalItem(
+                          transaction: transactions[index],
+                          dark: Theme.of(context).brightness == Brightness.dark,
+                        ),
                       ),
                     ),
                   ),
@@ -284,24 +291,29 @@ class AddTransactionButton extends StatelessWidget {
     return StoreBuilder<ConeState>(
       builder: (BuildContext context, Store<ConeState> store) {
         return FloatingActionButton(
-            heroTag: '''the only floating action button here \
+          heroTag: '''the only floating action button here \
 ${DateTime.now().millisecondsSinceEpoch}''',
-            onPressed: () {
-              store.dispatch(Actions.today);
-              Navigator.pushNamed<dynamic>(context, '/add-transaction')
-                  .then((dynamic transaction) {
-                if (transaction != null) {
-                  Scaffold.of(context).showSnackBar(
-                    transactionSnackBar(
-                        transaction: transaction as Transaction),
-                  );
-                }
-                store
-                  ..dispatch(Actions.resetTransaction)
-                  ..dispatch(Actions.refreshFileContents);
-              });
-            },
-            child: const Icon(Icons.add));
+          onPressed: () {
+            store
+              ..dispatch(Actions.today)
+              ..dispatch(UpdateTodayAction(DateTime.now()))
+              ..dispatch(Actions.updateHintTransaction);
+            Navigator.pushNamed<dynamic>(context, '/add-transaction')
+                .then((dynamic transaction) {
+              if (transaction != null) {
+                Scaffold.of(context).showSnackBar(
+                  transactionSnackBar(transaction: transaction as Transaction),
+                );
+              }
+              store
+                ..dispatch(Actions.resetTransaction)
+                ..dispatch(Actions.refreshFileContents);
+            });
+          },
+          child: (store.state.transactionIndex == -1)
+              ? const Icon(Icons.add)
+              : const Icon(Icons.content_copy),
+        );
       },
     );
   }

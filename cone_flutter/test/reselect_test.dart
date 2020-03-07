@@ -33,7 +33,8 @@ void main() {
       ..numberLocale = 'en'
       ..spacing = Spacing.zero
       ..contents = ''
-      ..defaultCurrency = '',
+      ..defaultCurrency = ''
+      ..reverseSort = false,
   );
   test('Test formattedExample.', () {
     expect(formattedExample(state), '5.00');

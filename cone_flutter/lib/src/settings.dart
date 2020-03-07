@@ -76,7 +76,8 @@ class SettingsColumn extends StatelessWidget {
                     final String defaultCurrency =
                         await _asyncDefaultCurrencyDialog(context);
                     store.dispatch(
-                      UpdateSettingsAction('default_currency', defaultCurrency),
+                      UpdateSettingsAction(
+                          'default_currency', defaultCurrency ?? ''),
                     );
                   },
                 ),
@@ -196,7 +197,7 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
         title: Text(ConeLocalizations.of(context).enterDefaultCurrency),
         content: TextField(
           onChanged: (String value) {
-            defaultCurrency = value;
+            defaultCurrency = value ?? '';
           },
         ),
         actions: <Widget>[

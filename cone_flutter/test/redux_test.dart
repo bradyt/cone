@@ -62,6 +62,8 @@ void main() {
       Actions.addPosting,
       RemovePostingAtAction(0),
       Actions.resetTransaction,
+      Actions.addPosting,
+      Actions.addPosting,
       UpdateDateAction('2000-01-01'),
       UpdateDescriptionAction('example'),
       UpdateAccountAction(index: 0, account: 'assets'),

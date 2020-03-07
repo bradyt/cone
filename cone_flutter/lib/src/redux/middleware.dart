@@ -71,7 +71,7 @@ dynamic firstConeMiddleware(
       prefs.setInt('brightness', action.brightness.index);
     });
   } else if (action == Actions.today) {
-    store.dispatch(UpdateHintDateAction(DateTime.now()));
+    store.dispatch(UpdateTodayAction(DateTime.now()));
   }
   next(action);
 }

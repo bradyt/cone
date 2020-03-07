@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:built_collection/built_collection.dart';
 import 'package:meta/meta.dart';
 import 'package:intl/intl.dart' show NumberFormat;
@@ -7,6 +9,7 @@ import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:cone_lib/cone_lib.dart'
     show
         AccountDirective,
+        Amount,
         AmountBuilder,
         Journal,
         JournalItem,
@@ -15,26 +18,13 @@ import 'package:cone_lib/cone_lib.dart'
         Transaction,
         TransactionBuilder;
 
-Transaction blendHintTransaction({
-  Transaction transaction,
-  Transaction hint,
+Amount blendHintAmount({
+  Amount amount,
+  Amount hintAmount,
 }) =>
-    transaction.rebuild(
-      (TransactionBuilder b) => b
-        ..date = (b.date.isEmpty) ? hint.date : b.date
-        ..description =
-            (b.description.isEmpty) ? hint.description : b.description
-        ..postings = blendHintPostings(
-          postings: b.postings,
-          hintPostings: hint.postings,
-        ),
-    );
-
-ListBuilder<Posting> blendHintPostings({
-  ListBuilder<Posting> postings,
-  BuiltList<Posting> hintPostings,
-}) =>
-    postings..update((ListBuilder<Posting> b) => b);
+    amount.rebuild((AmountBuilder b) => b
+      ..quantity = (b.quantity.isEmpty) ? hintAmount.quantity : b.quantity
+      ..commodity = (b.commodity.isEmpty) ? hintAmount.commodity : b.commodity);
 
 Posting blendHintPosting({
   Posting posting,
@@ -43,20 +33,55 @@ Posting blendHintPosting({
     posting.rebuild(
       (PostingBuilder b) => b
         ..account = (b.account.isEmpty) ? hintPosting.account : b.account
-        ..amount = (b.amount
-          ..commodity = (b.amount.commodity.isEmpty)
-              ? hintPosting.amount.commodity
-              : b.amount.commodity),
+        ..amount = blendHintAmount(
+          amount: b.amount.build(),
+          hintAmount: hintPosting.amount,
+        ).toBuilder(),
+    );
+
+BuiltList<Posting> blendHintPostings({
+  BuiltList<Posting> postings,
+  BuiltList<Posting> hintPostings,
+}) {
+  final int l = min(postings.length, hintPostings.length);
+  final ListBuilder<Posting> postingsBuilder = postings.toBuilder();
+
+  for (int i = 0; i < l; i++) {
+    postingsBuilder[i] = blendHintPosting(
+      posting: postings[i],
+      hintPosting: hintPostings[i],
+    );
+  }
+
+  return postingsBuilder.build();
+}
+
+Transaction blendHintTransaction({
+  Transaction transaction,
+  Transaction hintTransaction,
+}) =>
+    transaction.rebuild(
+      (TransactionBuilder b) => b
+        ..date = (b.date.isEmpty) ? hintTransaction.date : b.date
+        ..description = (b.description.isEmpty)
+            ? hintTransaction.description
+            : b.description
+        ..postings = blendHintPostings(
+          postings: b.postings.build(),
+          hintPostings: hintTransaction.postings,
+        ).toBuilder(),
     );
 
 Transaction implicitTransaction({
   @required Transaction transaction,
-  @required String date,
   @required String defaultCommodity,
   @required String Function({String quantity, String commodity}) padZeros,
+  @required Transaction hintTransaction,
 }) =>
-    transaction.rebuild((TransactionBuilder tb) => tb
-      ..date = (tb.date.isEmpty) ? date : tb.date
+    blendHintTransaction(
+      transaction: transaction,
+      hintTransaction: hintTransaction,
+    ).rebuild((TransactionBuilder tb) => tb
       ..postings = (tb.postings
         ..where(
           (Posting posting) =>
@@ -67,17 +92,15 @@ Transaction implicitTransaction({
             (PostingBuilder pb) => pb
               ..amount = (pb.amount
                 ..update(
-                  (AmountBuilder ab) => ab
-                    ..commodity =
-                        (ab.quantity.isNotEmpty && ab.commodity.isEmpty)
-                            ? defaultCommodity
-                            : ab.commodity,
+                  (AmountBuilder ab) => ab.commodity =
+                      (ab.quantity.isNotEmpty && ab.commodity.isEmpty)
+                          ? defaultCommodity
+                          : ab.commodity,
                 )
-                ..update(
-                  (AmountBuilder ab) => ab
-                    ..quantity = padZeros(
-                        quantity: ab.quantity, commodity: ab.commodity),
-                )),
+                ..update((AmountBuilder ab) {
+                  ab.quantity =
+                      padZeros(quantity: ab.quantity, commodity: ab.commodity);
+                })),
           ),
         )));
 

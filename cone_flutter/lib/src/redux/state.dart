@@ -1,7 +1,6 @@
 import 'package:built_value/built_value.dart';
-import 'package:built_collection/built_collection.dart';
 import 'package:cone_lib/cone_lib.dart'
-    show Posting, PostingBuilder, Transaction, TransactionBuilder;
+    show Posting, Transaction, TransactionBuilder;
 import 'package:redux/redux.dart';
 // ignore: unused_import
 import 'package:redux_logging/redux_logging.dart' show LoggingMiddleware;
@@ -19,11 +18,11 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
   @nullable
   ConeBrightness get brightness;
   @nullable
+  DateTime get today;
+  @nullable
   Spacing get spacing;
   @nullable
   String get contents;
-  @nullable
-  String get date;
   @nullable
   String get defaultCurrency;
   @nullable
@@ -35,6 +34,7 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
   @nullable
   String get systemLocale;
   Transaction get transaction;
+  Transaction get hintTransaction;
   @nullable
   bool get currencyOnLeft;
   @nullable
@@ -46,22 +46,15 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
   bool get saveInProgress;
   int get postingKey;
   int get refreshCount;
+  int get transactionIndex;
 
   static void _initializeBuilder(ConeStateBuilder b) => b
     ..initialized = false
     ..isRefreshing = false
-    ..postingKey = 2
+    ..postingKey = 0
     ..refreshCount = 0
     ..saveInProgress = false
-    ..transaction = Transaction(
-      (TransactionBuilder tb) => tb
-        ..postings = BuiltList<Posting>(
-          <Posting>[
-            Posting((PostingBuilder b) => b..key = 0),
-            Posting((PostingBuilder b) => b..key = 1),
-          ],
-        ).toBuilder(),
-    ).toBuilder();
+    ..transactionIndex = -1;
 }
 
 List<Middleware<ConeState>> coneMiddleware = <Middleware<ConeState>>[
