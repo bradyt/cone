@@ -7,6 +7,7 @@ import 'package:cone_lib/cone_lib.dart'
     show
         Amount,
         AmountBuilder,
+        Journal,
         Posting,
         PostingBuilder,
         Transaction,
@@ -33,6 +34,7 @@ void main() {
       ..numberLocale = 'en'
       ..spacing = Spacing.zero
       ..contents = ''
+      ..journal = Journal().toBuilder()
       ..defaultCurrency = ''
       ..reverseSort = false,
   );
