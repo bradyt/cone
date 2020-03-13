@@ -214,6 +214,27 @@ Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
 }
 
 class NumberLocaleSearchDelegate extends SearchDelegate<String> {
+  // Workaround because of https://github.com/flutter/flutter/issues/32180
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    if (theme.brightness == Brightness.dark) {
+      return theme.copyWith(
+        primaryColor: Colors.black,
+        primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+        primaryColorBrightness: Brightness.dark,
+        primaryTextTheme: theme.textTheme,
+      );
+    } else {
+      return theme.copyWith(
+        primaryColor: Colors.white,
+        primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+        primaryColorBrightness: Brightness.light,
+        primaryTextTheme: theme.textTheme,
+      );
+    }
+  }
+
   @override
   //ignore: missing_return
   List<Widget> buildActions(BuildContext context) {}
