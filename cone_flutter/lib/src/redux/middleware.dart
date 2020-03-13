@@ -1,11 +1,68 @@
+import 'dart:convert';
+
+import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uri_picker/uri_picker.dart';
+import 'package:cone_lib/cone_lib.dart';
 
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
 import 'package:cone/src/reselect.dart';
 import 'package:cone/src/services.dart';
+
+dynamic isolateRefreshConeMiddleware(
+    Store<ConeState> store, dynamic action, NextDispatcher next) {
+  if (action == Actions.refreshFileContents) {
+    if (store.state.ledgerFileUri != null) {
+      UriPicker.readTextFromUri(store.state.ledgerFileUri).then<void>(
+        (String contents) {
+          if (contents != store.state.contents) {
+            compute<String, String>(topLevelParser, contents).then(
+              (String jsonJournal) {
+                final Journal journal = serializers.deserializeWith(
+                  Journal.serializer,
+                  jsonDecode(jsonJournal),
+                );
+                store
+                  ..dispatch(UpdateJournalAction(journal))
+                  ..dispatch(UpdateContentsAction(contents));
+              },
+            );
+          } else {
+            store.dispatch(Actions.cancelRefresh);
+          }
+        },
+      );
+    }
+  }
+  next(action);
+}
+
+dynamic widgetTestRefreshConeMiddleware(
+    Store<ConeState> store, dynamic action, NextDispatcher next) {
+  if (action == Actions.refreshFileContents) {
+    if (store.state.ledgerFileUri != null) {
+      UriPicker.readTextFromUri(store.state.ledgerFileUri).then<void>(
+        (String contents) {
+          if (contents != store.state.contents) {
+            final String jsonJournal = topLevelParser(contents);
+            final Journal journal = serializers.deserializeWith(
+              Journal.serializer,
+              jsonDecode(jsonJournal),
+            );
+            store
+              ..dispatch(UpdateJournalAction(journal))
+              ..dispatch(UpdateContentsAction(contents));
+          } else {
+            store.dispatch(Actions.cancelRefresh);
+          }
+        },
+      );
+    }
+  }
+  next(action);
+}
 
 dynamic firstConeMiddleware(
     Store<ConeState> store, dynamic action, NextDispatcher next) {
@@ -36,13 +93,6 @@ dynamic firstConeMiddleware(
         );
       },
     );
-  } else if (action == Actions.refreshFileContents) {
-    if (store.state.ledgerFileUri != null) {
-      UriPicker.readTextFromUri(store.state.ledgerFileUri)
-          .then((String contents) {
-        store.dispatch(UpdateContentsAction(contents));
-      });
-    }
   } else if (action == Actions.submitTransaction) {
     appendFile(store.state.ledgerFileUri, formattedTransaction(store.state))
         .then((_) {

@@ -44,7 +44,7 @@ void main() {
     final Store<ConeState> store = Store<ConeState>(
       coneReducer,
       initialState: ConeState(),
-      middleware: coneMiddleware,
+      middleware: widgetTestConeMiddleware,
     );
 
     WidgetsFlutterBinding.ensureInitialized();
