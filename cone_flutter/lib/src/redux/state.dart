@@ -21,7 +21,6 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
   DateTime get today;
   @nullable
   Journal get journal;
-  @nullable
   Spacing get spacing;
   @nullable
   String get contents;
@@ -31,13 +30,11 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
   String get ledgerFileDisplayName;
   @nullable
   String get ledgerFileUri;
-  @nullable
   String get numberLocale;
   @nullable
   String get systemLocale;
   Transaction get transaction;
   Transaction get hintTransaction;
-  @nullable
   bool get currencyOnLeft;
   @nullable
   bool get debugMode;
@@ -56,7 +53,10 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
     ..postingKey = 0
     ..refreshCount = 0
     ..saveInProgress = false
-    ..transactionIndex = -1;
+    ..transactionIndex = -1
+    ..spacing = Spacing.one
+    ..currencyOnLeft = false
+    ..numberLocale = 'en_US';
 }
 
 List<Middleware<ConeState>> coneMiddleware = <Middleware<ConeState>>[

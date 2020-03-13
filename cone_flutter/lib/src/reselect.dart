@@ -5,11 +5,13 @@ import 'package:cone_lib/cone_lib.dart'
         Amount,
         AmountBuilder,
         Journal,
+        JournalItem,
         Posting,
         Transaction,
         TransactionBuilder;
 import 'package:cone_lib/pad_zeros.dart' show padZeros;
 import 'package:intl/intl.dart' show DateFormat;
+import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:built_collection/built_collection.dart';
 import 'package:reselect/reselect.dart'
     show createSelector1, createSelector2, createSelector3, Selector;
@@ -25,6 +27,20 @@ import 'package:cone/src/utils.dart'
         implicitTransaction,
         reducePostingFields,
         sortSuggestions;
+
+final Selector<ConeState, Iterable<MapEntry<String, String>>>
+    reselectCommodities = createSelector2(
+  (ConeState state) => state.systemLocale,
+  (ConeState state) => state.journal.journalItems,
+  (String locale, BuiltList<JournalItem> journalItems) {
+    print(locale);
+    return numberFormatSymbols.entries.map<MapEntry<String, String>>(
+        (MapEntry<dynamic, dynamic> entry) => MapEntry<String, String>(
+              entry.key as String,
+              entry.value.DEF_CURRENCY_CODE as String,
+            ));
+  },
+);
 
 final Selector<ConeState, Transaction> reselectHintTransaction =
     createSelector1(
@@ -118,12 +134,12 @@ final Selector<ConeState, bool> makeSaveButtonAvailable = createSelector3(
 final Selector<ConeState, String> formattedExample =
     (ConeState state) => Amount(
           (AmountBuilder b) => b
-            ..commodity = state.defaultCurrency
+            ..commodity = '¤'
             ..commodityOnLeft = state.currencyOnLeft
             ..quantity = padZeros(
               locale: state.numberLocale,
               quantity: '5',
-              commodity: state.defaultCurrency,
+              commodity: '¤',
             )
             ..spacing = state.spacing.index,
         ).toString();

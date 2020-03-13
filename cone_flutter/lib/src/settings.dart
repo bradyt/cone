@@ -59,71 +59,6 @@ class SettingsColumn extends StatelessWidget {
                       'debug_mode', !(store.state.debugMode ?? true)),
                 ),
               ),
-            ExpansionTile(
-              key: const Key('Formatting'),
-              leading: const Icon(
-                Icons.text_format,
-              ),
-              title: Text(
-                formattedExample(state),
-              ),
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.attach_money),
-                  title: Text(ConeLocalizations.of(context).defaultCurrency),
-                  subtitle: Text(state.defaultCurrency),
-                  onTap: () async {
-                    final String defaultCurrency =
-                        await _asyncDefaultCurrencyDialog(context);
-                    store.dispatch(
-                      UpdateSettingsAction(
-                          'default_currency', defaultCurrency ?? ''),
-                    );
-                  },
-                ),
-                ListTile(
-                  key: const Key('Locale'),
-                  leading: const Icon(Icons.language),
-                  title: Text(ConeLocalizations.of(context).numberLocale),
-                  subtitle: Text(state.numberLocale),
-                  onTap: () async {
-                    final String numberLocale = await showSearch<String>(
-                      context: context,
-                      delegate: NumberLocaleSearchDelegate(),
-                    );
-                    if (numberLocale != null) {
-                      store.dispatch(
-                        UpdateSettingsAction('number_locale', numberLocale),
-                      );
-                    }
-                  },
-                ),
-                SwitchListTile(
-                  key: const Key('Currency on left'),
-                  secondary: const Icon(Icons.compare_arrows),
-                  title: Text(ConeLocalizations.of(context).currencyOnLeft),
-                  value: state.currencyOnLeft,
-                  onChanged: (bool _) => store.dispatch(
-                    UpdateSettingsAction(
-                        'currency_on_left', !state.currencyOnLeft),
-                  ),
-                ),
-                SwitchListTile(
-                    key: const Key('Spacing'),
-                    secondary: const Icon(Icons.space_bar),
-                    title: Text(ConeLocalizations.of(context).spacing),
-                    value: state.spacing.index == 1,
-                    onChanged: (bool _) {
-                      store.dispatch(
-                        UpdateSettingsAction(
-                            'spacing',
-                            (state.spacing == Spacing.one)
-                                ? Spacing.zero
-                                : Spacing.one),
-                      );
-                    }),
-              ],
-            ),
             ListTile(
               key: const Key('Pick ledger file'),
               leading: const Icon(Icons.link),
@@ -186,31 +121,6 @@ class SettingsColumn extends StatelessWidget {
       },
     );
   }
-}
-
-Future<String> _asyncDefaultCurrencyDialog(BuildContext context) async {
-  String defaultCurrency;
-  return showDialog<String>(
-    context: context,
-    builder: (BuildContext context) {
-      return AlertDialog(
-        title: Text(ConeLocalizations.of(context).enterDefaultCurrency),
-        content: TextField(
-          onChanged: (String value) {
-            defaultCurrency = value ?? '';
-          },
-        ),
-        actions: <Widget>[
-          FlatButton(
-            child: Text(ConeLocalizations.of(context).submit),
-            onPressed: () {
-              Navigator.pop(context, defaultCurrency);
-            },
-          ),
-        ],
-      );
-    },
-  );
 }
 
 class NumberLocaleSearchDelegate extends SearchDelegate<String> {

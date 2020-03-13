@@ -165,21 +165,6 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
               b..ledgerFileDisplayName = action.value as String,
         );
         break;
-      case 'number_locale':
-        newState = state.rebuild(
-          (ConeStateBuilder b) => b..numberLocale = action.value as String,
-        );
-        break;
-      case 'currency_on_left':
-        newState = state.rebuild(
-          (ConeStateBuilder b) => b..currencyOnLeft = action.value as bool,
-        );
-        break;
-      case 'spacing':
-        newState = state.rebuild(
-          (ConeStateBuilder b) => b..spacing = action.value as Spacing,
-        );
-        break;
       case 'reverse_sort':
         newState = state.rebuild(
           (ConeStateBuilder b) => b..reverseSort = action.value as bool,

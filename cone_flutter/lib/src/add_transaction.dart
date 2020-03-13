@@ -4,6 +4,7 @@ import 'package:cone_lib/cone_lib.dart' show Posting, Transaction;
 import 'package:flutter/material.dart' hide Actions;
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:redux/redux.dart' show Store;
 
 // import 'package:cone/main.dart' show ConeWidgetTest;
@@ -619,9 +620,23 @@ class CommodityFieldState extends State<CommodityField> {
     final bool lastField =
         widget.index == widget.store.state.transaction.postings.length - 1 &&
             !widget.store.state.currencyOnLeft;
+
     return TextField(
       textAlign: TextAlign.center,
       controller: controller,
+      onTap: () async {
+        final Iterable<MapEntry<String, String>> entries =
+            reselectCommodities(widget.store.state);
+        final String commodity = await showSearch<String>(
+          context: context,
+          delegate: CommoditySearchDelegate(entries),
+        );
+        if (commodity != null) {
+          widget.store.dispatch(
+            UpdateCommodityAction(index: widget.index, commodity: commodity),
+          );
+        }
+      },
       decoration: InputDecoration(
         hintText:
             (widget.index < widget.store.state.hintTransaction.postings.length)
@@ -709,4 +724,94 @@ SnackBar transactionSnackBar({Transaction transaction}) {
       ],
     ),
   );
+}
+
+class CommoditySearchDelegate extends SearchDelegate<String> {
+  CommoditySearchDelegate(this.entries)
+      : super(textInputAction: TextInputAction.done);
+
+  final Iterable<MapEntry<String, String>> entries;
+
+  // Workaround because of https://github.com/flutter/flutter/issues/32180
+  @override
+  ThemeData appBarTheme(BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    if (theme.brightness == Brightness.dark) {
+      return theme.copyWith(
+        primaryColor: Colors.black,
+        primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+        primaryColorBrightness: Brightness.dark,
+        primaryTextTheme: theme.textTheme,
+      );
+    } else {
+      return theme.copyWith(
+        primaryColor: Colors.white,
+        primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
+        primaryColorBrightness: Brightness.light,
+        primaryTextTheme: theme.textTheme,
+      );
+    }
+  }
+
+  @override
+  List<Widget> buildActions(BuildContext context) => <Widget>[];
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    return IconButton(
+      icon: Icon(Icons.arrow_back),
+      onPressed: () => close(context, null),
+    );
+  }
+
+  @override
+  //ignore: missing_return
+  Widget buildResults(BuildContext context) {
+    Future<void>.microtask(() => close(context, query));
+    return Container();
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+    final Iterable<MapEntry<String, String>> matchedEntries = entries.where(
+      (dynamic entry) {
+        return entry.key.toLowerCase().contains(query.toLowerCase()) as bool ||
+            entry.value.toLowerCase().contains(query.toLowerCase()) as bool;
+      },
+    );
+    String currentLocale;
+    return ListView.builder(
+      itemCount: matchedEntries.length,
+      itemBuilder: (BuildContext _, int index) {
+        currentLocale = matchedEntries.elementAt(index).key;
+        return InkWell(
+          onTap: () =>
+              close(context, query = matchedEntries.elementAt(index).value),
+          child: Card(
+            child: Row(
+              children: <Widget>[
+                Expanded(
+                  child: ListTile(
+                    title: Text(currentLocale),
+                  ),
+                ),
+                const Expanded(child: SizedBox()),
+                Expanded(
+                  child: Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: ListTile(
+                      title: Text(
+                        numberFormatSymbols[currentLocale].DEF_CURRENCY_CODE
+                            as String,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
 }
