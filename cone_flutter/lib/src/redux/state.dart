@@ -25,8 +25,6 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
   @nullable
   String get contents;
   @nullable
-  String get defaultCurrency;
-  @nullable
   String get ledgerFileDisplayName;
   @nullable
   String get ledgerFileUri;

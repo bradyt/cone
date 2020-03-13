@@ -16,6 +16,7 @@ part 'types.g.dart';
   AccountDirective,
   Amount,
   Comment,
+  CommodityDirective,
   Journal,
   OtherDirective,
   Posting,
@@ -80,6 +81,23 @@ abstract class AccountDirective
 
   @override
   String toString() => '$account';
+}
+
+abstract class CommodityDirective
+    implements Directive, Built<CommodityDirective, CommodityDirectiveBuilder> {
+  factory CommodityDirective(
+          [void Function(CommodityDirectiveBuilder) updates]) =
+      _$CommodityDirective;
+  CommodityDirective._();
+  static Serializer<CommodityDirective> get serializer =>
+      _$commodityDirectiveSerializer;
+
+  int get firstLine;
+  int get lastLine;
+  String get commodity;
+
+  @override
+  String toString() => '$commodity';
 }
 
 abstract class OtherDirective

@@ -9,7 +9,6 @@ import 'package:redux/redux.dart' show Store;
 import 'package:cone/src/localizations.dart';
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
-import 'package:cone/src/reselect.dart' show formattedExample;
 import 'package:cone/src/types.dart';
 import 'package:cone/src/utils.dart';
 

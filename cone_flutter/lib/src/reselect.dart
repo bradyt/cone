@@ -2,8 +2,7 @@
 
 import 'package:cone_lib/cone_lib.dart'
     show
-        Amount,
-        AmountBuilder,
+        CommodityDirective,
         Journal,
         JournalItem,
         Posting,
@@ -28,17 +27,83 @@ import 'package:cone/src/utils.dart'
         reducePostingFields,
         sortSuggestions;
 
+final Iterable<MapEntry<String, String>> localeCommodities =
+    numberFormatSymbols.entries.map<MapEntry<String, String>>(
+  (MapEntry<dynamic, dynamic> entry) => MapEntry<String, String>(
+    entry.key as String,
+    entry.value.DEF_CURRENCY_CODE as String,
+  ),
+);
+
+final Selector<ConeState, Iterable<MapEntry<String, String>>>
+    reselectLocaleCommodities = createSelector1(
+  (ConeState state) => state.systemLocale,
+  (String locale) {
+    final int localeIndex = Iterable<int>.generate(localeCommodities.length)
+        .firstWhere(
+            (int index) => localeCommodities.elementAt(index).key == locale,
+            orElse: () => -1);
+    return (localeIndex == -1)
+        ? localeCommodities
+        : Iterable<MapEntry<String, String>>.generate(
+            localeCommodities.length,
+            (int index) {
+              if (index == 0) {
+                return localeCommodities.elementAt(localeIndex);
+              } else if (index <= localeIndex) {
+                return localeCommodities.elementAt(index - 1);
+              } else {
+                return localeCommodities.elementAt(index);
+              }
+            },
+          );
+  },
+);
+
+final Selector<ConeState, Iterable<String>> reselectJournalCommodities =
+    createSelector1(
+  (ConeState state) => state.journal.journalItems,
+  (BuiltList<JournalItem> journalItems) {
+    final List<String> commodities = <String>[];
+    for (final JournalItem journalItem in journalItems) {
+      if (journalItem is CommodityDirective) {
+        commodities.add(journalItem.commodity);
+      } else if (journalItem is Transaction) {
+        for (final Posting posting in journalItem.postings) {
+          final String commodity = posting.amount.commodity;
+          if (commodity.isNotEmpty) {
+            commodities.add(commodity);
+          }
+        }
+      }
+    }
+    final List<String> sortedByRecency = <String>[];
+    for (final String commodity in commodities.reversed) {
+      if (!sortedByRecency.contains(commodity)) {
+        sortedByRecency.add(commodity);
+      }
+    }
+    return sortedByRecency;
+  },
+);
+
 final Selector<ConeState, Iterable<MapEntry<String, String>>>
     reselectCommodities = createSelector2(
-  (ConeState state) => state.systemLocale,
-  (ConeState state) => state.journal.journalItems,
-  (String locale, BuiltList<JournalItem> journalItems) {
-    print(locale);
-    return numberFormatSymbols.entries.map<MapEntry<String, String>>(
-        (MapEntry<dynamic, dynamic> entry) => MapEntry<String, String>(
-              entry.key as String,
-              entry.value.DEF_CURRENCY_CODE as String,
-            ));
+  reselectLocaleCommodities,
+  reselectJournalCommodities,
+  (Iterable<MapEntry<String, String>> localeCommodities,
+      Iterable<String> journalCommodities) {
+    return Iterable<MapEntry<String, String>>.generate(
+      journalCommodities.length + localeCommodities.length,
+      (int index) => (index < journalCommodities.length)
+          ? MapEntry<String, String>(
+              '',
+              journalCommodities.elementAt(index),
+            )
+          : localeCommodities.elementAt(
+              index - journalCommodities.length,
+            ),
+    );
   },
 );
 
@@ -131,19 +196,6 @@ final Selector<ConeState, bool> makeSaveButtonAvailable = createSelector3(
       (debugMode || validTransaction) && !saveInProgress,
 );
 
-final Selector<ConeState, String> formattedExample =
-    (ConeState state) => Amount(
-          (AmountBuilder b) => b
-            ..commodity = '¤'
-            ..commodityOnLeft = state.currencyOnLeft
-            ..quantity = padZeros(
-              locale: state.numberLocale,
-              quantity: '5',
-              commodity: '¤',
-            )
-            ..spacing = state.spacing.index,
-        ).toString();
-
 final Selector<ConeState, String> formattedTransaction = (ConeState state) {
   final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   //ignore: lines_longer_than_80_chars
@@ -153,7 +205,7 @@ final Selector<ConeState, String> formattedTransaction = (ConeState state) {
 final Selector<ConeState, Transaction> reselectImplicitTransaction =
     (ConeState state) {
   return implicitTransaction(
-    defaultCommodity: state.defaultCurrency,
+    defaultCommodity: reselectCommodities(state).first.value,
     hintTransaction: state.hintTransaction,
     padZeros: ({String quantity, String commodity}) => padZeros(
       locale: state.numberLocale,
@@ -170,7 +222,7 @@ final Selector<ConeState, bool> hideAddTransactionButton = (ConeState state) =>
 final Selector<ConeState, String> quantityHint = (ConeState state) => padZeros(
       locale: state.numberLocale,
       quantity: '0',
-      commodity: state.defaultCurrency,
+      commodity: reselectCommodities(state).first.value,
     );
 
 final Selector<ConeState, List<String> Function(String)>

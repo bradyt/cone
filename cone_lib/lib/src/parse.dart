@@ -52,6 +52,13 @@ JournalItem parseJournalItem(Token<String> token) {
           ..firstLine = token.line
           ..lastLine = Token.lineAndColumnOf(token.buffer, token.stop)[0],
       );
+    } else if (token.value.startsWith('commodity')) {
+      return CommodityDirective(
+        (CommodityDirectiveBuilder b) => b
+          ..commodity = token.value.split('commodity ')[1].split(';')[0].trim()
+          ..firstLine = token.line
+          ..lastLine = Token.lineAndColumnOf(token.buffer, token.stop)[0],
+      );
     } else {
       return OtherDirective(
         (OtherDirectiveBuilder b) => b

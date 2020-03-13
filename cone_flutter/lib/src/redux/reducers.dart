@@ -4,27 +4,18 @@ import 'package:cone_lib/cone_lib.dart'
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
 import 'package:cone/src/reselect.dart';
-import 'package:cone/src/types.dart' show ConeBrightness, Spacing;
-import 'package:cone/src/utils.dart'
-    show localeCurrency, localeCurrencyOnLeft, localeSpacing;
+import 'package:cone/src/types.dart' show ConeBrightness;
 
 ConeState firstConeReducer(ConeState state, dynamic action) {
   if (action is InitializeSettingsAction) {
     return state.rebuild(
       (ConeStateBuilder b) => b
         ..brightness = ConeBrightness.values[action.settings.brightness ?? 0]
-        ..currencyOnLeft = action.settings.currencyOnLeft ??
-            localeCurrencyOnLeft(state.systemLocale)
         ..debugMode = action.settings.debugMode ?? false
-        ..defaultCurrency = action.settings.defaultCurrency ??
-            localeCurrency(state.systemLocale)
         ..initialized = true
         ..ledgerFileUri = action.settings.ledgerFileUri
         ..ledgerFileDisplayName = action.settings.ledgerFileDisplayName
-        ..numberLocale = action.settings.numberLocale ?? state.systemLocale
-        ..reverseSort = action.settings.reverseSort ?? true
-        ..spacing = Spacing.values[
-            action.settings.spacing ?? localeSpacing(state.systemLocale)],
+        ..reverseSort = action.settings.reverseSort ?? true,
     );
   } else if (action is UpdateSystemLocaleAction) {
     return state.rebuild(
@@ -147,11 +138,6 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
       case 'debug_mode':
         newState = state.rebuild(
           (ConeStateBuilder b) => b..debugMode = action.value as bool,
-        );
-        break;
-      case 'default_currency':
-        newState = state.rebuild(
-          (ConeStateBuilder b) => b..defaultCurrency = action.value as String,
         );
         break;
       case 'ledger_file_uri':

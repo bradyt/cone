@@ -16,7 +16,6 @@ import 'package:cone_lib/cone_lib.dart'
 import 'package:cone/src/redux/state.dart' show ConeState, ConeStateBuilder;
 import 'package:cone/src/reselect.dart'
     show
-        formattedExample,
         // hideAddTransactionButton,
         // makeSaveButtonAvailable,
         quantityHint,
@@ -35,12 +34,8 @@ void main() {
       ..spacing = Spacing.zero
       ..contents = ''
       ..journal = Journal().toBuilder()
-      ..defaultCurrency = ''
       ..reverseSort = false,
   );
-  test('Test formattedExample.', () {
-    expect(formattedExample(state), '5.00');
-  });
   test('Test reselectTransactions.', () {
     expect(reselectTransactions(state), <Transaction>[]);
   });

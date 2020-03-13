@@ -12,7 +12,7 @@ $(STATEGDART):
 
 build: $(PACKAGES) $(STATEGDART)
 
-watch:
+watch: $(PACKAGES)
 	flutter pub run build_runner watch
 
 analyze:

@@ -4,7 +4,6 @@ import 'package:cone_lib/cone_lib.dart' show Posting, Transaction;
 import 'package:flutter/material.dart' hide Actions;
 import 'package:flutter_redux/flutter_redux.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:redux/redux.dart' show Store;
 
 // import 'package:cone/main.dart' show ConeWidgetTest;
@@ -576,7 +575,7 @@ class CommodityFieldState extends State<CommodityField> {
 
       subscription = widget.store.onChange.listen(storeListener);
     }
-    defaultCurrency = widget.store.state.defaultCurrency;
+    defaultCurrency = reselectCommodities(widget.store.state).first.value;
     super.initState();
   }
 
@@ -800,10 +799,7 @@ class CommoditySearchDelegate extends SearchDelegate<String> {
                   child: Align(
                     alignment: AlignmentDirectional.centerEnd,
                     child: ListTile(
-                      title: Text(
-                        numberFormatSymbols[currentLocale].DEF_CURRENCY_CODE
-                            as String,
-                      ),
+                      title: Text(matchedEntries.elementAt(index).value),
                     ),
                   ),
                 ),

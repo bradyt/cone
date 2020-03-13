@@ -146,7 +146,7 @@ void main() {
       ..dispatch(UpdateAccountAction(index: 0, account: 'expenses:food'))
       ..dispatch(UpdateAccountAction(index: 1, account: 'assets:cash'));
 
-    await tester.enterText(textFieldFinder.at(4), '5');
+    await tester.enterText(textFieldFinder.at(3), '5');
 
     await tester.pumpAndSettle();
 
@@ -163,10 +163,10 @@ void main() {
 
     expect(find.text('assets:cash'), findsOneWidget);
     expect(find.text('  assets:cash'), findsOneWidget);
-    expect(find.text('USD5.00'), findsNWidgets(2));
+    expect(find.text('5.00 USD'), findsNWidgets(2));
 
     await tester.pumpAndSettle(const Duration(seconds: 4));
 
-    expect(find.text('USD5.00'), findsOneWidget);
+    expect(find.text('5.00 USD'), findsOneWidget);
   });
 }
