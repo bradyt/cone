@@ -9,6 +9,8 @@ environment:
 
 dependencies:
   file_picker_writable:
+  path_provider:
+  uuid:
   flutter:
     sdk: flutter
 

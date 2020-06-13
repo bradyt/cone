@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
@@ -224,6 +225,9 @@ String generateAlias(String uri, String displayName) {
       return null.toString();
     }
     return uri;
+  }
+  if (Platform.isIOS) {
+    return displayName;
   }
   final String authority = Uri.parse(uri).authority;
   final String path = Uri.parse(Uri.decodeFull(uri)).path;
