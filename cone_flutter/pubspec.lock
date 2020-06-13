@@ -204,6 +204,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "5.1.0"
+  file_picker_writable:
+    dependency: transitive
+    description:
+      name: file_picker_writable
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.1.1+4"
   fixnum:
     dependency: transitive
     description:
@@ -666,6 +673,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.2.0"
+  synchronized:
+    dependency: transitive
+    description:
+      name: synchronized
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.2.0"
   term_glyph:
     dependency: transitive
     description:
