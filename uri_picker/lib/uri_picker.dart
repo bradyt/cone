@@ -13,7 +13,7 @@ class UriPicker {
       const MethodChannel('tangential.info/uri_picker');
 
   static Future<String> pickUri() async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       return await FilePickerWritable()
           .openFilePicker()
           .then((FileInfo fileInfo) => fileInfo.identifier);
@@ -63,7 +63,7 @@ class UriPicker {
   }
 
   static Future<String> getDisplayName(String uri) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       return await FilePickerWritable()
           .readFileWithIdentifier(uri)
           .then((FileInfo fileInfo) => fileInfo.fileName);
@@ -81,7 +81,7 @@ class UriPicker {
   }
 
   static Future<void> isUriOpenable(String uri) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       return true;
     }
     try {
@@ -96,7 +96,7 @@ class UriPicker {
   }
 
   static Future<void> takePersistablePermission(String uri) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       return true;
     }
     try {
@@ -112,7 +112,7 @@ class UriPicker {
   }
 
   static Future<String> readTextFromUri(String uri) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       return await FilePickerWritable()
           .readFileWithIdentifier(uri)
           .then((FileInfo fileInfo) => fileInfo.file.readAsString());
@@ -130,7 +130,7 @@ class UriPicker {
   }
 
   static Future<String> alterDocument(String uri, String newContents) async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       Directory tempDir = await getTemporaryDirectory();
       String randomFileName = Uuid().v4();
       File file = File('${tempDir.path}/$randomFileName');
@@ -152,6 +152,6 @@ class UriPicker {
     } on PlatformException catch (e) {
       print('PlatformException $e');
     }
-    return 'Not implemented on Android.';
+    return 'Not implemented on macOS.';
   }
 }
