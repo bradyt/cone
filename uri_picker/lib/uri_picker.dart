@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:uuid/uuid.dart';
 
@@ -15,6 +16,39 @@ class UriPicker {
     if (Platform.isIOS) {
       return await FilePickerWritable()
           .openFilePicker()
+          .then((FileInfo fileInfo) => fileInfo.identifier);
+    }
+    String uri;
+    try {
+      uri = await _channel.invokeMethod<dynamic>('pickUri') as String;
+    } on PlatformException {
+      rethrow;
+    } on MissingPluginException {
+      rethrow;
+    }
+    return uri;
+  }
+
+  static Future<String> putEmptyFile() async {
+    if (Platform.isIOS) {
+      Directory tempDir = await getTemporaryDirectory();
+
+      Duration tz = DateTime.now().timeZoneOffset;
+      int tzHours = tz.abs().inHours;
+      int tzMinutes = tz.abs().inMinutes - 60 * tzHours;
+      bool tzIsNegative = tz.isNegative;
+
+      String padInt(int n) => '$n'.padLeft(2, '0');
+
+      String tzOffset =
+          '${(tzIsNegative) ? '-' : '+'}${padInt(tzHours)}${padInt(tzMinutes)}';
+      String fileName = DateFormat('yyyyMMddTHHmmss').format(DateTime.now()) +
+          '${tzOffset}_${Uuid().v4()}.txt';
+      File file = File('${tempDir.path}/$fileName');
+      await file.writeAsString('');
+
+      return await FilePickerWritable()
+          .openFilePickerForCreate(file)
           .then((FileInfo fileInfo) => fileInfo.identifier);
     }
     String uri;

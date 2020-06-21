@@ -10,6 +10,7 @@ enum Actions {
   markInitialized,
   parse,
   pickLedgerFileUri,
+  putEmptyFile,
   refreshFileContents,
   resetTransaction,
   snackBar,

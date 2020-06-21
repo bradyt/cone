@@ -93,6 +93,24 @@ dynamic firstConeMiddleware(
         );
       },
     );
+  } else if (action == Actions.putEmptyFile) {
+    UriPicker.putEmptyFile().then(
+      (String uri) {
+        UriPicker.getDisplayName(uri).then(
+          (String displayName) {
+            UriPicker.takePersistablePermission(uri).then(
+              (_) {
+                store
+                  ..dispatch(UpdateSettingsAction('ledger_file_uri', uri))
+                  ..dispatch(UpdateSettingsAction(
+                      'ledger_file_display_name', displayName))
+                  ..dispatch(Actions.refreshFileContents);
+              },
+            );
+          },
+        );
+      },
+    );
   } else if (action == Actions.submitTransaction) {
     appendFile(store.state.ledgerFileUri, formattedTransaction(store.state))
         .then((_) {
