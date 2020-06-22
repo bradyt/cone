@@ -76,21 +76,6 @@ class SettingsColumn extends StatelessWidget {
         final ConeState state = store.state;
         return Column(
           children: <Widget>[
-            if (!kReleaseMode)
-              ListTile(
-                leading: const Icon(Icons.developer_mode),
-                title: const Text('Debug mode'),
-                subtitle: StoreConnector<ConeState, String>(
-                  converter: (Store<ConeState> store) =>
-                      '${store.state.debugMode}',
-                  builder: (_, String debugMode) => Text(debugMode),
-                  distinct: true,
-                ),
-                onTap: () => store.dispatch(
-                  UpdateSettingsAction(
-                      'debug_mode', !(store.state.debugMode ?? true)),
-                ),
-              ),
             ListTile(
               key: const Key('Pick ledger file'),
               leading: const Icon(Icons.link),
@@ -102,51 +87,6 @@ class SettingsColumn extends StatelessWidget {
                 ),
               ),
               onTap: () => store.dispatch(Actions.pickLedgerFileUri),
-            ),
-            SwitchListTile(
-              key: const Key('Toggle reverse sort'),
-              secondary: const Icon(Icons.sort),
-              title: Text(ConeLocalizations.of(context).reverseSort),
-              value: state.reverseSort,
-              onChanged: (bool _) => store.dispatch(
-                UpdateSettingsAction('reverse_sort', !state.reverseSort),
-              ),
-            ),
-            ExpansionTile(
-              leading: const Icon(Icons.brightness_medium),
-              title: const Text('Brightness'),
-              children: <Widget>[
-                ListTile(
-                  leading: const Icon(Icons.brightness_auto),
-                  title: const Text('Auto'),
-                  trailing: Radio<ConeBrightness>(
-                    value: ConeBrightness.auto,
-                    groupValue: state.brightness,
-                    onChanged: (ConeBrightness value) =>
-                        store.dispatch(SetBrightness(value)),
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.brightness_high),
-                  title: const Text('Light'),
-                  trailing: Radio<ConeBrightness>(
-                    value: ConeBrightness.light,
-                    groupValue: state.brightness,
-                    onChanged: (ConeBrightness value) =>
-                        store.dispatch(SetBrightness(value)),
-                  ),
-                ),
-                ListTile(
-                  leading: const Icon(Icons.brightness_low),
-                  title: const Text('Dark'),
-                  trailing: Radio<ConeBrightness>(
-                    value: ConeBrightness.dark,
-                    groupValue: state.brightness,
-                    onChanged: (ConeBrightness value) =>
-                        store.dispatch(SetBrightness(value)),
-                  ),
-                ),
-              ],
             ),
           ],
         );
