@@ -16,5 +16,3 @@ dev_dependencies:
   built_value_generator:
   test:
   test_coverage:
-    git: https://github.com/pulyaevskiy/test-coverage.git
-    version: 0.4.2
