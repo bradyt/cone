@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Actions;
-import 'package:flutter_redux/flutter_redux.dart'
-    show StoreBuilder, StoreConnector;
+import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:redux/redux.dart' show Store;
@@ -9,7 +8,6 @@ import 'package:redux/redux.dart' show Store;
 import 'package:cone/src/localizations.dart';
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
-import 'package:cone/src/types.dart';
 import 'package:cone/src/utils.dart';
 
 class Settings extends StatelessWidget {
