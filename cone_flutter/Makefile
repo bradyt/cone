@@ -6,11 +6,11 @@ $(PACKAGES):
 
 get: $(PACKAGES)
 
-$(STATEGDART):
+$(STATEGDART): $(PACKAGES)
 	cd ../cone_lib && make build
 	flutter pub run build_runner build
 
-build: $(PACKAGES) $(STATEGDART)
+build: $(STATEGDART)
 
 watch: $(PACKAGES)
 	flutter pub run build_runner watch
@@ -26,3 +26,6 @@ coverage:
 
 install:
 	flutter build apk --flavor=play --target-platform android-arm,android-arm64,android-x64 --split-per-abi
+
+test_android_build: $(STATEGDART)
+	flutter build apk --flavor=dev --target-platform android-x64 --split-per-abi
