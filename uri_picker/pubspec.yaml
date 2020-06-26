@@ -5,7 +5,8 @@ author: Brady Trainor <mail@bradyt.net>
 homepage: https://github.com/bradyt/uri_picker
 
 environment:
-  sdk: ">=2.1.0 <3.0.0"
+  sdk: ">=2.7.0 <3.0.0"
+  flutter: ">=1.10.0"
 
 dependencies:
   file_picker_writable:
@@ -27,11 +28,6 @@ flutter:
   # The 'pluginClass' and Android 'package' identifiers should not ordinarily
   # be modified. They are used by the tooling to maintain consistency when
   # adding or updating assets for this project.
-  #
-  # NOTE: This new plugin description format is not supported on Flutter's
-  # stable channel as of 1.9.1. A plugin published using this format will not
-  # work for most clients until the next major stable release.
-  # However, it is required in order to declare macOS support.
   plugin:
     platforms:
       android:
