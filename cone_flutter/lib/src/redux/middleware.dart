@@ -71,8 +71,10 @@ dynamic firstConeMiddleware(
       (PersistentSettings persistentSettings) {
         store
           ..dispatch(InitializeSettingsAction(settings: persistentSettings))
-          ..dispatch(Actions.markInitialized)
-          ..dispatch(Actions.refreshFileContents);
+          ..dispatch(Actions.markInitialized);
+        if (store.state.ledgerFileUri != null) {
+          store.dispatch(Actions.refreshFileContents);
+        }
       },
     );
   } else if (action == Actions.pickLedgerFileUri) {

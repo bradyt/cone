@@ -50,6 +50,9 @@ class Transactions extends StatelessWidget {
             opacity: loading ? 0.5 : 1.0,
             child: RefreshIndicator(
               onRefresh: () {
+                if (store.state.ledgerFileUri == null) {
+                  return Future.value(null);
+                }
                 store.dispatch(Actions.refreshFileContents);
                 return store.onChange
                     .firstWhere((ConeState state) => !state.isRefreshing);
