@@ -51,7 +51,7 @@ class Transactions extends StatelessWidget {
             child: RefreshIndicator(
               onRefresh: () {
                 if (store.state.ledgerFileUri == null) {
-                  return Future.value(null);
+                  return Future<void>.value(null);
                 }
                 store.dispatch(Actions.refreshFileContents);
                 return store.onChange

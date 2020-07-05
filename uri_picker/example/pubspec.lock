@@ -74,9 +74,11 @@ packages:
   file_picker_writable:
     dependency: transitive
     description:
-      name: file_picker_writable
-      url: "https://pub.dartlang.org"
-    source: hosted
+      path: "."
+      ref: "cone/text/plain"
+      resolved-ref: "644363ea5bd26141b9b8392d87d0dfd14f317ad1"
+      url: "https://github.com/bradyt/file_picker_writable.git"
+    source: git
     version: "1.1.1+4"
   flutter:
     dependency: "direct main"
