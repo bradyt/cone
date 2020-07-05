@@ -1,0 +1,34 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:android)
+
+platform :android do
+  desc "Validate that the Google Play Store `json_key` works"
+  lane :validate do
+    validate_play_store_json_key
+  end
+
+  desc "Download metadata and binaries from Google Play (via _supply_)"
+  lane :download do
+    download_from_play_store
+  end
+
+  desc "Retrieves version codes for a Google Play track"
+  lane :version do
+    # https://github.com/fastlane/fastlane/issues/16593
+    google_play_track_version_codes
+  end
+end

@@ -1,0 +1,12 @@
+# -*- ruby -*-
+# For more information about this configuration visit
+# https://docs.fastlane.tools/actions/gym/#gymfile
+
+# In general, you can use the options available
+# fastlane gym --help
+
+destination("generic/platform=iOS")
+sdk("iphoneos")
+include_symbols(true)
+include_bitcode(false)
+export_xcargs("-allowProvisioningUpdates")

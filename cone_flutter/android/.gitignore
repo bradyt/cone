@@ -5,3 +5,9 @@ gradle-wrapper.jar
 /gradlew.bat
 /local.properties
 GeneratedPluginRegistrant.java
+
+/Gemfile.lock
+/vendor/bundle/
+
+/fastlane/report.xml
+/fastlane/README.md

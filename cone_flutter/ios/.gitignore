@@ -30,3 +30,9 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+/Gemfile.lock
+/vendor/bundle/
+
+/fastlane/report.xml
+/fastlane/README.md

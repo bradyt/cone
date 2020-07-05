@@ -1,0 +1,6 @@
+app_identifier("info.tangential.cone") # The bundle identifier of your app
+apple_id("mail@bradyt.com") # Your Apple email address
+
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
