@@ -29,3 +29,6 @@ install:
 
 test_android_build: $(STATEGDART)
 	flutter build apk --flavor=dev --target-platform android-x64 --split-per-abi
+
+test_ios_build: $(STATEGDART)
+	flutter build ios
