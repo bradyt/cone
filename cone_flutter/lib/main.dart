@@ -11,7 +11,6 @@ import 'package:cone/src/localizations.dart';
 import 'package:cone/src/redux/actions.dart';
 import 'package:cone/src/redux/state.dart';
 import 'package:cone/src/settings.dart';
-import 'package:cone/src/types.dart';
 
 class ConeWidgetTest extends InheritedWidget {
   const ConeWidgetTest({Key key, this.widgetTest, Widget child})
@@ -74,6 +73,11 @@ class ConeApp extends StatelessWidget {
     return StoreConnector<ConeState, dynamic>(
       converter: (Store<ConeState> store) => store.state.brightness,
       builder: (BuildContext context, dynamic brightness) {
+        final ThemeData theme = ThemeData(
+          floatingActionButtonTheme: const FloatingActionButtonThemeData(
+            foregroundColor: Colors.black,
+          ),
+        );
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           title: 'cone',
@@ -97,21 +101,13 @@ class ConeApp extends StatelessWidget {
             Locale('th'),
             Locale('zh'),
           ],
-          theme: (brightness == ConeBrightness.dark)
-              ? ThemeData(
-                  brightness: Brightness.dark,
-                  accentColor: Colors.greenAccent,
-                )
-              : ThemeData(
-                  primarySwatch: Colors.green,
-                  accentColor: Colors.amberAccent,
-                ),
-          darkTheme: (brightness == ConeBrightness.auto)
-              ? ThemeData(
-                  brightness: Brightness.dark,
-                  accentColor: Colors.greenAccent,
-                )
-              : null,
+          theme: theme.copyWith(
+            colorScheme: theme.colorScheme.copyWith(
+              primary: Colors.green,
+              secondary: Colors.amberAccent,
+            ),
+          ),
+          darkTheme: ThemeData.dark(),
           routes: <String, Widget Function(BuildContext)>{
             '/': (BuildContext context) => Home(),
             '/add-transaction': (BuildContext context) => AddTransaction(),

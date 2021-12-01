@@ -37,7 +37,7 @@ class _JournalGrammarDefinition extends GrammarDefinition {
 
 class _JournalParserDefinition extends _JournalGrammarDefinition {}
 
-class JournalParser extends GrammarParser {
+class JournalParser extends GrammarParser<List<Token<String>>> {
   JournalParser() : super(_JournalParserDefinition());
 }
 

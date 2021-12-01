@@ -10,13 +10,13 @@ import 'package:file_picker_writable/file_picker_writable.dart';
 
 class UriPicker {
   static const MethodChannel _channel =
-      const MethodChannel('tangential.info/uri_picker');
+      MethodChannel('tangential.info/uri_picker');
 
   static Future<String> pickUri() async {
     if (Platform.isIOS || Platform.isAndroid) {
-      return await FilePickerWritable()
-          .openFilePicker()
-          .then((FileInfo fileInfo) => fileInfo.identifier);
+      return await FilePickerWritable().openFile(
+        (fileInfo, file) async => fileInfo.identifier,
+      );
     }
     String uri;
     try {
@@ -30,7 +30,7 @@ class UriPicker {
   }
 
   static Future<String> putEmptyFile() async {
-    if (Platform.isIOS) {
+    if (Platform.isIOS || Platform.isAndroid) {
       Directory tempDir = await getTemporaryDirectory();
 
       Duration tz = DateTime.now().timeZoneOffset;
@@ -43,12 +43,15 @@ class UriPicker {
       String tzOffset =
           '${(tzIsNegative) ? '-' : '+'}${padInt(tzHours)}${padInt(tzMinutes)}';
       String fileName = DateFormat('yyyyMMddTHHmmss').format(DateTime.now()) +
-          '${tzOffset}_${Uuid().v4()}.txt';
+          '${tzOffset}_${const Uuid().v4()}.txt';
       File file = File('${tempDir.path}/$fileName');
       await file.writeAsString('');
 
       return await FilePickerWritable()
-          .openFilePickerForCreate(file)
+          .openFileForCreate(
+            fileName: fileName,
+            writer: (tempFile) => tempFile.writeAsString(''),
+          )
           .then((FileInfo fileInfo) => fileInfo.identifier);
     }
     String uri;
@@ -64,9 +67,10 @@ class UriPicker {
 
   static Future<String> getDisplayName(String uri) async {
     if (Platform.isIOS || Platform.isAndroid) {
-      return await FilePickerWritable()
-          .readFileWithIdentifier(uri)
-          .then((FileInfo fileInfo) => fileInfo.fileName);
+      return await FilePickerWritable().readFile(
+        identifier: uri,
+        reader: (fileInfo, file) async => fileInfo.fileName,
+      );
     }
     String displayName;
     try {
@@ -113,9 +117,10 @@ class UriPicker {
 
   static Future<String> readTextFromUri(String uri) async {
     if (Platform.isIOS || Platform.isAndroid) {
-      return await FilePickerWritable()
-          .readFileWithIdentifier(uri)
-          .then((FileInfo fileInfo) => fileInfo.file.readAsString());
+      return await FilePickerWritable().readFile(
+        identifier: uri,
+        reader: (fileInfo, file) => file.readAsString(),
+      );
     }
     String fileContents;
     try {
@@ -132,14 +137,14 @@ class UriPicker {
   static Future<String> alterDocument(String uri, String newContents) async {
     if (Platform.isIOS || Platform.isAndroid) {
       Directory tempDir = await getTemporaryDirectory();
-      String randomFileName = Uuid().v4();
+      String randomFileName = const Uuid().v4();
       File file = File('${tempDir.path}/$randomFileName');
       await file.writeAsString(newContents);
       final FileInfo fileInfo =
           await FilePickerWritable().writeFileWithIdentifier(uri, file);
       if (fileInfo.identifier != uri) {
-        print(
-            'omg the identifier changed!\n\nSee:\n\n${uri}\n\nvs\n\n${fileInfo.identifier}\n');
+        stdout.writeln(
+            'omg the identifier changed!\n\nSee:\n\n$uri\n\nvs\n\n${fileInfo.identifier}\n');
       }
       return fileInfo.identifier;
     }
@@ -150,7 +155,7 @@ class UriPicker {
         'newContents': newContents,
       });
     } on PlatformException catch (e) {
-      print('PlatformException $e');
+      stdout.writeln('PlatformException $e');
     }
     return 'Not implemented on macOS.';
   }

@@ -5,8 +5,10 @@
 import FlutterMacOS
 import Foundation
 
-import uri_picker
+import file_picker_writable
+import path_provider_macos
 
 func RegisterGeneratedPlugins(registry: FlutterPluginRegistry) {
-  UriPickerPlugin.register(with: registry.registrar(forPlugin: "UriPickerPlugin"))
+  FilePickerWritablePlugin.register(with: registry.registrar(forPlugin: "FilePickerWritablePlugin"))
+  PathProviderPlugin.register(with: registry.registrar(forPlugin: "PathProviderPlugin"))
 }

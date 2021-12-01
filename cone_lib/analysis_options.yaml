@@ -15,7 +15,7 @@ linter:
     - always_specify_types
     - annotate_overrides
     # - avoid_annotating_with_dynamic
-    - avoid_as
+    # - avoid_as
     - avoid_bool_literals_in_conditional_expressions
     - avoid_catches_without_on_clauses
     - avoid_catching_errors
@@ -55,7 +55,7 @@ linter:
     - control_flow_in_finally
     - curly_braces_in_flow_control_structures
     - diagnostic_describe_all_properties
-    - directives_ordering
+    # - directives_ordering
     - empty_catches
     - empty_constructor_bodies
     - empty_statements

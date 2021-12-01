@@ -299,7 +299,7 @@ class DescriptionFieldState extends State<DescriptionField> {
       builder: (BuildContext context, Store<ConeState> store) {
         return TypeAheadField<String>(
           getImmediateSuggestions: true,
-          textFieldConfiguration: TextFieldConfiguration<dynamic>(
+          textFieldConfiguration: TextFieldConfiguration(
             controller: controller,
             textInputAction: TextInputAction.next,
             onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
@@ -434,7 +434,7 @@ class AccountFieldState extends State<AccountField> {
   Widget build(BuildContext context) {
     return TypeAheadField<String>(
       getImmediateSuggestions: true,
-      textFieldConfiguration: TextFieldConfiguration<dynamic>(
+      textFieldConfiguration: TextFieldConfiguration(
         controller: controller,
         textInputAction: TextInputAction.next,
         onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
@@ -673,7 +673,7 @@ class SaveButton extends StatelessWidget {
                     '$transaction',
                   ).then((_) {
                     if (store.state.debugMode) {
-                      Scaffold.of(context).showSnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(
                         transactionSnackBar(transaction: transaction),
                       );
                     } else {
@@ -760,7 +760,7 @@ class CommoditySearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () => close(context, null),
     );
   }

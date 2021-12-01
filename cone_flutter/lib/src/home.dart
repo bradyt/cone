@@ -305,7 +305,7 @@ ${DateTime.now().millisecondsSinceEpoch}''',
             Navigator.pushNamed<dynamic>(context, '/add-transaction')
                 .then((dynamic transaction) {
               if (transaction != null) {
-                Scaffold.of(context).showSnackBar(
+                ScaffoldMessenger.of(context).showSnackBar(
                   transactionSnackBar(transaction: transaction as Transaction),
                 );
               }

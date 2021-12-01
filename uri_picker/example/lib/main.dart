@@ -5,12 +5,14 @@ import 'package:flutter/services.dart';
 import 'package:uri_picker/uri_picker.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
 class MyApp extends StatefulWidget {
+  const MyApp({Key key}) : super(key: key);
+
   @override
-  _MyAppState createState() => _MyAppState();
+  State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
@@ -48,8 +50,8 @@ class _MyAppState extends State<MyApp> {
             child: Column(
               children: <Widget>[
                 Text(_uri ?? 'No uri yet'),
-                RaisedButton(
-                  child: Text('Pick URI'),
+                ElevatedButton(
+                  child: const Text('Pick URI'),
                   onPressed: () async {
                     await pickUri();
                   },

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart' show WidgetsApp;
 import 'package:flutter/services.dart' show MethodCall, MethodChannel;
 import 'package:flutter_driver/driver_extension.dart';
+import 'package:flutter_test/flutter_test.dart';
 
 import 'package:cone/main.dart' as app;
 

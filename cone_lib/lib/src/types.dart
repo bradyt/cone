@@ -26,9 +26,7 @@ final Serializers serializers = _$serializers;
 
 String topLevelParser(String contents) {
   final BuiltList<Token<String>> tokens =
-      // ignore: avoid_as
-      (JournalParser().parse(contents).value as Iterable<Token<String>>)
-          .toBuiltList();
+      JournalParser().parse(contents).value.toBuiltList();
   final BuiltList<JournalItem> journalItems =
       tokens.map<JournalItem>(parseJournalItem).toBuiltList();
 

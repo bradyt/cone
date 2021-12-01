@@ -5,25 +5,25 @@ set -o pipefail
 set -o nounset
 
 # Run dartfmt
-echo "--- Running dartfmt in cone_lib... ---"
-(cd cone_lib && dartfmt --set-exit-if-changed . >/dev/null)
+echo "--- Running dart format in cone_lib... ---"
+(cd cone_lib && dart format --set-exit-if-changed . >/dev/null)
 
-echo "--- Running dartfmt in cone_flutter... ---"
-(cd cone_flutter && dartfmt --set-exit-if-changed . >/dev/null)
+echo "--- Running dart format in cone_flutter... ---"
+(cd cone_flutter && dart format --set-exit-if-changed . >/dev/null)
 
-echo "--- Running dartfmt in uri_picker... ---"
-(cd uri_picker && dartfmt --set-exit-if-changed . >/dev/null)
+echo "--- Running dart format in uri_picker... ---"
+(cd uri_picker && dart format --set-exit-if-changed . >/dev/null)
 
 # Get all packages
-(cd cone_lib && pub get)
+(cd cone_lib && dart pub get)
 
-(cd cone_flutter && flutter packages get)
+(cd cone_flutter && flutter pub get)
 
-(cd uri_picker && flutter packages get)
+(cd uri_picker && flutter pub get)
 
 # Build runner
-(cd cone_lib && pub run build_runner build)
-(cd cone_flutter && flutter pub run build_runner build)
+(cd cone_lib && dart pub run build_runner build)
+(cd cone_flutter && flutter pub run build_runner build --delete-conflicting-outputs)
 
 # Analyze
 echo "--- Running dartanalyzer in cone_lib... ---"
@@ -44,6 +44,3 @@ echo "--- Running tests in cone_flutter... ---"
 
 echo "--- Running tests in uri_picker... ---"
 (cd uri_picker && flutter test)
-
-# Coverage
-(cd cone_lib && pub run test_coverage --no-badge --min-coverage 20)

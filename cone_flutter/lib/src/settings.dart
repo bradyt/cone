@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart' hide Actions;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
 import 'package:intl/intl.dart' show NumberFormat;
@@ -21,7 +20,7 @@ class Settings extends StatelessWidget {
             rebuildOnChange: false,
             builder: (BuildContext context, Store<ConeState> store) {
               return PopupMenuButton<void>(
-                icon: Icon(Icons.more_vert),
+                icon: const Icon(Icons.more_vert),
                 offset: const Offset(0, 50),
                 onSelected: (_) {
                   store.dispatch(Actions.putEmptyFile);
@@ -122,7 +121,7 @@ class NumberLocaleSearchDelegate extends SearchDelegate<String> {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () => close(context, null),
     );
   }
