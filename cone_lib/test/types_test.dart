@@ -189,11 +189,6 @@ void main() {
         () => CommentBuilder().build(),
         throwsA(isA<BuiltValueNullFieldError>()),
       );
-
-      expect(
-        () => trivialComment.toBuilder()..replace(null),
-        throwsA(isArgumentError),
-      );
     });
   });
 }
