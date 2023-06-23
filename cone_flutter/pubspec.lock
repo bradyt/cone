@@ -154,7 +154,7 @@ packages:
     source: hosted
     version: "4.5.0"
   collection:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: collection
       sha256: cfc915e6923fe5ce6e153b0723c753045de46de1b4d63771530504004a45fae0
@@ -220,10 +220,10 @@ packages:
     dependency: "direct main"
     description:
       name: edit_distance
-      sha256: "5d5df1095679537a012cd94750075db87fc5630b7703d25e92302b18dc76eb71"
+      sha256: "42a2a27fdffb7d55efb6a575ac889ae073d092295cc980566c2e19ceea9a7677"
       url: "https://pub.dev"
     source: hosted
-    version: "0.5.0-nullsafety.0"
+    version: "0.4.1"
   fake_async:
     dependency: transitive
     description:

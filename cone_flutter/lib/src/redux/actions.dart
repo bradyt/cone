@@ -25,7 +25,7 @@ class UpdateTransactionIndexAction {
     this.index,
   });
 
-  final int index;
+  final int? index;
 }
 
 class InitializeSettingsAction {
@@ -33,7 +33,7 @@ class InitializeSettingsAction {
     this.settings,
   });
 
-  final PersistentSettings settings;
+  final PersistentSettings? settings;
 }
 
 class UpdateSettingsAction {
@@ -67,7 +67,7 @@ class UpdateSystemLocaleAction {
 class UpdateJournalAction {
   UpdateJournalAction(this.journal);
 
-  final Journal journal;
+  final Journal? journal;
 
   // @override
   // String toString() {
@@ -78,11 +78,11 @@ class UpdateJournalAction {
 class UpdateContentsAction {
   UpdateContentsAction(this.contents);
 
-  final String contents;
+  final String? contents;
 
   @override
   String toString() {
-    return 'UpdateContentsAction(\'${contents.split('\n')[0]}...\')';
+    return 'UpdateContentsAction(\'${contents!.split('\n')[0]}...\')';
   }
 }
 
@@ -107,28 +107,28 @@ class UpdateDescriptionAction {
 class UpdateAccountAction {
   UpdateAccountAction({this.index, this.account});
 
-  final int index;
-  final String account;
+  final int? index;
+  final String? account;
 }
 
 class UpdateQuantityAction {
   UpdateQuantityAction({this.index, this.quantity});
 
-  final int index;
-  final String quantity;
+  final int? index;
+  final String? quantity;
 }
 
 class UpdateCommodityAction {
   UpdateCommodityAction({this.index, this.commodity});
 
-  final int index;
-  final String commodity;
+  final int? index;
+  final String? commodity;
 }
 
 class RemovePostingAtAction {
   RemovePostingAtAction(this.index);
 
-  final int index;
+  final int? index;
 }
 
 class SetBrightness {

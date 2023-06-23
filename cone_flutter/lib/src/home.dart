@@ -94,7 +94,7 @@ class Transactions extends StatelessWidget {
 }
 
 class FormattedJournalItem extends StatelessWidget {
-  const FormattedJournalItem({@required this.transaction, @required this.dark});
+  const FormattedJournalItem({required this.transaction, required this.dark});
 
   // Color choices taken from
   // https://github.com/emacs-mirror/emacs/blob/emacs-26.3/lisp/font-lock.el
@@ -114,7 +114,7 @@ class FormattedJournalItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget formattedJournalItem;
+    late Widget formattedJournalItem;
     final Color colorNewline =
         dark ? const Color(0xffa9a9a9) : const Color(0xffd3d3d3);
     // final Color colorBuiltin =
@@ -253,10 +253,10 @@ class FormattedJournalItem extends StatelessWidget {
 }
 
 class FormatString extends StatelessWidget {
-  const FormatString({@required this.text, this.color});
+  const FormatString({required this.text, this.color});
 
   final String text;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {

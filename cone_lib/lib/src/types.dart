@@ -171,10 +171,8 @@ abstract class Amount implements Built<Amount, AmountBuilder> {
 
   String get commodity;
   String get quantity;
-  @nullable
-  bool get commodityOnLeft;
-  @nullable
-  int get spacing;
+  bool? get commodityOnLeft;
+  int? get spacing;
 
   static void _initializeBuilder(AmountBuilder b) => b
     ..quantity = ''

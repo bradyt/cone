@@ -10,7 +10,7 @@ void main() {
 
   WidgetsApp.debugAllowBannerOverride = false;
 
-  String bufferContents;
+  String? bufferContents;
 
   const MethodChannel('tangential.info/uri_picker')
       .setMockMethodCallHandler((MethodCall methodCall) async {
@@ -33,7 +33,7 @@ account income:snpp
     } else if (methodCall.method == 'readTextFromUri') {
       return bufferContents;
     } else if (methodCall.method == 'alterDocument') {
-      bufferContents = methodCall.arguments['newContents'] as String;
+      bufferContents = methodCall.arguments['newContents'] as String?;
     }
     return null;
   });

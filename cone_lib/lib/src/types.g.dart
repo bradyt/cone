@@ -41,9 +41,9 @@ class _$JournalSerializer implements StructuredSerializer<Journal> {
   final String wireName = 'Journal';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Journal object,
+  Iterable<Object?> serialize(Serializers serializers, Journal object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'journalItems',
       serializers.serialize(object.journalItems,
           specifiedType:
@@ -54,21 +54,21 @@ class _$JournalSerializer implements StructuredSerializer<Journal> {
   }
 
   @override
-  Journal deserialize(Serializers serializers, Iterable<Object> serialized,
+  Journal deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new JournalBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'journalItems':
           result.journalItems.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(JournalItem)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(JournalItem)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -84,9 +84,9 @@ class _$CommentSerializer implements StructuredSerializer<Comment> {
   final String wireName = 'Comment';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Comment object,
+  Iterable<Object?> serialize(Serializers serializers, Comment object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'firstLine',
       serializers.serialize(object.firstLine,
           specifiedType: const FullType(int)),
@@ -102,27 +102,27 @@ class _$CommentSerializer implements StructuredSerializer<Comment> {
   }
 
   @override
-  Comment deserialize(Serializers serializers, Iterable<Object> serialized,
+  Comment deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CommentBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'firstLine':
           result.firstLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'lastLine':
           result.lastLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'comment':
           result.comment = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -139,9 +139,9 @@ class _$AccountDirectiveSerializer
   final String wireName = 'AccountDirective';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, AccountDirective object,
+  Iterable<Object?> serialize(Serializers serializers, AccountDirective object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'firstLine',
       serializers.serialize(object.firstLine,
           specifiedType: const FullType(int)),
@@ -158,27 +158,27 @@ class _$AccountDirectiveSerializer
 
   @override
   AccountDirective deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AccountDirectiveBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'firstLine':
           result.firstLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'lastLine':
           result.lastLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'account':
           result.account = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -195,9 +195,10 @@ class _$CommodityDirectiveSerializer
   final String wireName = 'CommodityDirective';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, CommodityDirective object,
+  Iterable<Object?> serialize(
+      Serializers serializers, CommodityDirective object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'firstLine',
       serializers.serialize(object.firstLine,
           specifiedType: const FullType(int)),
@@ -214,27 +215,27 @@ class _$CommodityDirectiveSerializer
 
   @override
   CommodityDirective deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new CommodityDirectiveBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'firstLine':
           result.firstLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'lastLine':
           result.lastLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'commodity':
           result.commodity = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -251,9 +252,9 @@ class _$OtherDirectiveSerializer
   final String wireName = 'OtherDirective';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, OtherDirective object,
+  Iterable<Object?> serialize(Serializers serializers, OtherDirective object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'firstLine',
       serializers.serialize(object.firstLine,
           specifiedType: const FullType(int)),
@@ -270,27 +271,27 @@ class _$OtherDirectiveSerializer
 
   @override
   OtherDirective deserialize(
-      Serializers serializers, Iterable<Object> serialized,
+      Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new OtherDirectiveBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'firstLine':
           result.firstLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'lastLine':
           result.lastLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'other':
           result.other = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
       }
     }
@@ -306,9 +307,9 @@ class _$TransactionSerializer implements StructuredSerializer<Transaction> {
   final String wireName = 'Transaction';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Transaction object,
+  Iterable<Object?> serialize(Serializers serializers, Transaction object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'firstLine',
       serializers.serialize(object.firstLine,
           specifiedType: const FullType(int)),
@@ -330,37 +331,37 @@ class _$TransactionSerializer implements StructuredSerializer<Transaction> {
   }
 
   @override
-  Transaction deserialize(Serializers serializers, Iterable<Object> serialized,
+  Transaction deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new TransactionBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'firstLine':
           result.firstLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'lastLine':
           result.lastLine = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'date':
           result.date = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'description':
           result.description = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'postings':
           result.postings.replace(serializers.deserialize(value,
                   specifiedType: const FullType(
-                      BuiltList, const [const FullType(Posting)]))
-              as BuiltList<Object>);
+                      BuiltList, const [const FullType(Posting)]))!
+              as BuiltList<Object?>);
           break;
       }
     }
@@ -376,9 +377,9 @@ class _$PostingSerializer implements StructuredSerializer<Posting> {
   final String wireName = 'Posting';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Posting object,
+  Iterable<Object?> serialize(Serializers serializers, Posting object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'key',
       serializers.serialize(object.key, specifiedType: const FullType(int)),
       'account',
@@ -393,27 +394,27 @@ class _$PostingSerializer implements StructuredSerializer<Posting> {
   }
 
   @override
-  Posting deserialize(Serializers serializers, Iterable<Object> serialized,
+  Posting deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new PostingBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'key':
           result.key = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int))! as int;
           break;
         case 'account':
           result.account = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'amount':
           result.amount.replace(serializers.deserialize(value,
-              specifiedType: const FullType(Amount)) as Amount);
+              specifiedType: const FullType(Amount))! as Amount);
           break;
       }
     }
@@ -429,9 +430,9 @@ class _$AmountSerializer implements StructuredSerializer<Amount> {
   final String wireName = 'Amount';
 
   @override
-  Iterable<Object> serialize(Serializers serializers, Amount object,
+  Iterable<Object?> serialize(Serializers serializers, Amount object,
       {FullType specifiedType = FullType.unspecified}) {
-    final result = <Object>[
+    final result = <Object?>[
       'commodity',
       serializers.serialize(object.commodity,
           specifiedType: const FullType(String)),
@@ -439,7 +440,7 @@ class _$AmountSerializer implements StructuredSerializer<Amount> {
       serializers.serialize(object.quantity,
           specifiedType: const FullType(String)),
     ];
-    Object value;
+    Object? value;
     value = object.commodityOnLeft;
     if (value != null) {
       result
@@ -457,31 +458,31 @@ class _$AmountSerializer implements StructuredSerializer<Amount> {
   }
 
   @override
-  Amount deserialize(Serializers serializers, Iterable<Object> serialized,
+  Amount deserialize(Serializers serializers, Iterable<Object?> serialized,
       {FullType specifiedType = FullType.unspecified}) {
     final result = new AmountBuilder();
 
     final iterator = serialized.iterator;
     while (iterator.moveNext()) {
-      final key = iterator.current as String;
+      final key = iterator.current! as String;
       iterator.moveNext();
-      final Object value = iterator.current;
+      final Object? value = iterator.current;
       switch (key) {
         case 'commodity':
           result.commodity = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'quantity':
           result.quantity = serializers.deserialize(value,
-              specifiedType: const FullType(String)) as String;
+              specifiedType: const FullType(String))! as String;
           break;
         case 'commodityOnLeft':
           result.commodityOnLeft = serializers.deserialize(value,
-              specifiedType: const FullType(bool)) as bool;
+              specifiedType: const FullType(bool)) as bool?;
           break;
         case 'spacing':
           result.spacing = serializers.deserialize(value,
-              specifiedType: const FullType(int)) as int;
+              specifiedType: const FullType(int)) as int?;
           break;
       }
     }
@@ -494,10 +495,10 @@ class _$Journal extends Journal {
   @override
   final BuiltList<JournalItem> journalItems;
 
-  factory _$Journal([void Function(JournalBuilder) updates]) =>
+  factory _$Journal([void Function(JournalBuilder)? updates]) =>
       (new JournalBuilder()..update(updates))._build();
 
-  _$Journal._({this.journalItems}) : super._() {
+  _$Journal._({required this.journalItems}) : super._() {
     BuiltValueNullFieldError.checkNotNull(
         journalItems, r'Journal', 'journalItems');
   }
@@ -532,12 +533,12 @@ class _$Journal extends Journal {
 }
 
 class JournalBuilder implements Builder<Journal, JournalBuilder> {
-  _$Journal _$v;
+  _$Journal? _$v;
 
-  ListBuilder<JournalItem> _journalItems;
+  ListBuilder<JournalItem>? _journalItems;
   ListBuilder<JournalItem> get journalItems =>
       _$this._journalItems ??= new ListBuilder<JournalItem>();
-  set journalItems(ListBuilder<JournalItem> journalItems) =>
+  set journalItems(ListBuilder<JournalItem>? journalItems) =>
       _$this._journalItems = journalItems;
 
   JournalBuilder();
@@ -558,7 +559,7 @@ class JournalBuilder implements Builder<Journal, JournalBuilder> {
   }
 
   @override
-  void update(void Function(JournalBuilder) updates) {
+  void update(void Function(JournalBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
@@ -570,7 +571,7 @@ class JournalBuilder implements Builder<Journal, JournalBuilder> {
     try {
       _$result = _$v ?? new _$Journal._(journalItems: journalItems.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'journalItems';
         journalItems.build();
@@ -593,10 +594,12 @@ class _$Comment extends Comment {
   @override
   final String comment;
 
-  factory _$Comment([void Function(CommentBuilder) updates]) =>
+  factory _$Comment([void Function(CommentBuilder)? updates]) =>
       (new CommentBuilder()..update(updates))._build();
 
-  _$Comment._({this.firstLine, this.lastLine, this.comment}) : super._() {
+  _$Comment._(
+      {required this.firstLine, required this.lastLine, required this.comment})
+      : super._() {
     BuiltValueNullFieldError.checkNotNull(firstLine, r'Comment', 'firstLine');
     BuiltValueNullFieldError.checkNotNull(lastLine, r'Comment', 'lastLine');
     BuiltValueNullFieldError.checkNotNull(comment, r'Comment', 'comment');
@@ -630,19 +633,19 @@ class _$Comment extends Comment {
 }
 
 class CommentBuilder implements Builder<Comment, CommentBuilder> {
-  _$Comment _$v;
+  _$Comment? _$v;
 
-  int _firstLine;
-  int get firstLine => _$this._firstLine;
-  set firstLine(int firstLine) => _$this._firstLine = firstLine;
+  int? _firstLine;
+  int? get firstLine => _$this._firstLine;
+  set firstLine(int? firstLine) => _$this._firstLine = firstLine;
 
-  int _lastLine;
-  int get lastLine => _$this._lastLine;
-  set lastLine(int lastLine) => _$this._lastLine = lastLine;
+  int? _lastLine;
+  int? get lastLine => _$this._lastLine;
+  set lastLine(int? lastLine) => _$this._lastLine = lastLine;
 
-  String _comment;
-  String get comment => _$this._comment;
-  set comment(String comment) => _$this._comment = comment;
+  String? _comment;
+  String? get comment => _$this._comment;
+  set comment(String? comment) => _$this._comment = comment;
 
   CommentBuilder();
 
@@ -664,7 +667,7 @@ class CommentBuilder implements Builder<Comment, CommentBuilder> {
   }
 
   @override
-  void update(void Function(CommentBuilder) updates) {
+  void update(void Function(CommentBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
@@ -694,10 +697,11 @@ class _$AccountDirective extends AccountDirective {
   final String account;
 
   factory _$AccountDirective(
-          [void Function(AccountDirectiveBuilder) updates]) =>
+          [void Function(AccountDirectiveBuilder)? updates]) =>
       (new AccountDirectiveBuilder()..update(updates))._build();
 
-  _$AccountDirective._({this.firstLine, this.lastLine, this.account})
+  _$AccountDirective._(
+      {required this.firstLine, required this.lastLine, required this.account})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         firstLine, r'AccountDirective', 'firstLine');
@@ -737,19 +741,19 @@ class _$AccountDirective extends AccountDirective {
 
 class AccountDirectiveBuilder
     implements Builder<AccountDirective, AccountDirectiveBuilder> {
-  _$AccountDirective _$v;
+  _$AccountDirective? _$v;
 
-  int _firstLine;
-  int get firstLine => _$this._firstLine;
-  set firstLine(int firstLine) => _$this._firstLine = firstLine;
+  int? _firstLine;
+  int? get firstLine => _$this._firstLine;
+  set firstLine(int? firstLine) => _$this._firstLine = firstLine;
 
-  int _lastLine;
-  int get lastLine => _$this._lastLine;
-  set lastLine(int lastLine) => _$this._lastLine = lastLine;
+  int? _lastLine;
+  int? get lastLine => _$this._lastLine;
+  set lastLine(int? lastLine) => _$this._lastLine = lastLine;
 
-  String _account;
-  String get account => _$this._account;
-  set account(String account) => _$this._account = account;
+  String? _account;
+  String? get account => _$this._account;
+  set account(String? account) => _$this._account = account;
 
   AccountDirectiveBuilder();
 
@@ -771,7 +775,7 @@ class AccountDirectiveBuilder
   }
 
   @override
-  void update(void Function(AccountDirectiveBuilder) updates) {
+  void update(void Function(AccountDirectiveBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
@@ -801,10 +805,13 @@ class _$CommodityDirective extends CommodityDirective {
   final String commodity;
 
   factory _$CommodityDirective(
-          [void Function(CommodityDirectiveBuilder) updates]) =>
+          [void Function(CommodityDirectiveBuilder)? updates]) =>
       (new CommodityDirectiveBuilder()..update(updates))._build();
 
-  _$CommodityDirective._({this.firstLine, this.lastLine, this.commodity})
+  _$CommodityDirective._(
+      {required this.firstLine,
+      required this.lastLine,
+      required this.commodity})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         firstLine, r'CommodityDirective', 'firstLine');
@@ -845,19 +852,19 @@ class _$CommodityDirective extends CommodityDirective {
 
 class CommodityDirectiveBuilder
     implements Builder<CommodityDirective, CommodityDirectiveBuilder> {
-  _$CommodityDirective _$v;
+  _$CommodityDirective? _$v;
 
-  int _firstLine;
-  int get firstLine => _$this._firstLine;
-  set firstLine(int firstLine) => _$this._firstLine = firstLine;
+  int? _firstLine;
+  int? get firstLine => _$this._firstLine;
+  set firstLine(int? firstLine) => _$this._firstLine = firstLine;
 
-  int _lastLine;
-  int get lastLine => _$this._lastLine;
-  set lastLine(int lastLine) => _$this._lastLine = lastLine;
+  int? _lastLine;
+  int? get lastLine => _$this._lastLine;
+  set lastLine(int? lastLine) => _$this._lastLine = lastLine;
 
-  String _commodity;
-  String get commodity => _$this._commodity;
-  set commodity(String commodity) => _$this._commodity = commodity;
+  String? _commodity;
+  String? get commodity => _$this._commodity;
+  set commodity(String? commodity) => _$this._commodity = commodity;
 
   CommodityDirectiveBuilder();
 
@@ -879,7 +886,7 @@ class CommodityDirectiveBuilder
   }
 
   @override
-  void update(void Function(CommodityDirectiveBuilder) updates) {
+  void update(void Function(CommodityDirectiveBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
@@ -908,10 +915,12 @@ class _$OtherDirective extends OtherDirective {
   @override
   final String other;
 
-  factory _$OtherDirective([void Function(OtherDirectiveBuilder) updates]) =>
+  factory _$OtherDirective([void Function(OtherDirectiveBuilder)? updates]) =>
       (new OtherDirectiveBuilder()..update(updates))._build();
 
-  _$OtherDirective._({this.firstLine, this.lastLine, this.other}) : super._() {
+  _$OtherDirective._(
+      {required this.firstLine, required this.lastLine, required this.other})
+      : super._() {
     BuiltValueNullFieldError.checkNotNull(
         firstLine, r'OtherDirective', 'firstLine');
     BuiltValueNullFieldError.checkNotNull(
@@ -949,19 +958,19 @@ class _$OtherDirective extends OtherDirective {
 
 class OtherDirectiveBuilder
     implements Builder<OtherDirective, OtherDirectiveBuilder> {
-  _$OtherDirective _$v;
+  _$OtherDirective? _$v;
 
-  int _firstLine;
-  int get firstLine => _$this._firstLine;
-  set firstLine(int firstLine) => _$this._firstLine = firstLine;
+  int? _firstLine;
+  int? get firstLine => _$this._firstLine;
+  set firstLine(int? firstLine) => _$this._firstLine = firstLine;
 
-  int _lastLine;
-  int get lastLine => _$this._lastLine;
-  set lastLine(int lastLine) => _$this._lastLine = lastLine;
+  int? _lastLine;
+  int? get lastLine => _$this._lastLine;
+  set lastLine(int? lastLine) => _$this._lastLine = lastLine;
 
-  String _other;
-  String get other => _$this._other;
-  set other(String other) => _$this._other = other;
+  String? _other;
+  String? get other => _$this._other;
+  set other(String? other) => _$this._other = other;
 
   OtherDirectiveBuilder();
 
@@ -983,7 +992,7 @@ class OtherDirectiveBuilder
   }
 
   @override
-  void update(void Function(OtherDirectiveBuilder) updates) {
+  void update(void Function(OtherDirectiveBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
@@ -1016,15 +1025,15 @@ class _$Transaction extends Transaction {
   @override
   final BuiltList<Posting> postings;
 
-  factory _$Transaction([void Function(TransactionBuilder) updates]) =>
+  factory _$Transaction([void Function(TransactionBuilder)? updates]) =>
       (new TransactionBuilder()..update(updates))._build();
 
   _$Transaction._(
-      {this.firstLine,
-      this.lastLine,
-      this.date,
-      this.description,
-      this.postings})
+      {required this.firstLine,
+      required this.lastLine,
+      required this.date,
+      required this.description,
+      required this.postings})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
         firstLine, r'Transaction', 'firstLine');
@@ -1067,28 +1076,28 @@ class _$Transaction extends Transaction {
 }
 
 class TransactionBuilder implements Builder<Transaction, TransactionBuilder> {
-  _$Transaction _$v;
+  _$Transaction? _$v;
 
-  int _firstLine;
-  int get firstLine => _$this._firstLine;
-  set firstLine(int firstLine) => _$this._firstLine = firstLine;
+  int? _firstLine;
+  int? get firstLine => _$this._firstLine;
+  set firstLine(int? firstLine) => _$this._firstLine = firstLine;
 
-  int _lastLine;
-  int get lastLine => _$this._lastLine;
-  set lastLine(int lastLine) => _$this._lastLine = lastLine;
+  int? _lastLine;
+  int? get lastLine => _$this._lastLine;
+  set lastLine(int? lastLine) => _$this._lastLine = lastLine;
 
-  String _date;
-  String get date => _$this._date;
-  set date(String date) => _$this._date = date;
+  String? _date;
+  String? get date => _$this._date;
+  set date(String? date) => _$this._date = date;
 
-  String _description;
-  String get description => _$this._description;
-  set description(String description) => _$this._description = description;
+  String? _description;
+  String? get description => _$this._description;
+  set description(String? description) => _$this._description = description;
 
-  ListBuilder<Posting> _postings;
+  ListBuilder<Posting>? _postings;
   ListBuilder<Posting> get postings =>
       _$this._postings ??= new ListBuilder<Posting>();
-  set postings(ListBuilder<Posting> postings) => _$this._postings = postings;
+  set postings(ListBuilder<Posting>? postings) => _$this._postings = postings;
 
   TransactionBuilder() {
     Transaction._initializeBuilder(this);
@@ -1114,7 +1123,7 @@ class TransactionBuilder implements Builder<Transaction, TransactionBuilder> {
   }
 
   @override
-  void update(void Function(TransactionBuilder) updates) {
+  void update(void Function(TransactionBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
@@ -1136,7 +1145,7 @@ class TransactionBuilder implements Builder<Transaction, TransactionBuilder> {
                   description, r'Transaction', 'description'),
               postings: postings.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'postings';
         postings.build();
@@ -1159,10 +1168,11 @@ class _$Posting extends Posting {
   @override
   final Amount amount;
 
-  factory _$Posting([void Function(PostingBuilder) updates]) =>
+  factory _$Posting([void Function(PostingBuilder)? updates]) =>
       (new PostingBuilder()..update(updates))._build();
 
-  _$Posting._({this.key, this.account, this.amount}) : super._() {
+  _$Posting._({required this.key, required this.account, required this.amount})
+      : super._() {
     BuiltValueNullFieldError.checkNotNull(key, r'Posting', 'key');
     BuiltValueNullFieldError.checkNotNull(account, r'Posting', 'account');
     BuiltValueNullFieldError.checkNotNull(amount, r'Posting', 'amount');
@@ -1196,19 +1206,19 @@ class _$Posting extends Posting {
 }
 
 class PostingBuilder implements Builder<Posting, PostingBuilder> {
-  _$Posting _$v;
+  _$Posting? _$v;
 
-  int _key;
-  int get key => _$this._key;
-  set key(int key) => _$this._key = key;
+  int? _key;
+  int? get key => _$this._key;
+  set key(int? key) => _$this._key = key;
 
-  String _account;
-  String get account => _$this._account;
-  set account(String account) => _$this._account = account;
+  String? _account;
+  String? get account => _$this._account;
+  set account(String? account) => _$this._account = account;
 
-  AmountBuilder _amount;
+  AmountBuilder? _amount;
   AmountBuilder get amount => _$this._amount ??= new AmountBuilder();
-  set amount(AmountBuilder amount) => _$this._amount = amount;
+  set amount(AmountBuilder? amount) => _$this._amount = amount;
 
   PostingBuilder() {
     Posting._initializeBuilder(this);
@@ -1232,7 +1242,7 @@ class PostingBuilder implements Builder<Posting, PostingBuilder> {
   }
 
   @override
-  void update(void Function(PostingBuilder) updates) {
+  void update(void Function(PostingBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
@@ -1250,7 +1260,7 @@ class PostingBuilder implements Builder<Posting, PostingBuilder> {
                   account, r'Posting', 'account'),
               amount: amount.build());
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'amount';
         amount.build();
@@ -1271,15 +1281,18 @@ class _$Amount extends Amount {
   @override
   final String quantity;
   @override
-  final bool commodityOnLeft;
+  final bool? commodityOnLeft;
   @override
-  final int spacing;
+  final int? spacing;
 
-  factory _$Amount([void Function(AmountBuilder) updates]) =>
+  factory _$Amount([void Function(AmountBuilder)? updates]) =>
       (new AmountBuilder()..update(updates))._build();
 
   _$Amount._(
-      {this.commodity, this.quantity, this.commodityOnLeft, this.spacing})
+      {required this.commodity,
+      required this.quantity,
+      this.commodityOnLeft,
+      this.spacing})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(commodity, r'Amount', 'commodity');
     BuiltValueNullFieldError.checkNotNull(quantity, r'Amount', 'quantity');
@@ -1315,24 +1328,24 @@ class _$Amount extends Amount {
 }
 
 class AmountBuilder implements Builder<Amount, AmountBuilder> {
-  _$Amount _$v;
+  _$Amount? _$v;
 
-  String _commodity;
-  String get commodity => _$this._commodity;
-  set commodity(String commodity) => _$this._commodity = commodity;
+  String? _commodity;
+  String? get commodity => _$this._commodity;
+  set commodity(String? commodity) => _$this._commodity = commodity;
 
-  String _quantity;
-  String get quantity => _$this._quantity;
-  set quantity(String quantity) => _$this._quantity = quantity;
+  String? _quantity;
+  String? get quantity => _$this._quantity;
+  set quantity(String? quantity) => _$this._quantity = quantity;
 
-  bool _commodityOnLeft;
-  bool get commodityOnLeft => _$this._commodityOnLeft;
-  set commodityOnLeft(bool commodityOnLeft) =>
+  bool? _commodityOnLeft;
+  bool? get commodityOnLeft => _$this._commodityOnLeft;
+  set commodityOnLeft(bool? commodityOnLeft) =>
       _$this._commodityOnLeft = commodityOnLeft;
 
-  int _spacing;
-  int get spacing => _$this._spacing;
-  set spacing(int spacing) => _$this._spacing = spacing;
+  int? _spacing;
+  int? get spacing => _$this._spacing;
+  set spacing(int? spacing) => _$this._spacing = spacing;
 
   AmountBuilder() {
     Amount._initializeBuilder(this);
@@ -1357,7 +1370,7 @@ class AmountBuilder implements Builder<Amount, AmountBuilder> {
   }
 
   @override
-  void update(void Function(AmountBuilder) updates) {
+  void update(void Function(AmountBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
