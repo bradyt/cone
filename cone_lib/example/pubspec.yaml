@@ -5,7 +5,7 @@ homepage: https://github.com/bradyt/cone/tree/master/cone_lib/example/
 author: Brady Trainor <mail@bradyt.net>
 
 environment:
-  sdk: '>=2.4.0 <3.0.0'
+  sdk: ">=2.11.0 <3.0.0"
 
 dependencies:
   cone_lib:

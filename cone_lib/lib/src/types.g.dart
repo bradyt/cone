@@ -495,11 +495,11 @@ class _$Journal extends Journal {
   final BuiltList<JournalItem> journalItems;
 
   factory _$Journal([void Function(JournalBuilder) updates]) =>
-      (new JournalBuilder()..update(updates)).build();
+      (new JournalBuilder()..update(updates))._build();
 
   _$Journal._({this.journalItems}) : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        journalItems, 'Journal', 'journalItems');
+        journalItems, r'Journal', 'journalItems');
   }
 
   @override
@@ -517,12 +517,15 @@ class _$Journal extends Journal {
 
   @override
   int get hashCode {
-    return $jf($jc(0, journalItems.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, journalItems.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('Journal')
+    return (newBuiltValueToStringHelper(r'Journal')
           ..add('journalItems', journalItems))
         .toString();
   }
@@ -560,7 +563,9 @@ class JournalBuilder implements Builder<Journal, JournalBuilder> {
   }
 
   @override
-  _$Journal build() {
+  Journal build() => _build();
+
+  _$Journal _build() {
     _$Journal _$result;
     try {
       _$result = _$v ?? new _$Journal._(journalItems: journalItems.build());
@@ -571,7 +576,7 @@ class JournalBuilder implements Builder<Journal, JournalBuilder> {
         journalItems.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Journal', _$failedField, e.toString());
+            r'Journal', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -589,12 +594,12 @@ class _$Comment extends Comment {
   final String comment;
 
   factory _$Comment([void Function(CommentBuilder) updates]) =>
-      (new CommentBuilder()..update(updates)).build();
+      (new CommentBuilder()..update(updates))._build();
 
   _$Comment._({this.firstLine, this.lastLine, this.comment}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(firstLine, 'Comment', 'firstLine');
-    BuiltValueNullFieldError.checkNotNull(lastLine, 'Comment', 'lastLine');
-    BuiltValueNullFieldError.checkNotNull(comment, 'Comment', 'comment');
+    BuiltValueNullFieldError.checkNotNull(firstLine, r'Comment', 'firstLine');
+    BuiltValueNullFieldError.checkNotNull(lastLine, r'Comment', 'lastLine');
+    BuiltValueNullFieldError.checkNotNull(comment, r'Comment', 'comment');
   }
 
   @override
@@ -615,8 +620,12 @@ class _$Comment extends Comment {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc(0, firstLine.hashCode), lastLine.hashCode), comment.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, firstLine.hashCode);
+    _$hash = $jc(_$hash, lastLine.hashCode);
+    _$hash = $jc(_$hash, comment.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 }
 
@@ -660,15 +669,17 @@ class CommentBuilder implements Builder<Comment, CommentBuilder> {
   }
 
   @override
-  _$Comment build() {
+  Comment build() => _build();
+
+  _$Comment _build() {
     final _$result = _$v ??
         new _$Comment._(
             firstLine: BuiltValueNullFieldError.checkNotNull(
-                firstLine, 'Comment', 'firstLine'),
+                firstLine, r'Comment', 'firstLine'),
             lastLine: BuiltValueNullFieldError.checkNotNull(
-                lastLine, 'Comment', 'lastLine'),
+                lastLine, r'Comment', 'lastLine'),
             comment: BuiltValueNullFieldError.checkNotNull(
-                comment, 'Comment', 'comment'));
+                comment, r'Comment', 'comment'));
     replace(_$result);
     return _$result;
   }
@@ -684,16 +695,16 @@ class _$AccountDirective extends AccountDirective {
 
   factory _$AccountDirective(
           [void Function(AccountDirectiveBuilder) updates]) =>
-      (new AccountDirectiveBuilder()..update(updates)).build();
+      (new AccountDirectiveBuilder()..update(updates))._build();
 
   _$AccountDirective._({this.firstLine, this.lastLine, this.account})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        firstLine, 'AccountDirective', 'firstLine');
+        firstLine, r'AccountDirective', 'firstLine');
     BuiltValueNullFieldError.checkNotNull(
-        lastLine, 'AccountDirective', 'lastLine');
+        lastLine, r'AccountDirective', 'lastLine');
     BuiltValueNullFieldError.checkNotNull(
-        account, 'AccountDirective', 'account');
+        account, r'AccountDirective', 'account');
   }
 
   @override
@@ -715,8 +726,12 @@ class _$AccountDirective extends AccountDirective {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc(0, firstLine.hashCode), lastLine.hashCode), account.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, firstLine.hashCode);
+    _$hash = $jc(_$hash, lastLine.hashCode);
+    _$hash = $jc(_$hash, account.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 }
 
@@ -761,15 +776,17 @@ class AccountDirectiveBuilder
   }
 
   @override
-  _$AccountDirective build() {
+  AccountDirective build() => _build();
+
+  _$AccountDirective _build() {
     final _$result = _$v ??
         new _$AccountDirective._(
             firstLine: BuiltValueNullFieldError.checkNotNull(
-                firstLine, 'AccountDirective', 'firstLine'),
+                firstLine, r'AccountDirective', 'firstLine'),
             lastLine: BuiltValueNullFieldError.checkNotNull(
-                lastLine, 'AccountDirective', 'lastLine'),
+                lastLine, r'AccountDirective', 'lastLine'),
             account: BuiltValueNullFieldError.checkNotNull(
-                account, 'AccountDirective', 'account'));
+                account, r'AccountDirective', 'account'));
     replace(_$result);
     return _$result;
   }
@@ -785,16 +802,16 @@ class _$CommodityDirective extends CommodityDirective {
 
   factory _$CommodityDirective(
           [void Function(CommodityDirectiveBuilder) updates]) =>
-      (new CommodityDirectiveBuilder()..update(updates)).build();
+      (new CommodityDirectiveBuilder()..update(updates))._build();
 
   _$CommodityDirective._({this.firstLine, this.lastLine, this.commodity})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        firstLine, 'CommodityDirective', 'firstLine');
+        firstLine, r'CommodityDirective', 'firstLine');
     BuiltValueNullFieldError.checkNotNull(
-        lastLine, 'CommodityDirective', 'lastLine');
+        lastLine, r'CommodityDirective', 'lastLine');
     BuiltValueNullFieldError.checkNotNull(
-        commodity, 'CommodityDirective', 'commodity');
+        commodity, r'CommodityDirective', 'commodity');
   }
 
   @override
@@ -817,8 +834,12 @@ class _$CommodityDirective extends CommodityDirective {
 
   @override
   int get hashCode {
-    return $jf($jc($jc($jc(0, firstLine.hashCode), lastLine.hashCode),
-        commodity.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, firstLine.hashCode);
+    _$hash = $jc(_$hash, lastLine.hashCode);
+    _$hash = $jc(_$hash, commodity.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 }
 
@@ -863,15 +884,17 @@ class CommodityDirectiveBuilder
   }
 
   @override
-  _$CommodityDirective build() {
+  CommodityDirective build() => _build();
+
+  _$CommodityDirective _build() {
     final _$result = _$v ??
         new _$CommodityDirective._(
             firstLine: BuiltValueNullFieldError.checkNotNull(
-                firstLine, 'CommodityDirective', 'firstLine'),
+                firstLine, r'CommodityDirective', 'firstLine'),
             lastLine: BuiltValueNullFieldError.checkNotNull(
-                lastLine, 'CommodityDirective', 'lastLine'),
+                lastLine, r'CommodityDirective', 'lastLine'),
             commodity: BuiltValueNullFieldError.checkNotNull(
-                commodity, 'CommodityDirective', 'commodity'));
+                commodity, r'CommodityDirective', 'commodity'));
     replace(_$result);
     return _$result;
   }
@@ -886,14 +909,14 @@ class _$OtherDirective extends OtherDirective {
   final String other;
 
   factory _$OtherDirective([void Function(OtherDirectiveBuilder) updates]) =>
-      (new OtherDirectiveBuilder()..update(updates)).build();
+      (new OtherDirectiveBuilder()..update(updates))._build();
 
   _$OtherDirective._({this.firstLine, this.lastLine, this.other}) : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        firstLine, 'OtherDirective', 'firstLine');
+        firstLine, r'OtherDirective', 'firstLine');
     BuiltValueNullFieldError.checkNotNull(
-        lastLine, 'OtherDirective', 'lastLine');
-    BuiltValueNullFieldError.checkNotNull(other, 'OtherDirective', 'other');
+        lastLine, r'OtherDirective', 'lastLine');
+    BuiltValueNullFieldError.checkNotNull(other, r'OtherDirective', 'other');
   }
 
   @override
@@ -915,8 +938,12 @@ class _$OtherDirective extends OtherDirective {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc(0, firstLine.hashCode), lastLine.hashCode), other.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, firstLine.hashCode);
+    _$hash = $jc(_$hash, lastLine.hashCode);
+    _$hash = $jc(_$hash, other.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 }
 
@@ -961,15 +988,17 @@ class OtherDirectiveBuilder
   }
 
   @override
-  _$OtherDirective build() {
+  OtherDirective build() => _build();
+
+  _$OtherDirective _build() {
     final _$result = _$v ??
         new _$OtherDirective._(
             firstLine: BuiltValueNullFieldError.checkNotNull(
-                firstLine, 'OtherDirective', 'firstLine'),
+                firstLine, r'OtherDirective', 'firstLine'),
             lastLine: BuiltValueNullFieldError.checkNotNull(
-                lastLine, 'OtherDirective', 'lastLine'),
+                lastLine, r'OtherDirective', 'lastLine'),
             other: BuiltValueNullFieldError.checkNotNull(
-                other, 'OtherDirective', 'other'));
+                other, r'OtherDirective', 'other'));
     replace(_$result);
     return _$result;
   }
@@ -988,7 +1017,7 @@ class _$Transaction extends Transaction {
   final BuiltList<Posting> postings;
 
   factory _$Transaction([void Function(TransactionBuilder) updates]) =>
-      (new TransactionBuilder()..update(updates)).build();
+      (new TransactionBuilder()..update(updates))._build();
 
   _$Transaction._(
       {this.firstLine,
@@ -998,12 +1027,12 @@ class _$Transaction extends Transaction {
       this.postings})
       : super._() {
     BuiltValueNullFieldError.checkNotNull(
-        firstLine, 'Transaction', 'firstLine');
-    BuiltValueNullFieldError.checkNotNull(lastLine, 'Transaction', 'lastLine');
-    BuiltValueNullFieldError.checkNotNull(date, 'Transaction', 'date');
+        firstLine, r'Transaction', 'firstLine');
+    BuiltValueNullFieldError.checkNotNull(lastLine, r'Transaction', 'lastLine');
+    BuiltValueNullFieldError.checkNotNull(date, r'Transaction', 'date');
     BuiltValueNullFieldError.checkNotNull(
-        description, 'Transaction', 'description');
-    BuiltValueNullFieldError.checkNotNull(postings, 'Transaction', 'postings');
+        description, r'Transaction', 'description');
+    BuiltValueNullFieldError.checkNotNull(postings, r'Transaction', 'postings');
   }
 
   @override
@@ -1026,12 +1055,14 @@ class _$Transaction extends Transaction {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc($jc($jc(0, firstLine.hashCode), lastLine.hashCode),
-                date.hashCode),
-            description.hashCode),
-        postings.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, firstLine.hashCode);
+    _$hash = $jc(_$hash, lastLine.hashCode);
+    _$hash = $jc(_$hash, date.hashCode);
+    _$hash = $jc(_$hash, description.hashCode);
+    _$hash = $jc(_$hash, postings.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 }
 
@@ -1088,19 +1119,21 @@ class TransactionBuilder implements Builder<Transaction, TransactionBuilder> {
   }
 
   @override
-  _$Transaction build() {
+  Transaction build() => _build();
+
+  _$Transaction _build() {
     _$Transaction _$result;
     try {
       _$result = _$v ??
           new _$Transaction._(
               firstLine: BuiltValueNullFieldError.checkNotNull(
-                  firstLine, 'Transaction', 'firstLine'),
+                  firstLine, r'Transaction', 'firstLine'),
               lastLine: BuiltValueNullFieldError.checkNotNull(
-                  lastLine, 'Transaction', 'lastLine'),
+                  lastLine, r'Transaction', 'lastLine'),
               date: BuiltValueNullFieldError.checkNotNull(
-                  date, 'Transaction', 'date'),
+                  date, r'Transaction', 'date'),
               description: BuiltValueNullFieldError.checkNotNull(
-                  description, 'Transaction', 'description'),
+                  description, r'Transaction', 'description'),
               postings: postings.build());
     } catch (_) {
       String _$failedField;
@@ -1109,7 +1142,7 @@ class TransactionBuilder implements Builder<Transaction, TransactionBuilder> {
         postings.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Transaction', _$failedField, e.toString());
+            r'Transaction', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -1127,12 +1160,12 @@ class _$Posting extends Posting {
   final Amount amount;
 
   factory _$Posting([void Function(PostingBuilder) updates]) =>
-      (new PostingBuilder()..update(updates)).build();
+      (new PostingBuilder()..update(updates))._build();
 
   _$Posting._({this.key, this.account, this.amount}) : super._() {
-    BuiltValueNullFieldError.checkNotNull(key, 'Posting', 'key');
-    BuiltValueNullFieldError.checkNotNull(account, 'Posting', 'account');
-    BuiltValueNullFieldError.checkNotNull(amount, 'Posting', 'amount');
+    BuiltValueNullFieldError.checkNotNull(key, r'Posting', 'key');
+    BuiltValueNullFieldError.checkNotNull(account, r'Posting', 'account');
+    BuiltValueNullFieldError.checkNotNull(amount, r'Posting', 'amount');
   }
 
   @override
@@ -1153,8 +1186,12 @@ class _$Posting extends Posting {
 
   @override
   int get hashCode {
-    return $jf(
-        $jc($jc($jc(0, key.hashCode), account.hashCode), amount.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, key.hashCode);
+    _$hash = $jc(_$hash, account.hashCode);
+    _$hash = $jc(_$hash, amount.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 }
 
@@ -1200,14 +1237,17 @@ class PostingBuilder implements Builder<Posting, PostingBuilder> {
   }
 
   @override
-  _$Posting build() {
+  Posting build() => _build();
+
+  _$Posting _build() {
     _$Posting _$result;
     try {
       _$result = _$v ??
           new _$Posting._(
-              key: BuiltValueNullFieldError.checkNotNull(key, 'Posting', 'key'),
+              key:
+                  BuiltValueNullFieldError.checkNotNull(key, r'Posting', 'key'),
               account: BuiltValueNullFieldError.checkNotNull(
-                  account, 'Posting', 'account'),
+                  account, r'Posting', 'account'),
               amount: amount.build());
     } catch (_) {
       String _$failedField;
@@ -1216,7 +1256,7 @@ class PostingBuilder implements Builder<Posting, PostingBuilder> {
         amount.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'Posting', _$failedField, e.toString());
+            r'Posting', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -1236,13 +1276,13 @@ class _$Amount extends Amount {
   final int spacing;
 
   factory _$Amount([void Function(AmountBuilder) updates]) =>
-      (new AmountBuilder()..update(updates)).build();
+      (new AmountBuilder()..update(updates))._build();
 
   _$Amount._(
       {this.commodity, this.quantity, this.commodityOnLeft, this.spacing})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(commodity, 'Amount', 'commodity');
-    BuiltValueNullFieldError.checkNotNull(quantity, 'Amount', 'quantity');
+    BuiltValueNullFieldError.checkNotNull(commodity, r'Amount', 'commodity');
+    BuiltValueNullFieldError.checkNotNull(quantity, r'Amount', 'quantity');
   }
 
   @override
@@ -1264,10 +1304,13 @@ class _$Amount extends Amount {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc($jc($jc(0, commodity.hashCode), quantity.hashCode),
-            commodityOnLeft.hashCode),
-        spacing.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, commodity.hashCode);
+    _$hash = $jc(_$hash, quantity.hashCode);
+    _$hash = $jc(_$hash, commodityOnLeft.hashCode);
+    _$hash = $jc(_$hash, spacing.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 }
 
@@ -1319,13 +1362,15 @@ class AmountBuilder implements Builder<Amount, AmountBuilder> {
   }
 
   @override
-  _$Amount build() {
+  Amount build() => _build();
+
+  _$Amount _build() {
     final _$result = _$v ??
         new _$Amount._(
             commodity: BuiltValueNullFieldError.checkNotNull(
-                commodity, 'Amount', 'commodity'),
+                commodity, r'Amount', 'commodity'),
             quantity: BuiltValueNullFieldError.checkNotNull(
-                quantity, 'Amount', 'quantity'),
+                quantity, r'Amount', 'quantity'),
             commodityOnLeft: commodityOnLeft,
             spacing: spacing);
     replace(_$result);
@@ -1333,4 +1378,4 @@ class AmountBuilder implements Builder<Amount, AmountBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

@@ -49,7 +49,7 @@ class _$ConeState extends ConeState {
   final int transactionIndex;
 
   factory _$ConeState([void Function(ConeStateBuilder) updates]) =>
-      (new ConeStateBuilder()..update(updates)).build();
+      (new ConeStateBuilder()..update(updates))._build();
 
   _$ConeState._(
       {this.brightness,
@@ -73,27 +73,27 @@ class _$ConeState extends ConeState {
       this.refreshCount,
       this.transactionIndex})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(spacing, 'ConeState', 'spacing');
+    BuiltValueNullFieldError.checkNotNull(spacing, r'ConeState', 'spacing');
     BuiltValueNullFieldError.checkNotNull(
-        numberLocale, 'ConeState', 'numberLocale');
+        numberLocale, r'ConeState', 'numberLocale');
     BuiltValueNullFieldError.checkNotNull(
-        transaction, 'ConeState', 'transaction');
+        transaction, r'ConeState', 'transaction');
     BuiltValueNullFieldError.checkNotNull(
-        hintTransaction, 'ConeState', 'hintTransaction');
+        hintTransaction, r'ConeState', 'hintTransaction');
     BuiltValueNullFieldError.checkNotNull(
-        currencyOnLeft, 'ConeState', 'currencyOnLeft');
+        currencyOnLeft, r'ConeState', 'currencyOnLeft');
     BuiltValueNullFieldError.checkNotNull(
-        initialized, 'ConeState', 'initialized');
+        initialized, r'ConeState', 'initialized');
     BuiltValueNullFieldError.checkNotNull(
-        isRefreshing, 'ConeState', 'isRefreshing');
+        isRefreshing, r'ConeState', 'isRefreshing');
     BuiltValueNullFieldError.checkNotNull(
-        saveInProgress, 'ConeState', 'saveInProgress');
+        saveInProgress, r'ConeState', 'saveInProgress');
     BuiltValueNullFieldError.checkNotNull(
-        postingKey, 'ConeState', 'postingKey');
+        postingKey, r'ConeState', 'postingKey');
     BuiltValueNullFieldError.checkNotNull(
-        refreshCount, 'ConeState', 'refreshCount');
+        refreshCount, r'ConeState', 'refreshCount');
     BuiltValueNullFieldError.checkNotNull(
-        transactionIndex, 'ConeState', 'transactionIndex');
+        transactionIndex, r'ConeState', 'transactionIndex');
   }
 
   @override
@@ -131,59 +131,34 @@ class _$ConeState extends ConeState {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        $jc(
-                                                                            $jc(
-                                                                                $jc(
-                                                                                    0,
-                                                                                    brightness
-                                                                                        .hashCode),
-                                                                                today
-                                                                                    .hashCode),
-                                                                            journal
-                                                                                .hashCode),
-                                                                        spacing
-                                                                            .hashCode),
-                                                                    contents
-                                                                        .hashCode),
-                                                                ledgerFileDisplayName
-                                                                    .hashCode),
-                                                            ledgerFileUri
-                                                                .hashCode),
-                                                        numberLocale.hashCode),
-                                                    systemLocale.hashCode),
-                                                transaction.hashCode),
-                                            hintTransaction.hashCode),
-                                        currencyOnLeft.hashCode),
-                                    debugMode.hashCode),
-                                initialized.hashCode),
-                            isRefreshing.hashCode),
-                        reverseSort.hashCode),
-                    saveInProgress.hashCode),
-                postingKey.hashCode),
-            refreshCount.hashCode),
-        transactionIndex.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, brightness.hashCode);
+    _$hash = $jc(_$hash, today.hashCode);
+    _$hash = $jc(_$hash, journal.hashCode);
+    _$hash = $jc(_$hash, spacing.hashCode);
+    _$hash = $jc(_$hash, contents.hashCode);
+    _$hash = $jc(_$hash, ledgerFileDisplayName.hashCode);
+    _$hash = $jc(_$hash, ledgerFileUri.hashCode);
+    _$hash = $jc(_$hash, numberLocale.hashCode);
+    _$hash = $jc(_$hash, systemLocale.hashCode);
+    _$hash = $jc(_$hash, transaction.hashCode);
+    _$hash = $jc(_$hash, hintTransaction.hashCode);
+    _$hash = $jc(_$hash, currencyOnLeft.hashCode);
+    _$hash = $jc(_$hash, debugMode.hashCode);
+    _$hash = $jc(_$hash, initialized.hashCode);
+    _$hash = $jc(_$hash, isRefreshing.hashCode);
+    _$hash = $jc(_$hash, reverseSort.hashCode);
+    _$hash = $jc(_$hash, saveInProgress.hashCode);
+    _$hash = $jc(_$hash, postingKey.hashCode);
+    _$hash = $jc(_$hash, refreshCount.hashCode);
+    _$hash = $jc(_$hash, transactionIndex.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('ConeState')
+    return (newBuiltValueToStringHelper(r'ConeState')
           ..add('brightness', brightness)
           ..add('today', today)
           ..add('journal', journal)
@@ -344,7 +319,9 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
   }
 
   @override
-  _$ConeState build() {
+  ConeState build() => _build();
+
+  _$ConeState _build() {
     _$ConeState _$result;
     try {
       _$result = _$v ??
@@ -353,31 +330,31 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
               today: today,
               journal: _journal?.build(),
               spacing: BuiltValueNullFieldError.checkNotNull(
-                  spacing, 'ConeState', 'spacing'),
+                  spacing, r'ConeState', 'spacing'),
               contents: contents,
               ledgerFileDisplayName: ledgerFileDisplayName,
               ledgerFileUri: ledgerFileUri,
               numberLocale: BuiltValueNullFieldError.checkNotNull(
-                  numberLocale, 'ConeState', 'numberLocale'),
+                  numberLocale, r'ConeState', 'numberLocale'),
               systemLocale: systemLocale,
               transaction: transaction.build(),
               hintTransaction: hintTransaction.build(),
               currencyOnLeft: BuiltValueNullFieldError.checkNotNull(
-                  currencyOnLeft, 'ConeState', 'currencyOnLeft'),
+                  currencyOnLeft, r'ConeState', 'currencyOnLeft'),
               debugMode: debugMode,
               initialized: BuiltValueNullFieldError.checkNotNull(
-                  initialized, 'ConeState', 'initialized'),
+                  initialized, r'ConeState', 'initialized'),
               isRefreshing: BuiltValueNullFieldError.checkNotNull(
-                  isRefreshing, 'ConeState', 'isRefreshing'),
+                  isRefreshing, r'ConeState', 'isRefreshing'),
               reverseSort: reverseSort,
               saveInProgress: BuiltValueNullFieldError.checkNotNull(
-                  saveInProgress, 'ConeState', 'saveInProgress'),
+                  saveInProgress, r'ConeState', 'saveInProgress'),
               postingKey: BuiltValueNullFieldError.checkNotNull(
-                  postingKey, 'ConeState', 'postingKey'),
+                  postingKey, r'ConeState', 'postingKey'),
               refreshCount: BuiltValueNullFieldError.checkNotNull(
-                  refreshCount, 'ConeState', 'refreshCount'),
+                  refreshCount, r'ConeState', 'refreshCount'),
               transactionIndex:
-                  BuiltValueNullFieldError.checkNotNull(transactionIndex, 'ConeState', 'transactionIndex'));
+                  BuiltValueNullFieldError.checkNotNull(transactionIndex, r'ConeState', 'transactionIndex'));
     } catch (_) {
       String _$failedField;
       try {
@@ -390,7 +367,7 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
         hintTransaction.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'ConeState', _$failedField, e.toString());
+            r'ConeState', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -399,4 +376,4 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

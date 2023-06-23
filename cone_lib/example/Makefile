@@ -1,5 +1,5 @@
 executable:
-	pub global activate --source path .
+	flutter pub global activate --source path .
 
 version:
-	pub run build_runner build
+	dart run build_runner build
