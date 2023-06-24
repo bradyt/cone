@@ -316,9 +316,9 @@ class DescriptionFieldState extends State<DescriptionField> {
             controller.text = suggestion;
           },
           suggestionsCallback: reselectDescriptionSuggestions(store.state),
-          transitionBuilder:
-              (BuildContext _, Widget suggestionsBox, AnimationController? __) =>
-                  suggestionsBox,
+          transitionBuilder: (BuildContext _, Widget suggestionsBox,
+                  AnimationController? __) =>
+              suggestionsBox,
         );
       },
     );
@@ -534,14 +534,14 @@ class QuantityFieldState extends State<QuantityField> {
       textAlign: TextAlign.center,
       controller: controller,
       decoration: InputDecoration(
-        hintText:
-            (widget.index! < widget.store!.state.hintTransaction.postings.length)
-                ? ((widget.store!.state.hintTransaction.postings[widget.index!]
-                        .amount.quantity.isNotEmpty)
-                    ? widget.store!.state.hintTransaction.postings[widget.index!]
-                        .amount.quantity
-                    : hint)
-                : hint,
+        hintText: (widget.index! <
+                widget.store!.state.hintTransaction.postings.length)
+            ? ((widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.quantity.isNotEmpty)
+                ? widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.quantity
+                : hint)
+            : hint,
       ),
       keyboardType: const TextInputType.numberWithOptions(
         decimal: true,
@@ -639,14 +639,14 @@ class CommodityFieldState extends State<CommodityField> {
         }
       },
       decoration: InputDecoration(
-        hintText:
-            (widget.index! < widget.store!.state.hintTransaction.postings.length)
-                ? ((widget.store!.state.hintTransaction.postings[widget.index!]
-                        .amount.commodity.isNotEmpty)
-                    ? widget.store!.state.hintTransaction.postings[widget.index!]
-                        .amount.commodity
-                    : defaultCurrency)
-                : defaultCurrency,
+        hintText: (widget.index! <
+                widget.store!.state.hintTransaction.postings.length)
+            ? ((widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.commodity.isNotEmpty)
+                ? widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.commodity
+                : defaultCurrency)
+            : defaultCurrency,
       ),
       textInputAction: lastField ? null : TextInputAction.next,
       onSubmitted: lastField ? null : (_) => FocusScope.of(context).nextFocus(),
@@ -715,7 +715,7 @@ SnackBar transactionSnackBar({required Transaction transaction}) {
                   style: const TextStyle(fontFamily: 'IBMPlexMono'),
                 ),
                 Text.rich(
-                  TextSpan(text: '${posting.amount ?? ''}'),
+                  TextSpan(text: '${posting.amount}'),
                   style: const TextStyle(fontFamily: 'IBMPlexMono'),
                 ),
               ],
@@ -741,14 +741,12 @@ class CommoditySearchDelegate extends SearchDelegate<String?> {
       return theme.copyWith(
         primaryColor: Colors.black,
         primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-        primaryColorBrightness: Brightness.dark,
         primaryTextTheme: theme.textTheme,
       );
     } else {
       return theme.copyWith(
         primaryColor: Colors.white,
         primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-        primaryColorBrightness: Brightness.light,
         primaryTextTheme: theme.textTheme,
       );
     }

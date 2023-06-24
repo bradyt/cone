@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:async';
 
 import 'package:flutter/foundation.dart';
 import 'package:redux/redux.dart';
@@ -115,6 +114,9 @@ dynamic firstConeMiddleware(
       },
     );
   } else if (action == Actions.submitTransaction) {
+    if (store.state.ledgerFileUri == null) {
+      return;
+    }
     appendFile(store.state.ledgerFileUri!, formattedTransaction(store.state))
         .then((_) {
       store.dispatch(Actions.refreshFileContents);

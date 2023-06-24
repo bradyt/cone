@@ -40,7 +40,7 @@ class Posting {
   @override
   String toString() {
     if (account == null) {
-      return null;
+      return '';
     } else if (amount == '') {
       return '$account';
     } else if (currencyOnLeft!) {

@@ -197,9 +197,8 @@ final Selector<ConeState, bool> makeSaveButtonAvailable = createSelector3(
 );
 
 final Selector<ConeState, String> formattedTransaction = (ConeState state) {
-  final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   //ignore: lines_longer_than_80_chars
-  return '${state.transaction.rebuild((TransactionBuilder b) => b..date = state.transaction.date ?? today)}';
+  return '${state.transaction.rebuild((TransactionBuilder b) => b..date = state.transaction.date)}';
 };
 
 final Selector<ConeState, Transaction> reselectImplicitTransaction =

@@ -99,8 +99,8 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
       (ConeStateBuilder b) => b
         ..transaction = state.transaction
             .rebuild(
-              (TransactionBuilder tb) =>
-                  tb.postings[action.index!] = tb.postings[action.index!].rebuild(
+              (TransactionBuilder tb) => tb.postings[action.index!] =
+                  tb.postings[action.index!].rebuild(
                 (PostingBuilder pb) => pb.account = action.account,
               ),
             )
@@ -111,8 +111,8 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
       (ConeStateBuilder b) => b
         ..transaction = state.transaction
             .rebuild(
-              (TransactionBuilder tb) =>
-                  tb.postings[action.index!] = tb.postings[action.index!].rebuild(
+              (TransactionBuilder tb) => tb.postings[action.index!] =
+                  tb.postings[action.index!].rebuild(
                 (PostingBuilder pb) =>
                     pb.amount = pb.amount..quantity = action.quantity,
               ),
@@ -124,8 +124,8 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
       (ConeStateBuilder b) => b
         ..transaction = state.transaction
             .rebuild(
-              (TransactionBuilder tb) =>
-                  tb.postings[action.index!] = tb.postings[action.index!].rebuild(
+              (TransactionBuilder tb) => tb.postings[action.index!] =
+                  tb.postings[action.index!].rebuild(
                 (PostingBuilder pb) =>
                     pb.amount = pb.amount..commodity = action.commodity,
               ),

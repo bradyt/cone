@@ -2,7 +2,6 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:built_collection/built_collection.dart';
-import 'package:meta/meta.dart';
 import 'package:intl/intl.dart' show NumberFormat;
 import 'package:intl/number_symbols.dart' show NumberSymbols;
 import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
@@ -25,7 +24,8 @@ Amount blendHintAmount({
 }) =>
     amount.rebuild((AmountBuilder b) => b
       ..quantity = (b.quantity!.isEmpty) ? hintAmount!.quantity : b.quantity
-      ..commodity = (b.commodity!.isEmpty) ? hintAmount!.commodity : b.commodity);
+      ..commodity =
+          (b.commodity!.isEmpty) ? hintAmount!.commodity : b.commodity);
 
 Posting blendHintPosting({
   required Posting posting,
@@ -106,13 +106,13 @@ Transaction implicitTransaction({
         )));
 
 int reducePostingFields(Posting posting) =>
-    ((posting.account.isEmpty ?? true) ? 0 : 1) +
-    ((posting.amount.quantity.isEmpty ?? true) ? 0 : 2);
+    ((posting.account.isEmpty) ? 0 : 1) +
+    ((posting.amount.quantity.isEmpty) ? 0 : 2);
 
 List<bool> emptyPostingFields(Posting posting) {
   return <bool>[
-    posting.account.isEmpty ?? true,
-    posting.amount.quantity.isEmpty ?? true,
+    posting.account.isEmpty,
+    posting.amount.quantity.isEmpty,
   ];
 }
 
@@ -156,8 +156,7 @@ String? localeCurrency(String locale) =>
 List<String> descriptions(Journal journal) => journal.journalItems
     .whereType<Transaction>()
     .map<String>((Transaction transaction) => transaction.description)
-    .where(
-        (String description) => description.isNotEmpty && description != null)
+    .where((String description) => description.isNotEmpty)
     .toList();
 
 List<String> accounts(Journal journal) {

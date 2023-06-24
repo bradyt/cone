@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart' hide Actions;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
-import 'package:intl/intl.dart' show NumberFormat;
-import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:redux/redux.dart' show Store;
 
 import 'package:cone/src/localizations.dart';

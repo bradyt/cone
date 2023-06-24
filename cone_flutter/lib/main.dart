@@ -13,8 +13,11 @@ import 'package:cone/src/redux/state.dart';
 import 'package:cone/src/settings.dart';
 
 class ConeWidgetTest extends InheritedWidget {
-  const ConeWidgetTest({Key? key, this.widgetTest, required Widget child})
-      : super(key: key, child: child);
+  const ConeWidgetTest({
+    required Widget child,
+    this.widgetTest,
+    Key? key,
+  }) : super(key: key, child: child);
 
   final bool? widgetTest;
 

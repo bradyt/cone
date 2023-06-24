@@ -37,7 +37,7 @@ void main() {
       return '';
     });
 
-    SharedPreferences.setMockInitialValues(<String, dynamic>{
+    SharedPreferences.setMockInitialValues(<String, Object>{
       'brightness': 0,
     });
 

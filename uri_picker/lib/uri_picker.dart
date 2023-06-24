@@ -42,8 +42,9 @@ class UriPicker {
 
       String tzOffset =
           '${(tzIsNegative) ? '-' : '+'}${padInt(tzHours)}${padInt(tzMinutes)}';
-      String fileName = DateFormat('yyyyMMddTHHmmss').format(DateTime.now()) +
-          '${tzOffset}_${const Uuid().v4()}.txt';
+
+      String nowString = DateFormat("yyyyMMddTHHmmss").format(DateTime.now());
+      String fileName = '$nowString${tzOffset}_${const Uuid().v4()}.txt';
       File file = File('${tempDir.path}/$fileName');
       await file.writeAsString('');
 

@@ -6,7 +6,7 @@ import 'package:cone/src/services.dart';
 
 void main() {
   test('Test PersistentSettings.', () async {
-    SharedPreferences.setMockInitialValues(<String, dynamic>{
+    SharedPreferences.setMockInitialValues(<String, Object>{
       'brightness': 0,
     });
 
