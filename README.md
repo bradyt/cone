@@ -6,4 +6,7 @@ with ledger-cli and ledger-likes.
 Please see the [cone website](https://cone.tangential.info) for more
 information.
 
-Install flutter version 3.7.12 (which includes dart 2.19.6)
+Build dependencies are:
+
+- (for iOS): XCode 14.3 (or later)
+- (for iOS): Cocoapods 1.11.2 (or later(?))
