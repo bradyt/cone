@@ -545,6 +545,7 @@ class QuantityFieldState extends State<QuantityField> {
       ),
       keyboardType: const TextInputType.numberWithOptions(
         decimal: true,
+        signed: true,
       ),
       textInputAction: lastField ? null : TextInputAction.next,
       onSubmitted: lastField ? null : (_) => FocusScope.of(context).nextFocus(),
