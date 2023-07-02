@@ -8,23 +8,23 @@ part of 'state.dart';
 
 class _$ConeState extends ConeState {
   @override
-  final ConeBrightness brightness;
+  final ConeBrightness? brightness;
   @override
-  final DateTime today;
+  final DateTime? today;
   @override
-  final Journal journal;
+  final Journal? journal;
   @override
   final Spacing spacing;
   @override
-  final String contents;
+  final String? contents;
   @override
-  final String ledgerFileDisplayName;
+  final String? ledgerFileDisplayName;
   @override
-  final String ledgerFileUri;
+  final String? ledgerFileUri;
   @override
   final String numberLocale;
   @override
-  final String systemLocale;
+  final String? systemLocale;
   @override
   final Transaction transaction;
   @override
@@ -32,13 +32,13 @@ class _$ConeState extends ConeState {
   @override
   final bool currencyOnLeft;
   @override
-  final bool debugMode;
+  final bool? debugMode;
   @override
   final bool initialized;
   @override
   final bool isRefreshing;
   @override
-  final bool reverseSort;
+  final bool? reverseSort;
   @override
   final bool saveInProgress;
   @override
@@ -48,52 +48,52 @@ class _$ConeState extends ConeState {
   @override
   final int transactionIndex;
 
-  factory _$ConeState([void Function(ConeStateBuilder) updates]) =>
-      (new ConeStateBuilder()..update(updates)).build();
+  factory _$ConeState([void Function(ConeStateBuilder)? updates]) =>
+      (new ConeStateBuilder()..update(updates))._build();
 
   _$ConeState._(
       {this.brightness,
       this.today,
       this.journal,
-      this.spacing,
+      required this.spacing,
       this.contents,
       this.ledgerFileDisplayName,
       this.ledgerFileUri,
-      this.numberLocale,
+      required this.numberLocale,
       this.systemLocale,
-      this.transaction,
-      this.hintTransaction,
-      this.currencyOnLeft,
+      required this.transaction,
+      required this.hintTransaction,
+      required this.currencyOnLeft,
       this.debugMode,
-      this.initialized,
-      this.isRefreshing,
+      required this.initialized,
+      required this.isRefreshing,
       this.reverseSort,
-      this.saveInProgress,
-      this.postingKey,
-      this.refreshCount,
-      this.transactionIndex})
+      required this.saveInProgress,
+      required this.postingKey,
+      required this.refreshCount,
+      required this.transactionIndex})
       : super._() {
-    BuiltValueNullFieldError.checkNotNull(spacing, 'ConeState', 'spacing');
+    BuiltValueNullFieldError.checkNotNull(spacing, r'ConeState', 'spacing');
     BuiltValueNullFieldError.checkNotNull(
-        numberLocale, 'ConeState', 'numberLocale');
+        numberLocale, r'ConeState', 'numberLocale');
     BuiltValueNullFieldError.checkNotNull(
-        transaction, 'ConeState', 'transaction');
+        transaction, r'ConeState', 'transaction');
     BuiltValueNullFieldError.checkNotNull(
-        hintTransaction, 'ConeState', 'hintTransaction');
+        hintTransaction, r'ConeState', 'hintTransaction');
     BuiltValueNullFieldError.checkNotNull(
-        currencyOnLeft, 'ConeState', 'currencyOnLeft');
+        currencyOnLeft, r'ConeState', 'currencyOnLeft');
     BuiltValueNullFieldError.checkNotNull(
-        initialized, 'ConeState', 'initialized');
+        initialized, r'ConeState', 'initialized');
     BuiltValueNullFieldError.checkNotNull(
-        isRefreshing, 'ConeState', 'isRefreshing');
+        isRefreshing, r'ConeState', 'isRefreshing');
     BuiltValueNullFieldError.checkNotNull(
-        saveInProgress, 'ConeState', 'saveInProgress');
+        saveInProgress, r'ConeState', 'saveInProgress');
     BuiltValueNullFieldError.checkNotNull(
-        postingKey, 'ConeState', 'postingKey');
+        postingKey, r'ConeState', 'postingKey');
     BuiltValueNullFieldError.checkNotNull(
-        refreshCount, 'ConeState', 'refreshCount');
+        refreshCount, r'ConeState', 'refreshCount');
     BuiltValueNullFieldError.checkNotNull(
-        transactionIndex, 'ConeState', 'transactionIndex');
+        transactionIndex, r'ConeState', 'transactionIndex');
   }
 
   @override
@@ -131,59 +131,34 @@ class _$ConeState extends ConeState {
 
   @override
   int get hashCode {
-    return $jf($jc(
-        $jc(
-            $jc(
-                $jc(
-                    $jc(
-                        $jc(
-                            $jc(
-                                $jc(
-                                    $jc(
-                                        $jc(
-                                            $jc(
-                                                $jc(
-                                                    $jc(
-                                                        $jc(
-                                                            $jc(
-                                                                $jc(
-                                                                    $jc(
-                                                                        $jc(
-                                                                            $jc(
-                                                                                $jc(
-                                                                                    0,
-                                                                                    brightness
-                                                                                        .hashCode),
-                                                                                today
-                                                                                    .hashCode),
-                                                                            journal
-                                                                                .hashCode),
-                                                                        spacing
-                                                                            .hashCode),
-                                                                    contents
-                                                                        .hashCode),
-                                                                ledgerFileDisplayName
-                                                                    .hashCode),
-                                                            ledgerFileUri
-                                                                .hashCode),
-                                                        numberLocale.hashCode),
-                                                    systemLocale.hashCode),
-                                                transaction.hashCode),
-                                            hintTransaction.hashCode),
-                                        currencyOnLeft.hashCode),
-                                    debugMode.hashCode),
-                                initialized.hashCode),
-                            isRefreshing.hashCode),
-                        reverseSort.hashCode),
-                    saveInProgress.hashCode),
-                postingKey.hashCode),
-            refreshCount.hashCode),
-        transactionIndex.hashCode));
+    var _$hash = 0;
+    _$hash = $jc(_$hash, brightness.hashCode);
+    _$hash = $jc(_$hash, today.hashCode);
+    _$hash = $jc(_$hash, journal.hashCode);
+    _$hash = $jc(_$hash, spacing.hashCode);
+    _$hash = $jc(_$hash, contents.hashCode);
+    _$hash = $jc(_$hash, ledgerFileDisplayName.hashCode);
+    _$hash = $jc(_$hash, ledgerFileUri.hashCode);
+    _$hash = $jc(_$hash, numberLocale.hashCode);
+    _$hash = $jc(_$hash, systemLocale.hashCode);
+    _$hash = $jc(_$hash, transaction.hashCode);
+    _$hash = $jc(_$hash, hintTransaction.hashCode);
+    _$hash = $jc(_$hash, currencyOnLeft.hashCode);
+    _$hash = $jc(_$hash, debugMode.hashCode);
+    _$hash = $jc(_$hash, initialized.hashCode);
+    _$hash = $jc(_$hash, isRefreshing.hashCode);
+    _$hash = $jc(_$hash, reverseSort.hashCode);
+    _$hash = $jc(_$hash, saveInProgress.hashCode);
+    _$hash = $jc(_$hash, postingKey.hashCode);
+    _$hash = $jc(_$hash, refreshCount.hashCode);
+    _$hash = $jc(_$hash, transactionIndex.hashCode);
+    _$hash = $jf(_$hash);
+    return _$hash;
   }
 
   @override
   String toString() {
-    return (newBuiltValueToStringHelper('ConeState')
+    return (newBuiltValueToStringHelper(r'ConeState')
           ..add('brightness', brightness)
           ..add('today', today)
           ..add('journal', journal)
@@ -209,95 +184,95 @@ class _$ConeState extends ConeState {
 }
 
 class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
-  _$ConeState _$v;
+  _$ConeState? _$v;
 
-  ConeBrightness _brightness;
-  ConeBrightness get brightness => _$this._brightness;
-  set brightness(ConeBrightness brightness) => _$this._brightness = brightness;
+  ConeBrightness? _brightness;
+  ConeBrightness? get brightness => _$this._brightness;
+  set brightness(ConeBrightness? brightness) => _$this._brightness = brightness;
 
-  DateTime _today;
-  DateTime get today => _$this._today;
-  set today(DateTime today) => _$this._today = today;
+  DateTime? _today;
+  DateTime? get today => _$this._today;
+  set today(DateTime? today) => _$this._today = today;
 
-  JournalBuilder _journal;
+  JournalBuilder? _journal;
   JournalBuilder get journal => _$this._journal ??= new JournalBuilder();
-  set journal(JournalBuilder journal) => _$this._journal = journal;
+  set journal(JournalBuilder? journal) => _$this._journal = journal;
 
-  Spacing _spacing;
-  Spacing get spacing => _$this._spacing;
-  set spacing(Spacing spacing) => _$this._spacing = spacing;
+  Spacing? _spacing;
+  Spacing? get spacing => _$this._spacing;
+  set spacing(Spacing? spacing) => _$this._spacing = spacing;
 
-  String _contents;
-  String get contents => _$this._contents;
-  set contents(String contents) => _$this._contents = contents;
+  String? _contents;
+  String? get contents => _$this._contents;
+  set contents(String? contents) => _$this._contents = contents;
 
-  String _ledgerFileDisplayName;
-  String get ledgerFileDisplayName => _$this._ledgerFileDisplayName;
-  set ledgerFileDisplayName(String ledgerFileDisplayName) =>
+  String? _ledgerFileDisplayName;
+  String? get ledgerFileDisplayName => _$this._ledgerFileDisplayName;
+  set ledgerFileDisplayName(String? ledgerFileDisplayName) =>
       _$this._ledgerFileDisplayName = ledgerFileDisplayName;
 
-  String _ledgerFileUri;
-  String get ledgerFileUri => _$this._ledgerFileUri;
-  set ledgerFileUri(String ledgerFileUri) =>
+  String? _ledgerFileUri;
+  String? get ledgerFileUri => _$this._ledgerFileUri;
+  set ledgerFileUri(String? ledgerFileUri) =>
       _$this._ledgerFileUri = ledgerFileUri;
 
-  String _numberLocale;
-  String get numberLocale => _$this._numberLocale;
-  set numberLocale(String numberLocale) => _$this._numberLocale = numberLocale;
+  String? _numberLocale;
+  String? get numberLocale => _$this._numberLocale;
+  set numberLocale(String? numberLocale) => _$this._numberLocale = numberLocale;
 
-  String _systemLocale;
-  String get systemLocale => _$this._systemLocale;
-  set systemLocale(String systemLocale) => _$this._systemLocale = systemLocale;
+  String? _systemLocale;
+  String? get systemLocale => _$this._systemLocale;
+  set systemLocale(String? systemLocale) => _$this._systemLocale = systemLocale;
 
-  TransactionBuilder _transaction;
+  TransactionBuilder? _transaction;
   TransactionBuilder get transaction =>
       _$this._transaction ??= new TransactionBuilder();
-  set transaction(TransactionBuilder transaction) =>
+  set transaction(TransactionBuilder? transaction) =>
       _$this._transaction = transaction;
 
-  TransactionBuilder _hintTransaction;
+  TransactionBuilder? _hintTransaction;
   TransactionBuilder get hintTransaction =>
       _$this._hintTransaction ??= new TransactionBuilder();
-  set hintTransaction(TransactionBuilder hintTransaction) =>
+  set hintTransaction(TransactionBuilder? hintTransaction) =>
       _$this._hintTransaction = hintTransaction;
 
-  bool _currencyOnLeft;
-  bool get currencyOnLeft => _$this._currencyOnLeft;
-  set currencyOnLeft(bool currencyOnLeft) =>
+  bool? _currencyOnLeft;
+  bool? get currencyOnLeft => _$this._currencyOnLeft;
+  set currencyOnLeft(bool? currencyOnLeft) =>
       _$this._currencyOnLeft = currencyOnLeft;
 
-  bool _debugMode;
-  bool get debugMode => _$this._debugMode;
-  set debugMode(bool debugMode) => _$this._debugMode = debugMode;
+  bool? _debugMode;
+  bool? get debugMode => _$this._debugMode;
+  set debugMode(bool? debugMode) => _$this._debugMode = debugMode;
 
-  bool _initialized;
-  bool get initialized => _$this._initialized;
-  set initialized(bool initialized) => _$this._initialized = initialized;
+  bool? _initialized;
+  bool? get initialized => _$this._initialized;
+  set initialized(bool? initialized) => _$this._initialized = initialized;
 
-  bool _isRefreshing;
-  bool get isRefreshing => _$this._isRefreshing;
-  set isRefreshing(bool isRefreshing) => _$this._isRefreshing = isRefreshing;
+  bool? _isRefreshing;
+  bool? get isRefreshing => _$this._isRefreshing;
+  set isRefreshing(bool? isRefreshing) => _$this._isRefreshing = isRefreshing;
 
-  bool _reverseSort;
-  bool get reverseSort => _$this._reverseSort;
-  set reverseSort(bool reverseSort) => _$this._reverseSort = reverseSort;
+  bool? _reverseSort;
+  bool? get reverseSort => _$this._reverseSort;
+  set reverseSort(bool? reverseSort) => _$this._reverseSort = reverseSort;
 
-  bool _saveInProgress;
-  bool get saveInProgress => _$this._saveInProgress;
-  set saveInProgress(bool saveInProgress) =>
+  bool? _saveInProgress;
+  bool? get saveInProgress => _$this._saveInProgress;
+  set saveInProgress(bool? saveInProgress) =>
       _$this._saveInProgress = saveInProgress;
 
-  int _postingKey;
-  int get postingKey => _$this._postingKey;
-  set postingKey(int postingKey) => _$this._postingKey = postingKey;
+  int? _postingKey;
+  int? get postingKey => _$this._postingKey;
+  set postingKey(int? postingKey) => _$this._postingKey = postingKey;
 
-  int _refreshCount;
-  int get refreshCount => _$this._refreshCount;
-  set refreshCount(int refreshCount) => _$this._refreshCount = refreshCount;
+  int? _refreshCount;
+  int? get refreshCount => _$this._refreshCount;
+  set refreshCount(int? refreshCount) => _$this._refreshCount = refreshCount;
 
-  int _transactionIndex;
-  int get transactionIndex => _$this._transactionIndex;
-  set transactionIndex(int transactionIndex) =>
+  int? _transactionIndex;
+  int? get transactionIndex => _$this._transactionIndex;
+  set transactionIndex(int? transactionIndex) =>
       _$this._transactionIndex = transactionIndex;
 
   ConeStateBuilder() {
@@ -339,12 +314,14 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
   }
 
   @override
-  void update(void Function(ConeStateBuilder) updates) {
+  void update(void Function(ConeStateBuilder)? updates) {
     if (updates != null) updates(this);
   }
 
   @override
-  _$ConeState build() {
+  ConeState build() => _build();
+
+  _$ConeState _build() {
     _$ConeState _$result;
     try {
       _$result = _$v ??
@@ -353,33 +330,33 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
               today: today,
               journal: _journal?.build(),
               spacing: BuiltValueNullFieldError.checkNotNull(
-                  spacing, 'ConeState', 'spacing'),
+                  spacing, r'ConeState', 'spacing'),
               contents: contents,
               ledgerFileDisplayName: ledgerFileDisplayName,
               ledgerFileUri: ledgerFileUri,
               numberLocale: BuiltValueNullFieldError.checkNotNull(
-                  numberLocale, 'ConeState', 'numberLocale'),
+                  numberLocale, r'ConeState', 'numberLocale'),
               systemLocale: systemLocale,
               transaction: transaction.build(),
               hintTransaction: hintTransaction.build(),
               currencyOnLeft: BuiltValueNullFieldError.checkNotNull(
-                  currencyOnLeft, 'ConeState', 'currencyOnLeft'),
+                  currencyOnLeft, r'ConeState', 'currencyOnLeft'),
               debugMode: debugMode,
               initialized: BuiltValueNullFieldError.checkNotNull(
-                  initialized, 'ConeState', 'initialized'),
+                  initialized, r'ConeState', 'initialized'),
               isRefreshing: BuiltValueNullFieldError.checkNotNull(
-                  isRefreshing, 'ConeState', 'isRefreshing'),
+                  isRefreshing, r'ConeState', 'isRefreshing'),
               reverseSort: reverseSort,
               saveInProgress: BuiltValueNullFieldError.checkNotNull(
-                  saveInProgress, 'ConeState', 'saveInProgress'),
+                  saveInProgress, r'ConeState', 'saveInProgress'),
               postingKey: BuiltValueNullFieldError.checkNotNull(
-                  postingKey, 'ConeState', 'postingKey'),
+                  postingKey, r'ConeState', 'postingKey'),
               refreshCount: BuiltValueNullFieldError.checkNotNull(
-                  refreshCount, 'ConeState', 'refreshCount'),
+                  refreshCount, r'ConeState', 'refreshCount'),
               transactionIndex:
-                  BuiltValueNullFieldError.checkNotNull(transactionIndex, 'ConeState', 'transactionIndex'));
+                  BuiltValueNullFieldError.checkNotNull(transactionIndex, r'ConeState', 'transactionIndex'));
     } catch (_) {
-      String _$failedField;
+      late String _$failedField;
       try {
         _$failedField = 'journal';
         _journal?.build();
@@ -390,7 +367,7 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
         hintTransaction.build();
       } catch (e) {
         throw new BuiltValueNestedFieldError(
-            'ConeState', _$failedField, e.toString());
+            r'ConeState', _$failedField, e.toString());
       }
       rethrow;
     }
@@ -399,4 +376,4 @@ class ConeStateBuilder implements Builder<ConeState, ConeStateBuilder> {
   }
 }
 
-// ignore_for_file: always_put_control_body_on_new_line,always_specify_types,annotate_overrides,avoid_annotating_with_dynamic,avoid_as,avoid_catches_without_on_clauses,avoid_returning_this,deprecated_member_use_from_same_package,lines_longer_than_80_chars,omit_local_variable_types,prefer_expression_function_bodies,sort_constructors_first,test_types_in_equals,unnecessary_const,unnecessary_new
+// ignore_for_file: deprecated_member_use_from_same_package,type=lint

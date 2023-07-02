@@ -9,7 +9,7 @@ class ConeLocalizations {
 
   final Locale locale;
 
-  static ConeLocalizations of(BuildContext context) {
+  static ConeLocalizations? of(BuildContext context) {
     return Localizations.of<ConeLocalizations>(context, ConeLocalizations);
   }
 
@@ -20,7 +20,7 @@ class ConeLocalizations {
     );
   }
 
-  String get currencyName {
+  String? get currencyName {
     return NumberFormat.currency(
       locale: locale.toString(),
     ).currencyName;
@@ -29,44 +29,44 @@ class ConeLocalizations {
   static final Map<String, Map<String, String>> _localizedValues =
       localizedValues;
 
-  String get addTransaction {
-    return _localizedValues[locale.languageCode]['addTransaction'];
+  String? get addTransaction {
+    return _localizedValues[locale.languageCode]!['addTransaction'];
   }
 
-  String get currencyOnLeft {
-    return _localizedValues[locale.languageCode]['currencyOnLeft'];
+  String? get currencyOnLeft {
+    return _localizedValues[locale.languageCode]!['currencyOnLeft'];
   }
 
-  String get defaultCurrency {
-    return _localizedValues[locale.languageCode]['defaultCurrency'];
+  String? get defaultCurrency {
+    return _localizedValues[locale.languageCode]!['defaultCurrency'];
   }
 
-  String get enterDefaultCurrency {
-    return _localizedValues[locale.languageCode]['enterDefaultCurrency'];
+  String? get enterDefaultCurrency {
+    return _localizedValues[locale.languageCode]!['enterDefaultCurrency'];
   }
 
-  String get ledgerFile {
-    return _localizedValues[locale.languageCode]['ledgerFile'];
+  String? get ledgerFile {
+    return _localizedValues[locale.languageCode]!['ledgerFile'];
   }
 
-  String get numberLocale {
-    return _localizedValues[locale.languageCode]['numberLocale'];
+  String? get numberLocale {
+    return _localizedValues[locale.languageCode]!['numberLocale'];
   }
 
-  String get reverseSort {
-    return _localizedValues[locale.languageCode]['reverseSort'];
+  String? get reverseSort {
+    return _localizedValues[locale.languageCode]!['reverseSort'];
   }
 
-  String get settings {
-    return _localizedValues[locale.languageCode]['settings'];
+  String? get settings {
+    return _localizedValues[locale.languageCode]!['settings'];
   }
 
-  String get spacing {
-    return _localizedValues[locale.languageCode]['spacing'];
+  String? get spacing {
+    return _localizedValues[locale.languageCode]!['spacing'];
   }
 
-  String get submit {
-    return _localizedValues[locale.languageCode]['submit'];
+  String? get submit {
+    return _localizedValues[locale.languageCode]!['submit'];
   }
 }
 

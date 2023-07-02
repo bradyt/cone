@@ -23,7 +23,7 @@ echo "--- Running dart format in uri_picker... ---"
 
 # Build runner
 (cd cone_lib && dart pub run build_runner build)
-(cd cone_flutter && flutter pub run build_runner build --delete-conflicting-outputs)
+(cd cone_flutter && dart run build_runner build --delete-conflicting-outputs)
 
 # Analyze
 echo "--- Running dartanalyzer in cone_lib... ---"

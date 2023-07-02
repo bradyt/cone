@@ -29,7 +29,7 @@ class AddTransaction extends StatelessWidget {
       builder: (BuildContext context, Store<ConeState> store) {
         return Scaffold(
           appBar: AppBar(
-            title: Text(ConeLocalizations.of(context).addTransaction),
+            title: Text(ConeLocalizations.of(context)!.addTransaction!),
           ),
           body: AddTransactionBody(),
           floatingActionButton: SaveButton(),
@@ -86,15 +86,15 @@ class AddTransactionForm extends StatelessWidget {
 class DismissiblePostingWidget extends StatelessWidget {
   const DismissiblePostingWidget({this.store, this.index});
 
-  final Store<ConeState> store;
-  final int index;
+  final Store<ConeState>? store;
+  final int? index;
 
   @override
   Widget build(BuildContext context) {
     return Dismissible(
-      key: ValueKey<int>(store.state.transaction.postings[index].key),
+      key: ValueKey<int>(store!.state.transaction.postings[index!].key),
       onDismissed: (DismissDirection _) =>
-          store.dispatch(RemovePostingAtAction(index)),
+          store!.dispatch(RemovePostingAtAction(index)),
       child: PostingWidget(index),
     );
   }
@@ -137,7 +137,7 @@ class DateWidget extends StatelessWidget {
 class DateField extends StatefulWidget {
   const DateField({this.store});
 
-  final Store<ConeState> store;
+  final Store<ConeState>? store;
 
   @override
   DateFieldState createState() => DateFieldState();
@@ -145,7 +145,7 @@ class DateField extends StatefulWidget {
 
 class DateFieldState extends State<DateField> {
   final TextEditingController controller = TextEditingController();
-  StreamSubscription<ConeState> subscription;
+  late StreamSubscription<ConeState> subscription;
   String lastText = '';
   String converter(ConeState state) => state.transaction.date;
 
@@ -154,29 +154,29 @@ class DateFieldState extends State<DateField> {
     super.initState();
 
     controller.addListener(controllerListener);
-    subscription = widget.store.onChange.listen(storeListener);
+    subscription = widget.store!.onChange.listen(storeListener);
   }
 
   void controllerListener() {
     if (lastText == controller.text ||
-        converter(widget.store.state) == controller.text) {
+        converter(widget.store!.state) == controller.text) {
       return;
     }
 
-    widget.store.dispatch(UpdateDateAction(controller.text));
+    widget.store!.dispatch(UpdateDateAction(controller.text));
 
     lastText = controller.text;
   }
 
   void storeListener(ConeState state) {
-    if (controller.text == converter(widget.store.state)) {
+    if (controller.text == converter(widget.store!.state)) {
       return;
     }
     setState(
       () {
         controller
           ..removeListener(controllerListener)
-          ..text = converter(widget.store.state)
+          ..text = converter(widget.store!.state)
           ..addListener(controllerListener);
       },
     );
@@ -206,7 +206,7 @@ class DateFieldState extends State<DateField> {
             suffixIcon: IconButton(
               icon: const Icon(Icons.calendar_today),
               onPressed: () async {
-                final DateTime result = await showDatePicker(
+                final DateTime? result = await showDatePicker(
                   context: context,
                   initialDate: DateTime.now(),
                   firstDate: DateTime(1900),
@@ -214,7 +214,7 @@ class DateFieldState extends State<DateField> {
                 );
                 if (result != null) {
                   controller.text =
-                      reselectDateFormat(widget.store.state).format(result);
+                      reselectDateFormat(widget.store!.state).format(result);
                 }
                 FocusScope.of(context).nextFocus();
               },
@@ -240,7 +240,7 @@ class DescriptionWidget extends StatelessWidget {
 class DescriptionField extends StatefulWidget {
   const DescriptionField({this.store});
 
-  final Store<ConeState> store;
+  final Store<ConeState>? store;
 
   @override
   DescriptionFieldState createState() => DescriptionFieldState();
@@ -248,7 +248,7 @@ class DescriptionField extends StatefulWidget {
 
 class DescriptionFieldState extends State<DescriptionField> {
   final TextEditingController controller = TextEditingController();
-  StreamSubscription<ConeState> subscription;
+  late StreamSubscription<ConeState> subscription;
   String lastText = '';
   String converter(ConeState state) => state.transaction.description;
 
@@ -257,29 +257,29 @@ class DescriptionFieldState extends State<DescriptionField> {
     super.initState();
 
     controller.addListener(controllerListener);
-    subscription = widget.store.onChange.listen(storeListener);
+    subscription = widget.store!.onChange.listen(storeListener);
   }
 
   void controllerListener() {
     if (lastText == controller.text ||
-        converter(widget.store.state) == controller.text) {
+        converter(widget.store!.state) == controller.text) {
       return;
     }
 
-    widget.store.dispatch(UpdateDescriptionAction(controller.text));
+    widget.store!.dispatch(UpdateDescriptionAction(controller.text));
 
     lastText = controller.text;
   }
 
   void storeListener(ConeState state) {
-    if (controller.text == converter(widget.store.state)) {
+    if (controller.text == converter(widget.store!.state)) {
       return;
     }
     setState(
       () {
         controller
           ..removeListener(controllerListener)
-          ..text = converter(widget.store.state)
+          ..text = converter(widget.store!.state)
           ..addListener(controllerListener);
       },
     );
@@ -316,9 +316,9 @@ class DescriptionFieldState extends State<DescriptionField> {
             controller.text = suggestion;
           },
           suggestionsCallback: reselectDescriptionSuggestions(store.state),
-          transitionBuilder:
-              (BuildContext _, Widget suggestionsBox, AnimationController __) =>
-                  suggestionsBox,
+          transitionBuilder: (BuildContext _, Widget suggestionsBox,
+                  AnimationController? __) =>
+              suggestionsBox,
         );
       },
     );
@@ -328,7 +328,7 @@ class DescriptionFieldState extends State<DescriptionField> {
 class PostingWidget extends StatelessWidget {
   const PostingWidget(this.index);
 
-  final int index;
+  final int? index;
 
   @override
   Widget build(BuildContext context) {
@@ -371,8 +371,8 @@ class PostingWidget extends StatelessWidget {
 class AccountField extends StatefulWidget {
   const AccountField({this.store, this.index});
 
-  final Store<ConeState> store;
-  final int index;
+  final Store<ConeState>? store;
+  final int? index;
 
   @override
   AccountFieldState createState() => AccountFieldState();
@@ -380,16 +380,16 @@ class AccountField extends StatefulWidget {
 
 class AccountFieldState extends State<AccountField> {
   final TextEditingController controller = TextEditingController();
-  StreamSubscription<ConeState> subscription;
+  late StreamSubscription<ConeState> subscription;
   String lastText = '';
   String converter(ConeState state) =>
-      state.transaction.postings[widget.index].account;
+      state.transaction.postings[widget.index!].account;
 
   @override
   void initState() {
-    if (widget.index < widget.store.state.transaction.postings.length) {
+    if (widget.index! < widget.store!.state.transaction.postings.length) {
       controller.addListener(controllerListener);
-      subscription = widget.store.onChange.listen(storeListener);
+      subscription = widget.store!.onChange.listen(storeListener);
 
       super.initState();
     }
@@ -397,25 +397,25 @@ class AccountFieldState extends State<AccountField> {
 
   void controllerListener() {
     if (lastText == controller.text ||
-        converter(widget.store.state) == controller.text) {
+        converter(widget.store!.state) == controller.text) {
       return;
     }
-    widget.store.dispatch(
+    widget.store!.dispatch(
       UpdateAccountAction(index: widget.index, account: controller.text),
     );
     lastText = controller.text;
   }
 
   void storeListener(ConeState state) {
-    if (widget.index < widget.store.state.transaction.postings.length) {
-      if (controller.text == converter(widget.store.state)) {
+    if (widget.index! < widget.store!.state.transaction.postings.length) {
+      if (controller.text == converter(widget.store!.state)) {
         return;
       }
       setState(
         () {
           controller
             ..removeListener(controllerListener)
-            ..text = converter(widget.store.state)
+            ..text = converter(widget.store!.state)
             ..addListener(controllerListener);
         },
       );
@@ -439,10 +439,10 @@ class AccountFieldState extends State<AccountField> {
         textInputAction: TextInputAction.next,
         onSubmitted: (dynamic _) => FocusScope.of(context).nextFocus(),
         decoration: InputDecoration(
-          hintText: (widget.index <
-                  widget.store.state.hintTransaction.postings.length)
+          hintText: (widget.index! <
+                  widget.store!.state.hintTransaction.postings.length)
               ? widget
-                  .store.state.hintTransaction.postings[widget.index].account
+                  .store!.state.hintTransaction.postings[widget.index!].account
               : null,
         ),
       ),
@@ -452,9 +452,9 @@ class AccountFieldState extends State<AccountField> {
       onSuggestionSelected: (String suggestion) {
         controller.text = suggestion;
       },
-      suggestionsCallback: reselectAccountSuggestions(widget.store.state),
+      suggestionsCallback: reselectAccountSuggestions(widget.store!.state),
       transitionBuilder:
-          (BuildContext _, Widget suggestionsBox, AnimationController __) =>
+          (BuildContext _, Widget suggestionsBox, AnimationController? __) =>
               suggestionsBox,
     );
   }
@@ -463,8 +463,8 @@ class AccountFieldState extends State<AccountField> {
 class QuantityField extends StatefulWidget {
   const QuantityField({this.store, this.index});
 
-  final Store<ConeState> store;
-  final int index;
+  final Store<ConeState>? store;
+  final int? index;
 
   @override
   QuantityFieldState createState() => QuantityFieldState();
@@ -472,45 +472,45 @@ class QuantityField extends StatefulWidget {
 
 class QuantityFieldState extends State<QuantityField> {
   TextEditingController controller = TextEditingController();
-  StreamSubscription<ConeState> subscription;
+  late StreamSubscription<ConeState> subscription;
   String lastText = '';
-  String hint;
+  String? hint;
   String converter(ConeState state) =>
-      state.transaction.postings[widget.index].amount?.quantity;
+      state.transaction.postings[widget.index!].amount.quantity;
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.index < widget.store.state.transaction.postings.length) {
+    if (widget.index! < widget.store!.state.transaction.postings.length) {
       controller.addListener(controllerListener);
-      subscription = widget.store.onChange.listen(storeListener);
+      subscription = widget.store!.onChange.listen(storeListener);
 
-      hint = quantityHint(widget.store.state);
+      hint = quantityHint(widget.store!.state);
     }
   }
 
   void controllerListener() {
     if (lastText == controller.text ||
-        converter(widget.store.state) == controller.text) {
+        converter(widget.store!.state) == controller.text) {
       return;
     }
-    widget.store.dispatch(
+    widget.store!.dispatch(
       UpdateQuantityAction(index: widget.index, quantity: controller.text),
     );
     lastText = controller.text;
   }
 
   void storeListener(ConeState state) {
-    if (widget.index < widget.store.state.transaction.postings.length) {
-      if (controller.text == converter(widget.store.state)) {
+    if (widget.index! < widget.store!.state.transaction.postings.length) {
+      if (controller.text == converter(widget.store!.state)) {
         return;
       }
       setState(
         () {
           controller
             ..removeListener(controllerListener)
-            ..text = converter(widget.store.state)
+            ..text = converter(widget.store!.state)
             ..addListener(controllerListener);
         },
       );
@@ -528,23 +528,24 @@ class QuantityFieldState extends State<QuantityField> {
   @override
   Widget build(BuildContext context) {
     final bool lastField =
-        widget.index == widget.store.state.transaction.postings.length - 1 &&
-            widget.store.state.currencyOnLeft;
+        widget.index == widget.store!.state.transaction.postings.length - 1 &&
+            widget.store!.state.currencyOnLeft;
     return TextField(
       textAlign: TextAlign.center,
       controller: controller,
       decoration: InputDecoration(
-        hintText:
-            (widget.index < widget.store.state.hintTransaction.postings.length)
-                ? ((widget.store.state.hintTransaction.postings[widget.index]
-                        .amount.quantity.isNotEmpty)
-                    ? widget.store.state.hintTransaction.postings[widget.index]
-                        .amount.quantity
-                    : hint)
-                : hint,
+        hintText: (widget.index! <
+                widget.store!.state.hintTransaction.postings.length)
+            ? ((widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.quantity.isNotEmpty)
+                ? widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.quantity
+                : hint)
+            : hint,
       ),
       keyboardType: const TextInputType.numberWithOptions(
         decimal: true,
+        signed: true,
       ),
       textInputAction: lastField ? null : TextInputAction.next,
       onSubmitted: lastField ? null : (_) => FocusScope.of(context).nextFocus(),
@@ -555,8 +556,8 @@ class QuantityFieldState extends State<QuantityField> {
 class CommodityField extends StatefulWidget {
   const CommodityField({this.store, this.index});
 
-  final Store<ConeState> store;
-  final int index;
+  final Store<ConeState>? store;
+  final int? index;
 
   @override
   CommodityFieldState createState() => CommodityFieldState();
@@ -564,44 +565,44 @@ class CommodityField extends StatefulWidget {
 
 class CommodityFieldState extends State<CommodityField> {
   TextEditingController controller = TextEditingController();
-  StreamSubscription<ConeState> subscription;
+  late StreamSubscription<ConeState> subscription;
   String lastText = '';
-  String defaultCurrency;
+  String? defaultCurrency;
   String converter(ConeState state) =>
-      state.transaction.postings[widget.index].amount?.commodity;
+      state.transaction.postings[widget.index!].amount.commodity;
 
   @override
   void initState() {
-    if (widget.index < widget.store.state.transaction.postings.length) {
+    if (widget.index! < widget.store!.state.transaction.postings.length) {
       controller.addListener(controllerListener);
 
-      subscription = widget.store.onChange.listen(storeListener);
+      subscription = widget.store!.onChange.listen(storeListener);
     }
-    defaultCurrency = reselectCommodities(widget.store.state).first.value;
+    defaultCurrency = reselectCommodities(widget.store!.state).first.value;
     super.initState();
   }
 
   void controllerListener() {
     if (lastText == controller.text ||
-        converter(widget.store.state) == controller.text) {
+        converter(widget.store!.state) == controller.text) {
       return;
     }
-    widget.store.dispatch(
+    widget.store!.dispatch(
       UpdateCommodityAction(index: widget.index, commodity: controller.text),
     );
     lastText = controller.text;
   }
 
   void storeListener(ConeState state) {
-    if (widget.index < widget.store.state.transaction.postings.length) {
-      if (controller.text == converter(widget.store.state)) {
+    if (widget.index! < widget.store!.state.transaction.postings.length) {
+      if (controller.text == converter(widget.store!.state)) {
         return;
       }
       setState(
         () {
           controller
             ..removeListener(controllerListener)
-            ..text = converter(widget.store.state)
+            ..text = converter(widget.store!.state)
             ..addListener(controllerListener);
         },
       );
@@ -619,34 +620,34 @@ class CommodityFieldState extends State<CommodityField> {
   @override
   Widget build(BuildContext context) {
     final bool lastField =
-        widget.index == widget.store.state.transaction.postings.length - 1 &&
-            !widget.store.state.currencyOnLeft;
+        widget.index == widget.store!.state.transaction.postings.length - 1 &&
+            !widget.store!.state.currencyOnLeft;
 
     return TextField(
       textAlign: TextAlign.center,
       controller: controller,
       onTap: () async {
-        final Iterable<MapEntry<String, String>> entries =
-            reselectCommodities(widget.store.state);
-        final String commodity = await showSearch<String>(
+        final Iterable<MapEntry<String?, String?>> entries =
+            reselectCommodities(widget.store!.state);
+        final String? commodity = await showSearch<String?>(
           context: context,
           delegate: CommoditySearchDelegate(entries),
         );
         if (commodity != null) {
-          widget.store.dispatch(
+          widget.store!.dispatch(
             UpdateCommodityAction(index: widget.index, commodity: commodity),
           );
         }
       },
       decoration: InputDecoration(
-        hintText:
-            (widget.index < widget.store.state.hintTransaction.postings.length)
-                ? ((widget.store.state.hintTransaction.postings[widget.index]
-                        .amount.commodity.isNotEmpty)
-                    ? widget.store.state.hintTransaction.postings[widget.index]
-                        .amount.commodity
-                    : defaultCurrency)
-                : defaultCurrency,
+        hintText: (widget.index! <
+                widget.store!.state.hintTransaction.postings.length)
+            ? ((widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.commodity.isNotEmpty)
+                ? widget.store!.state.hintTransaction.postings[widget.index!]
+                    .amount.commodity
+                : defaultCurrency)
+            : defaultCurrency,
       ),
       textInputAction: lastField ? null : TextInputAction.next,
       onSubmitted: lastField ? null : (_) => FocusScope.of(context).nextFocus(),
@@ -669,10 +670,10 @@ class SaveButton extends StatelessWidget {
                   final Transaction transaction =
                       reselectImplicitTransaction(store.state);
                   appendFile(
-                    store.state.ledgerFileUri,
+                    store.state.ledgerFileUri!,
                     '$transaction',
                   ).then((_) {
-                    if (store.state.debugMode) {
+                    if (store.state.debugMode!) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         transactionSnackBar(transaction: transaction),
                       );
@@ -690,7 +691,7 @@ class SaveButton extends StatelessWidget {
   }
 }
 
-SnackBar transactionSnackBar({Transaction transaction}) {
+SnackBar transactionSnackBar({required Transaction transaction}) {
   return SnackBar(
     content: Column(
       mainAxisSize: MainAxisSize.min,
@@ -715,7 +716,7 @@ SnackBar transactionSnackBar({Transaction transaction}) {
                   style: const TextStyle(fontFamily: 'IBMPlexMono'),
                 ),
                 Text.rich(
-                  TextSpan(text: '${posting.amount ?? ''}'),
+                  TextSpan(text: '${posting.amount}'),
                   style: const TextStyle(fontFamily: 'IBMPlexMono'),
                 ),
               ],
@@ -727,11 +728,11 @@ SnackBar transactionSnackBar({Transaction transaction}) {
   );
 }
 
-class CommoditySearchDelegate extends SearchDelegate<String> {
+class CommoditySearchDelegate extends SearchDelegate<String?> {
   CommoditySearchDelegate(this.entries)
       : super(textInputAction: TextInputAction.done);
 
-  final Iterable<MapEntry<String, String>> entries;
+  final Iterable<MapEntry<String?, String?>> entries;
 
   // Workaround because of https://github.com/flutter/flutter/issues/32180
   @override
@@ -741,14 +742,12 @@ class CommoditySearchDelegate extends SearchDelegate<String> {
       return theme.copyWith(
         primaryColor: Colors.black,
         primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-        primaryColorBrightness: Brightness.dark,
         primaryTextTheme: theme.textTheme,
       );
     } else {
       return theme.copyWith(
         primaryColor: Colors.white,
         primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-        primaryColorBrightness: Brightness.light,
         primaryTextTheme: theme.textTheme,
       );
     }
@@ -774,26 +773,26 @@ class CommoditySearchDelegate extends SearchDelegate<String> {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    final Iterable<MapEntry<String, String>> matchedEntries = entries.where(
+    final Iterable<MapEntry<String?, String?>> matchedEntries = entries.where(
       (dynamic entry) {
         return entry.key.toLowerCase().contains(query.toLowerCase()) as bool ||
             entry.value.toLowerCase().contains(query.toLowerCase()) as bool;
       },
     );
-    String currentLocale;
+    String? currentLocale;
     return ListView.builder(
       itemCount: matchedEntries.length,
       itemBuilder: (BuildContext _, int index) {
         currentLocale = matchedEntries.elementAt(index).key;
         return InkWell(
           onTap: () =>
-              close(context, query = matchedEntries.elementAt(index).value),
+              close(context, query = matchedEntries.elementAt(index).value!),
           child: Card(
             child: Row(
               children: <Widget>[
                 Expanded(
                   child: ListTile(
-                    title: Text(currentLocale),
+                    title: Text(currentLocale!),
                   ),
                 ),
                 const Expanded(child: SizedBox()),
@@ -801,7 +800,7 @@ class CommoditySearchDelegate extends SearchDelegate<String> {
                   child: Align(
                     alignment: AlignmentDirectional.centerEnd,
                     child: ListTile(
-                      title: Text(matchedEntries.elementAt(index).value),
+                      title: Text(matchedEntries.elementAt(index).value!),
                     ),
                   ),
                 ),

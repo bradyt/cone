@@ -15,31 +15,22 @@ abstract class ConeState implements Built<ConeState, ConeStateBuilder> {
   factory ConeState([void Function(ConeStateBuilder) updates]) = _$ConeState;
   ConeState._();
 
-  @nullable
-  ConeBrightness get brightness;
-  @nullable
-  DateTime get today;
-  @nullable
-  Journal get journal;
+  ConeBrightness? get brightness;
+  DateTime? get today;
+  Journal? get journal;
   Spacing get spacing;
-  @nullable
-  String get contents;
-  @nullable
-  String get ledgerFileDisplayName;
-  @nullable
-  String get ledgerFileUri;
+  String? get contents;
+  String? get ledgerFileDisplayName;
+  String? get ledgerFileUri;
   String get numberLocale;
-  @nullable
-  String get systemLocale;
+  String? get systemLocale;
   Transaction get transaction;
   Transaction get hintTransaction;
   bool get currencyOnLeft;
-  @nullable
-  bool get debugMode;
+  bool? get debugMode;
   bool get initialized;
   bool get isRefreshing;
-  @nullable
-  bool get reverseSort;
+  bool? get reverseSort;
   bool get saveInProgress;
   int get postingKey;
   int get refreshCount;
@@ -89,8 +80,8 @@ String coneLogFormatter(
       '${state.transaction.postings.map((Posting posting) => '          Posting(\n'
           '              account: ${posting.account}\n'
           '              amount: Amount(\n'
-          '                  quantity: ${posting.amount?.quantity}\n'
-          '                  commodity: ${posting.amount?.commodity}\n'
+          '                  quantity: ${posting.amount.quantity}\n'
+          '                  commodity: ${posting.amount.commodity}\n'
           '              ),\n'
           '          ),\n').join('')}'
       '      ],\n'

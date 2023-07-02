@@ -4,7 +4,7 @@ homepage: https://github.com/bradyt/cone
 
 # The following line prevents the package from being accidentally published to
 # pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,11 +19,11 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 0.2.20+28
 
 environment:
-  sdk: ^2.9.0
-
+  sdk: ">=3.0.0 <4.0.0"
 dependencies:
   built_collection:
   built_value:
+  collection: ^1.15.0-nullsafety.4
   cone_lib:
     path: ../cone_lib
   cupertino_icons:
@@ -54,13 +54,11 @@ dev_dependencies:
   redux_dev_tools:
   test:
 
-
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
 # The following section is specific to Flutter.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.

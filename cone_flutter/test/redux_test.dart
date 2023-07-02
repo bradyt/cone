@@ -12,18 +12,23 @@ import 'package:cone/src/types.dart';
 void main() {
   group('Test state.dart.', () {
     test('Test ConeState.', () {
+      //ignore: unnecessary_type_check
       expect(ConeState() is ConeState, true);
     });
     test('Test coneMiddleWare.', () {
+      //ignore: unnecessary_type_check
       expect(coneMiddleware is List, true);
     });
     test('Test coneReducer.', () {
       expect(
-          coneReducer(ConeState(), Actions.markInitialized) is ConeState, true);
+          //ignore: unnecessary_type_check
+          coneReducer(ConeState(), Actions.markInitialized) is ConeState,
+          true);
     });
   });
   group('Test action.dart.', () {
     test('Test InitializeSettingsAction.', () {
+      //ignore: unnecessary_type_check
       expect(InitializeSettingsAction() is InitializeSettingsAction, true);
     });
     test('Test UpdateSettingsAction.', () {
@@ -82,6 +87,7 @@ void main() {
     ].fold<ConeState>(ConeState(), firstConeReducer);
 
     test('Test reduction is a state.', () {
+      //ignore: unnecessary_type_check
       expect(coneFinalState is ConeState, true);
     });
   });
@@ -92,7 +98,7 @@ void main() {
       middleware: coneMiddleware,
     );
 
-    SharedPreferences.setMockInitialValues(<String, dynamic>{
+    SharedPreferences.setMockInitialValues(<String, Object>{
       'brightness': 0,
     });
 

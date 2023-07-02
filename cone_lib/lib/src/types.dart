@@ -157,7 +157,7 @@ abstract class Posting implements Built<Posting, PostingBuilder> {
   String toString() {
     final int padding = max(
         2,
-        (amount?.commodityOnLeft ?? true)
+        (amount.commodityOnLeft ?? true)
             ? 52 - 4 - account.length - 2 - amount.toString().length
             : 52 - 4 - account.length - 2 - amount.quantity.toString().length);
     return '    $account  ${' ' * padding}$amount'.trimRight();
@@ -171,10 +171,8 @@ abstract class Amount implements Built<Amount, AmountBuilder> {
 
   String get commodity;
   String get quantity;
-  @nullable
-  bool get commodityOnLeft;
-  @nullable
-  int get spacing;
+  bool? get commodityOnLeft;
+  int? get spacing;
 
   static void _initializeBuilder(AmountBuilder b) => b
     ..quantity = ''
@@ -183,9 +181,9 @@ abstract class Amount implements Built<Amount, AmountBuilder> {
   @override
   String toString() {
     if (commodityOnLeft ?? true) {
-      return '${commodity ?? ''}${' ' * (spacing ?? 0)}$quantity';
+      return '$commodity${' ' * (spacing ?? 0)}$quantity';
     } else {
-      return '$quantity${' ' * (spacing ?? 0)}${commodity ?? ''}';
+      return '$quantity${' ' * (spacing ?? 0)}$commodity';
     }
   }
 }

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart' show IterableNullableExtension;
 import 'package:flutter/material.dart';
 
 class Transaction {
@@ -14,7 +15,7 @@ class Transaction {
       result += '\n  ' +
           postings
               .map((Posting ps) => ps.toString())
-              .where((String it) => it != null)
+              .whereNotNull()
               .join('\n  ');
     }
     return result.trimRight();
@@ -30,19 +31,19 @@ class Posting {
     this.currencyOnLeft,
   });
 
-  String account;
-  String amount;
-  String currency;
-  bool currencyOnLeft;
-  Key key;
+  String? account;
+  String? amount;
+  String? currency;
+  bool? currencyOnLeft;
+  Key? key;
 
   @override
   String toString() {
     if (account == null) {
-      return null;
+      return '';
     } else if (amount == '') {
       return '$account';
-    } else if (currencyOnLeft) {
+    } else if (currencyOnLeft!) {
       return '$account  $currency $amount'.trimRight();
     } else {
       return '$account  $amount $currency'.trimRight();

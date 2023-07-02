@@ -10,12 +10,12 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
   if (action is InitializeSettingsAction) {
     return state.rebuild(
       (ConeStateBuilder b) => b
-        ..brightness = ConeBrightness.values[action.settings.brightness ?? 0]
-        ..debugMode = action.settings.debugMode ?? false
+        ..brightness = ConeBrightness.values[action.settings!.brightness ?? 0]
+        ..debugMode = action.settings!.debugMode ?? false
         ..initialized = true
-        ..ledgerFileUri = action.settings.ledgerFileUri
-        ..ledgerFileDisplayName = action.settings.ledgerFileDisplayName
-        ..reverseSort = action.settings.reverseSort ?? true,
+        ..ledgerFileUri = action.settings!.ledgerFileUri
+        ..ledgerFileDisplayName = action.settings!.ledgerFileDisplayName
+        ..reverseSort = action.settings!.reverseSort ?? true,
     );
   } else if (action is UpdateSystemLocaleAction) {
     return state.rebuild(
@@ -44,14 +44,14 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
     return state.rebuild(
       (ConeStateBuilder b) => b
         ..hintTransaction.postings =
-            ((action.index < b.hintTransaction.postings.length)
-                ? (b.hintTransaction.postings..removeAt(action.index))
+            ((action.index! < b.hintTransaction.postings.length)
+                ? (b.hintTransaction.postings..removeAt(action.index!))
                 : b.hintTransaction.postings)
         ..transaction = state.transaction
             .rebuild(
               (TransactionBuilder tb) => tb.postings = tb.postings
                 ..removeAt(
-                  action.index,
+                  action.index!,
                 ),
             )
             .toBuilder(),
@@ -70,7 +70,7 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
     return state.rebuild(
       (ConeStateBuilder csb) => csb
         ..hintTransaction = reselectHintTransaction(state).toBuilder()
-        ..hintTransaction.date = reselectDateFormat(state).format(state.today),
+        ..hintTransaction.date = reselectDateFormat(state).format(state.today!),
     );
   } else if (action is UpdateTodayAction) {
     return state.rebuild(
@@ -99,8 +99,8 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
       (ConeStateBuilder b) => b
         ..transaction = state.transaction
             .rebuild(
-              (TransactionBuilder tb) =>
-                  tb.postings[action.index] = tb.postings[action.index].rebuild(
+              (TransactionBuilder tb) => tb.postings[action.index!] =
+                  tb.postings[action.index!].rebuild(
                 (PostingBuilder pb) => pb.account = action.account,
               ),
             )
@@ -111,8 +111,8 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
       (ConeStateBuilder b) => b
         ..transaction = state.transaction
             .rebuild(
-              (TransactionBuilder tb) =>
-                  tb.postings[action.index] = tb.postings[action.index].rebuild(
+              (TransactionBuilder tb) => tb.postings[action.index!] =
+                  tb.postings[action.index!].rebuild(
                 (PostingBuilder pb) =>
                     pb.amount = pb.amount..quantity = action.quantity,
               ),
@@ -124,8 +124,8 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
       (ConeStateBuilder b) => b
         ..transaction = state.transaction
             .rebuild(
-              (TransactionBuilder tb) =>
-                  tb.postings[action.index] = tb.postings[action.index].rebuild(
+              (TransactionBuilder tb) => tb.postings[action.index!] =
+                  tb.postings[action.index!].rebuild(
                 (PostingBuilder pb) =>
                     pb.amount = pb.amount..commodity = action.commodity,
               ),
@@ -137,23 +137,23 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
     switch (action.key) {
       case 'debug_mode':
         newState = state.rebuild(
-          (ConeStateBuilder b) => b..debugMode = action.value as bool,
+          (ConeStateBuilder b) => b..debugMode = action.value as bool?,
         );
         break;
       case 'ledger_file_uri':
         newState = state.rebuild(
-          (ConeStateBuilder b) => b..ledgerFileUri = action.value as String,
+          (ConeStateBuilder b) => b..ledgerFileUri = action.value as String?,
         );
         break;
       case 'ledger_file_display_name':
         newState = state.rebuild(
           (ConeStateBuilder b) =>
-              b..ledgerFileDisplayName = action.value as String,
+              b..ledgerFileDisplayName = action.value as String?,
         );
         break;
       case 'reverse_sort':
         newState = state.rebuild(
-          (ConeStateBuilder b) => b..reverseSort = action.value as bool,
+          (ConeStateBuilder b) => b..reverseSort = action.value as bool?,
         );
         break;
       default:
@@ -171,7 +171,7 @@ ConeState firstConeReducer(ConeState state, dynamic action) {
   } else if (action is UpdateJournalAction) {
     return state.rebuild(
       (ConeStateBuilder b) => b
-        ..journal = action.journal.toBuilder()
+        ..journal = action.journal!.toBuilder()
         ..isRefreshing = false
         ..refreshCount = state.refreshCount + 1,
     );

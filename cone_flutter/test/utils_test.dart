@@ -82,7 +82,7 @@ void main() {
       expect(
         implicitTransaction(
           defaultCommodity: '¤',
-          padZeros: ({String quantity, String commodity}) => padZeros(
+          padZeros: ({String? quantity, String? commodity}) => padZeros(
             locale: 'en',
             quantity: quantity,
             commodity: commodity,
@@ -95,7 +95,7 @@ void main() {
       expect(
         implicitTransaction(
           defaultCommodity: '¤',
-          padZeros: ({String quantity, String commodity}) => padZeros(
+          padZeros: ({String? quantity, String? commodity}) => padZeros(
             locale: 'en',
             quantity: quantity,
             commodity: commodity,
@@ -116,7 +116,7 @@ void main() {
       expect(
         implicitTransaction(
           defaultCommodity: '¤',
-          padZeros: ({String quantity, String commodity}) => padZeros(
+          padZeros: ({String? quantity, String? commodity}) => padZeros(
             locale: 'en',
             quantity: quantity,
             commodity: commodity,
@@ -170,9 +170,9 @@ extension CopyTransaction on Transaction {
       );
 
   Transaction copyWith({
-    String date,
-    String description,
-    BuiltList<Posting> postings,
+    String? date,
+    String? description,
+    BuiltList<Posting>? postings,
   }) =>
       rebuild(
         (TransactionBuilder b) => b
@@ -184,9 +184,9 @@ extension CopyTransaction on Transaction {
 
 extension CopyPosting on Posting {
   Posting copyWith({
-    int key,
-    String account,
-    Amount amount,
+    int? key,
+    String? account,
+    Amount? amount,
   }) =>
       rebuild(
         (PostingBuilder b) => b
@@ -198,10 +198,10 @@ extension CopyPosting on Posting {
 
 extension CopyAmount on Amount {
   Amount copyWith({
-    String quantity,
-    String commodity,
-    bool commodityOnLeft,
-    int spacing,
+    String? quantity,
+    String? commodity,
+    bool? commodityOnLeft,
+    int? spacing,
   }) =>
       rebuild(
         (AmountBuilder b) => b

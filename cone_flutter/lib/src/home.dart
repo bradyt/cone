@@ -94,7 +94,7 @@ class Transactions extends StatelessWidget {
 }
 
 class FormattedJournalItem extends StatelessWidget {
-  const FormattedJournalItem({@required this.transaction, @required this.dark});
+  const FormattedJournalItem({required this.transaction, required this.dark});
 
   // Color choices taken from
   // https://github.com/emacs-mirror/emacs/blob/emacs-26.3/lisp/font-lock.el
@@ -114,149 +114,90 @@ class FormattedJournalItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Widget formattedJournalItem;
     final Color colorNewline =
         dark ? const Color(0xffa9a9a9) : const Color(0xffd3d3d3);
     // final Color colorBuiltin =
     //     dark ? const Color(0xffb0c4de) : const Color(0xff483d8b);
     // final Color colorComment =
     //     dark ? const Color(0xffff7f24) : const Color(0xffb22222);
-    if (transaction is Transaction) {
-      final Color colorConstant =
-          dark ? const Color(0xff7fffd4) : const Color(0xff008b8b);
-      // final Color colorString =
-      //     dark ? const Color(0xffffa07a) : const Color(0xff8b2252);
-      final Color colorKeyword =
-          dark ? const Color(0xff00ffff) : const Color(0xff800080);
-      final Color colorWarning =
-          dark ? const Color(0xffffc0cb) : const Color(0xffff6a6a);
-      final String date = transaction.date;
-      final String description = transaction.description;
-      final Widget column = Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              FormatString(
-                text: date,
-                color: colorKeyword,
-              ),
-              Expanded(
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    children: <Widget>[
-                      const FormatString(text: ' '),
-                      FormatString(
-                        text: description,
-                        color: colorWarning,
-                      ),
-                      FormatString(
-                        text: '\$',
-                        color: colorNewline,
-                      ),
-                    ],
-                  ),
+    final Color colorConstant =
+        dark ? const Color(0xff7fffd4) : const Color(0xff008b8b);
+    // final Color colorString =
+    //     dark ? const Color(0xffffa07a) : const Color(0xff8b2252);
+    final Color colorKeyword =
+        dark ? const Color(0xff00ffff) : const Color(0xff800080);
+    final Color colorWarning =
+        dark ? const Color(0xffffc0cb) : const Color(0xffff6a6a);
+    final String date = transaction.date;
+    final String description = transaction.description;
+    final Widget formattedJournalItem = Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            FormatString(
+              text: date,
+              color: colorKeyword,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: <Widget>[
+                    const FormatString(text: ' '),
+                    FormatString(
+                      text: description,
+                      color: colorWarning,
+                    ),
+                    FormatString(
+                      text: '\$',
+                      color: colorNewline,
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
-          for (final Posting posting in transaction.postings)
-            Builder(
-              builder: (BuildContext _) {
-                final String account = posting.account;
-                final Amount amount = posting.amount;
-                return Row(
-                  children: <Widget>[
-                    const FormatString(text: '  '),
-                    Expanded(
-                      child: SingleChildScrollView(
-                        scrollDirection: Axis.horizontal,
-                        child: FormatString(
-                          text: account,
-                          color: null,
-                        ),
+            ),
+          ],
+        ),
+        for (final Posting posting in transaction.postings)
+          Builder(
+            builder: (BuildContext _) {
+              final String account = posting.account;
+              final Amount amount = posting.amount;
+              return Row(
+                children: <Widget>[
+                  const FormatString(text: '  '),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: FormatString(
+                        text: account,
+                        color: null,
                       ),
                     ),
-                    if (amount != null)
-                      Align(
-                        alignment: AlignmentDirectional.centerEnd,
-                        child: FormatString(
-                          text: amount.toString(),
-                          color: colorConstant,
-                        ),
-                      ),
-                  ],
-                );
-              },
-            ) // else Text(line)
-          ,
-        ],
-      );
-      formattedJournalItem = column;
-      // } else if (RegExp(r'[A-Za-z]').hasMatch(chunk[0])) {
-      //   formattedChunk = SingleChildScrollView(
-      //     scrollDirection: Axis.horizontal,
-      //     child: Builder(
-      //       builder: (BuildContext _) {
-      //         final List<String> lines = chunk.split('\n');
-      //         return Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: <Widget>[
-      //             for (String line in lines)
-      //               Row(
-      //                 children: <Widget>[
-      //                   FormatString(
-      //                     text: line,
-      //                     color: colorBuiltin,
-      //                   ),
-      //                   FormatString(
-      //                     text: '\$',
-      //                     color: colorNewline,
-      //                   ),
-      //                 ],
-      //               ),
-      //           ],
-      //         );
-      //       },
-      //     ),
-      //   );
-      // } else {
-      //   formattedChunk = SingleChildScrollView(
-      //     scrollDirection: Axis.horizontal,
-      //     child: Builder(
-      //       builder: (BuildContext _) {
-      //         final List<String> lines = chunk.split('\n');
-      //         return Column(
-      //           crossAxisAlignment: CrossAxisAlignment.start,
-      //           children: <Widget>[
-      //             for (String line in lines)
-      //               Row(
-      //                 children: <Widget>[
-      //                   FormatString(
-      //                     text: line,
-      //                     color: colorComment,
-      //                   ),
-      //                   FormatString(
-      //                     text: '\$',
-      //                     color: colorNewline,
-      //                   ),
-      //                 ],
-      //               ),
-      //           ],
-      //         );
-      //       },
-      //     ),
-      //   );
-    }
+                  ),
+                  Align(
+                    alignment: AlignmentDirectional.centerEnd,
+                    child: FormatString(
+                      text: amount.toString(),
+                      color: colorConstant,
+                    ),
+                  ),
+                ],
+              );
+            },
+          ) // else Text(line)
+        ,
+      ],
+    );
     return formattedJournalItem;
   }
 }
 
 class FormatString extends StatelessWidget {
-  const FormatString({@required this.text, this.color});
+  const FormatString({required this.text, this.color});
 
   final String text;
-  final Color color;
+  final Color? color;
 
   @override
   Widget build(BuildContext context) {
