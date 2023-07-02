@@ -150,7 +150,7 @@ void main() {
   });
   group('Test generated code.', () {
     test('Test built values.', () {
-      expect(() => Comment(), throwsA(isA<BuiltValueNullFieldError>()));
+      expect(Comment.new, throwsA(isA<BuiltValueNullFieldError>()));
       expect(
         () => Comment((CommentBuilder b) => b..firstLine = -1),
         throwsA(isA<BuiltValueNullFieldError>()),
