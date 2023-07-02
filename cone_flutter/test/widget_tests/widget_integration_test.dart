@@ -15,7 +15,7 @@ import 'package:cone/src/redux/state.dart';
 void main() {
   testWidgets('MyWidget has a title and message', (WidgetTester tester) async {
     const String mockedUri = 'Google Drive - blah.txt';
-    String mockedFile = '';
+    String? mockedFile = '';
 
     const MethodChannel('tangential.info/uri_picker')
         .setMockMethodCallHandler((MethodCall methodCall) async {
@@ -31,13 +31,13 @@ void main() {
         }
       } else if (methodCall.method == 'alterDocument') {
         if (methodCall.arguments['uri'] == mockedUri) {
-          return mockedFile = methodCall.arguments['newContents'] as String;
+          return mockedFile = methodCall.arguments['newContents'] as String?;
         }
       }
       return '';
     });
 
-    SharedPreferences.setMockInitialValues(<String, dynamic>{
+    SharedPreferences.setMockInitialValues(<String, Object>{
       'brightness': 0,
     });
 

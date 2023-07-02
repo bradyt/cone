@@ -9,18 +9,18 @@ void main() {
 }
 
 class MyApp extends StatefulWidget {
-  const MyApp({Key key}) : super(key: key);
+  const MyApp({Key? key}) : super(key: key);
 
   @override
   State<MyApp> createState() => _MyAppState();
 }
 
 class _MyAppState extends State<MyApp> {
-  String _uri;
+  String? _uri;
 
   // Platform messages are asynchronous, so we initialize in an async method.
   Future<void> pickUri() async {
-    String uri;
+    String? uri;
     // Platform messages may fail, so we use a try/catch PlatformException.
     try {
       uri = await UriPicker.pickUri();

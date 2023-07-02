@@ -8,12 +8,12 @@ get: $(PACKAGES)
 
 $(STATEGDART): $(PACKAGES)
 	cd ../cone_lib && make build
-	flutter pub run build_runner build
+	dart run build_runner build
 
 build: $(STATEGDART)
 
 watch: $(PACKAGES)
-	flutter pub run build_runner watch
+	dart run build_runner watch
 
 analyze:
 	flutter analyze --watch

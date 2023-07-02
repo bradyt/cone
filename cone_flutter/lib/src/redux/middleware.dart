@@ -15,12 +15,12 @@ dynamic isolateRefreshConeMiddleware(
     Store<ConeState> store, dynamic action, NextDispatcher next) {
   if (action == Actions.refreshFileContents) {
     if (store.state.ledgerFileUri != null) {
-      UriPicker.readTextFromUri(store.state.ledgerFileUri).then<void>(
-        (String contents) {
-          if (contents != store.state.contents) {
+      UriPicker.readTextFromUri(store.state.ledgerFileUri!).then<void>(
+        (String? contents) {
+          if (contents != null && contents != store.state.contents) {
             compute<String, String>(topLevelParser, contents).then(
               (String jsonJournal) {
-                final Journal journal = serializers.deserializeWith(
+                final Journal? journal = serializers.deserializeWith(
                   Journal.serializer,
                   jsonDecode(jsonJournal),
                 );
@@ -43,11 +43,11 @@ dynamic widgetTestRefreshConeMiddleware(
     Store<ConeState> store, dynamic action, NextDispatcher next) {
   if (action == Actions.refreshFileContents) {
     if (store.state.ledgerFileUri != null) {
-      UriPicker.readTextFromUri(store.state.ledgerFileUri).then<void>(
-        (String contents) {
+      UriPicker.readTextFromUri(store.state.ledgerFileUri!).then<void>(
+        (String? contents) {
           if (contents != store.state.contents) {
-            final String jsonJournal = topLevelParser(contents);
-            final Journal journal = serializers.deserializeWith(
+            final String jsonJournal = topLevelParser(contents!);
+            final Journal? journal = serializers.deserializeWith(
               Journal.serializer,
               jsonDecode(jsonJournal),
             );
@@ -79,9 +79,9 @@ dynamic firstConeMiddleware(
     );
   } else if (action == Actions.pickLedgerFileUri) {
     UriPicker.pickUri().then(
-      (String uri) {
-        UriPicker.getDisplayName(uri).then(
-          (String displayName) {
+      (String? uri) {
+        UriPicker.getDisplayName(uri!).then(
+          (String? displayName) {
             UriPicker.takePersistablePermission(uri).then(
               (_) {
                 store
@@ -97,9 +97,9 @@ dynamic firstConeMiddleware(
     );
   } else if (action == Actions.putEmptyFile) {
     UriPicker.putEmptyFile().then(
-      (String uri) {
-        UriPicker.getDisplayName(uri).then(
-          (String displayName) {
+      (String? uri) {
+        UriPicker.getDisplayName(uri!).then(
+          (String? displayName) {
             UriPicker.takePersistablePermission(uri).then(
               (_) {
                 store
@@ -114,7 +114,10 @@ dynamic firstConeMiddleware(
       },
     );
   } else if (action == Actions.submitTransaction) {
-    appendFile(store.state.ledgerFileUri, formattedTransaction(store.state))
+    if (store.state.ledgerFileUri == null) {
+      return;
+    }
+    appendFile(store.state.ledgerFileUri!, formattedTransaction(store.state))
         .then((_) {
       store.dispatch(Actions.refreshFileContents);
     });

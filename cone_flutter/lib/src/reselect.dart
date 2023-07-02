@@ -27,25 +27,25 @@ import 'package:cone/src/utils.dart'
         reducePostingFields,
         sortSuggestions;
 
-final Iterable<MapEntry<String, String>> localeCommodities =
-    numberFormatSymbols.entries.map<MapEntry<String, String>>(
-  (MapEntry<dynamic, dynamic> entry) => MapEntry<String, String>(
-    entry.key as String,
-    entry.value.DEF_CURRENCY_CODE as String,
+final Iterable<MapEntry<String?, String?>> localeCommodities =
+    numberFormatSymbols.entries.map<MapEntry<String?, String?>>(
+  (MapEntry<dynamic, dynamic> entry) => MapEntry<String?, String?>(
+    entry.key as String?,
+    entry.value.DEF_CURRENCY_CODE as String?,
   ),
 );
 
-final Selector<ConeState, Iterable<MapEntry<String, String>>>
+final Selector<ConeState, Iterable<MapEntry<String?, String?>>>
     reselectLocaleCommodities = createSelector1(
   (ConeState state) => state.systemLocale,
-  (String locale) {
+  (String? locale) {
     final int localeIndex = Iterable<int>.generate(localeCommodities.length)
         .firstWhere(
             (int index) => localeCommodities.elementAt(index).key == locale,
             orElse: () => -1);
     return (localeIndex == -1)
         ? localeCommodities
-        : Iterable<MapEntry<String, String>>.generate(
+        : Iterable<MapEntry<String?, String?>>.generate(
             localeCommodities.length,
             (int index) {
               if (index == 0) {
@@ -62,7 +62,7 @@ final Selector<ConeState, Iterable<MapEntry<String, String>>>
 
 final Selector<ConeState, Iterable<String>> reselectJournalCommodities =
     createSelector1(
-  (ConeState state) => state.journal.journalItems,
+  (ConeState state) => state.journal!.journalItems,
   (BuiltList<JournalItem> journalItems) {
     final List<String> commodities = <String>[];
     for (final JournalItem journalItem in journalItems) {
@@ -87,13 +87,13 @@ final Selector<ConeState, Iterable<String>> reselectJournalCommodities =
   },
 );
 
-final Selector<ConeState, Iterable<MapEntry<String, String>>>
+final Selector<ConeState, Iterable<MapEntry<String?, String?>>>
     reselectCommodities = createSelector2(
   reselectLocaleCommodities,
   reselectJournalCommodities,
-  (Iterable<MapEntry<String, String>> localeCommodities,
+  (Iterable<MapEntry<String?, String?>> localeCommodities,
       Iterable<String> journalCommodities) {
-    return Iterable<MapEntry<String, String>>.generate(
+    return Iterable<MapEntry<String?, String?>>.generate(
       journalCommodities.length + localeCommodities.length,
       (int index) => (index < journalCommodities.length)
           ? MapEntry<String, String>(
@@ -133,7 +133,7 @@ final Selector<ConeState, DateFormat> reselectDateFormat = createSelector1(
 
 final Selector<ConeState, bool> descriptionIsEmpty = createSelector1(
   (ConeState state) => state.transaction.description,
-  (String description) => description?.isEmpty ?? true,
+  (String? description) => description?.isEmpty ?? true,
 );
 
 final Selector<ConeState, List<List<bool>>> emptyPostingsFields =
@@ -183,23 +183,22 @@ final Selector<ConeState, BuiltList<Transaction>> reselectTransactions =
     createSelector2(
   (ConeState state) => state.journal,
   (ConeState state) => state.reverseSort,
-  (Journal journal, bool reverseSort) => reverseSort
-      ? journal.journalItems.reversed.whereType<Transaction>().toBuiltList()
-      : journal.journalItems.whereType<Transaction>().toBuiltList(),
+  (Journal? journal, bool? reverseSort) => reverseSort!
+      ? journal!.journalItems.reversed.whereType<Transaction>().toBuiltList()
+      : journal!.journalItems.whereType<Transaction>().toBuiltList(),
 );
 
 final Selector<ConeState, bool> makeSaveButtonAvailable = createSelector3(
   (ConeState state) => state.debugMode,
   (ConeState state) => state.saveInProgress,
   validTransaction,
-  (bool debugMode, bool saveInProgress, bool validTransaction) =>
-      (debugMode || validTransaction) && !saveInProgress,
+  (bool? debugMode, bool saveInProgress, bool validTransaction) =>
+      (debugMode! || validTransaction) && !saveInProgress,
 );
 
 final Selector<ConeState, String> formattedTransaction = (ConeState state) {
-  final String today = DateFormat('yyyy-MM-dd').format(DateTime.now());
   //ignore: lines_longer_than_80_chars
-  return '${state.transaction.rebuild((TransactionBuilder b) => b..date = state.transaction.date ?? today)}';
+  return '${state.transaction.rebuild((TransactionBuilder b) => b..date = state.transaction.date)}';
 };
 
 final Selector<ConeState, Transaction> reselectImplicitTransaction =
@@ -207,7 +206,7 @@ final Selector<ConeState, Transaction> reselectImplicitTransaction =
   return implicitTransaction(
     defaultCommodity: reselectCommodities(state).first.value,
     hintTransaction: state.hintTransaction,
-    padZeros: ({String quantity, String commodity}) => padZeros(
+    padZeros: ({String? quantity, String? commodity}) => padZeros(
       locale: state.numberLocale,
       quantity: quantity,
       commodity: commodity,
@@ -227,14 +226,14 @@ final Selector<ConeState, String> quantityHint = (ConeState state) => padZeros(
 
 final Selector<ConeState, List<String> Function(String)>
     reselectDescriptionSuggestions = createSelector1(
-  (ConeState state) => sortSuggestions(descriptions(state.journal)),
+  (ConeState state) => sortSuggestions(descriptions(state.journal!)),
   (List<String> sortedDescriptions) =>
       (String pattern) => filterSuggestions(pattern, sortedDescriptions),
 );
 
 final Selector<ConeState, List<String> Function(String)>
     reselectAccountSuggestions = createSelector1(
-  (ConeState state) => sortSuggestions(accounts(state.journal)),
+  (ConeState state) => sortSuggestions(accounts(state.journal!)),
   (List<String> sortedAccounts) =>
       (String pattern) => filterSuggestions(pattern, sortedAccounts),
 );

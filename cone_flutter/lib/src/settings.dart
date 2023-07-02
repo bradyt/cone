@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart' hide Actions;
 import 'package:flutter_redux/flutter_redux.dart' show StoreBuilder;
-import 'package:intl/intl.dart' show NumberFormat;
-import 'package:intl/number_symbols_data.dart' show numberFormatSymbols;
 import 'package:redux/redux.dart' show Store;
 
 import 'package:cone/src/localizations.dart';
@@ -14,7 +12,7 @@ class Settings extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(ConeLocalizations.of(context).settings),
+        title: Text(ConeLocalizations.of(context)!.settings!),
         actions: <Widget>[
           StoreBuilder<ConeState>(
             rebuildOnChange: false,
@@ -29,7 +27,7 @@ class Settings extends StatelessWidget {
                   return choices.map((Choice choice) {
                     return PopupMenuItem<Choice>(
                       value: choice,
-                      child: Text(choice.title),
+                      child: Text(choice.title!),
                     );
                   }).toList();
                 },
@@ -46,8 +44,8 @@ class Settings extends StatelessWidget {
 class Choice {
   const Choice({this.title, this.icon});
 
-  final String title;
-  final IconData icon;
+  final String? title;
+  final IconData? icon;
 }
 
 List<Choice> choices = const <Choice>[
@@ -76,7 +74,7 @@ class SettingsColumn extends StatelessWidget {
             ListTile(
               key: const Key('Pick ledger file'),
               leading: const Icon(Icons.link),
-              title: Text(ConeLocalizations.of(context).ledgerFile),
+              title: Text(ConeLocalizations.of(context)!.ledgerFile!),
               subtitle: Text(
                 generateAlias(
                   state.ledgerFileUri,
@@ -86,88 +84,6 @@ class SettingsColumn extends StatelessWidget {
               onTap: () => store.dispatch(Actions.pickLedgerFileUri),
             ),
           ],
-        );
-      },
-    );
-  }
-}
-
-class NumberLocaleSearchDelegate extends SearchDelegate<String> {
-  // Workaround because of https://github.com/flutter/flutter/issues/32180
-  @override
-  ThemeData appBarTheme(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    if (theme.brightness == Brightness.dark) {
-      return theme.copyWith(
-        primaryColor: Colors.black,
-        primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-        primaryColorBrightness: Brightness.dark,
-        primaryTextTheme: theme.textTheme,
-      );
-    } else {
-      return theme.copyWith(
-        primaryColor: Colors.white,
-        primaryIconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-        primaryColorBrightness: Brightness.light,
-        primaryTextTheme: theme.textTheme,
-      );
-    }
-  }
-
-  @override
-  //ignore: missing_return
-  List<Widget> buildActions(BuildContext context) {}
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () => close(context, null),
-    );
-  }
-
-  @override
-  //ignore: missing_return
-  Widget buildResults(BuildContext context) {}
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    final List<String> matchedLocales = numberFormatSymbols.keys.where(
-      (dynamic locale) {
-        return (locale as String).toLowerCase().contains(query.toLowerCase());
-      },
-    ).toList() as List<String>;
-    String currentLocale;
-    return ListView.builder(
-      itemCount: matchedLocales.length,
-      itemBuilder: (BuildContext _, int index) {
-        currentLocale = matchedLocales[index];
-        return InkWell(
-          onTap: () => close(context, query = matchedLocales[index]),
-          child: Card(
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  child: ListTile(
-                    title: Text(currentLocale),
-                  ),
-                ),
-                const Expanded(child: SizedBox()),
-                Expanded(
-                  child: Align(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: ListTile(
-                      title: Text(
-                        NumberFormat.decimalPattern(currentLocale).format(
-                          1234.56,
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
         );
       },
     );

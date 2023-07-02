@@ -12,15 +12,15 @@ class UriPicker {
   static const MethodChannel _channel =
       MethodChannel('tangential.info/uri_picker');
 
-  static Future<String> pickUri() async {
+  static Future<String?> pickUri() async {
     if (Platform.isIOS || Platform.isAndroid) {
       return await FilePickerWritable().openFile(
         (fileInfo, file) async => fileInfo.identifier,
       );
     }
-    String uri;
+    String? uri;
     try {
-      uri = await _channel.invokeMethod<dynamic>('pickUri') as String;
+      uri = await _channel.invokeMethod<dynamic>('pickUri') as String?;
     } on PlatformException {
       rethrow;
     } on MissingPluginException {
@@ -29,7 +29,7 @@ class UriPicker {
     return uri;
   }
 
-  static Future<String> putEmptyFile() async {
+  static Future<String?> putEmptyFile() async {
     if (Platform.isIOS || Platform.isAndroid) {
       Directory tempDir = await getTemporaryDirectory();
 
@@ -42,8 +42,9 @@ class UriPicker {
 
       String tzOffset =
           '${(tzIsNegative) ? '-' : '+'}${padInt(tzHours)}${padInt(tzMinutes)}';
-      String fileName = DateFormat('yyyyMMddTHHmmss').format(DateTime.now()) +
-          '${tzOffset}_${const Uuid().v4()}.txt';
+
+      String nowString = DateFormat("yyyyMMddTHHmmss").format(DateTime.now());
+      String fileName = '$nowString${tzOffset}_${const Uuid().v4()}.txt';
       File file = File('${tempDir.path}/$fileName');
       await file.writeAsString('');
 
@@ -52,11 +53,11 @@ class UriPicker {
             fileName: fileName,
             writer: (tempFile) => tempFile.writeAsString(''),
           )
-          .then((FileInfo fileInfo) => fileInfo.identifier);
+          .then((FileInfo? fileInfo) => fileInfo!.identifier);
     }
-    String uri;
+    String? uri;
     try {
-      uri = await _channel.invokeMethod<dynamic>('pickUri') as String;
+      uri = await _channel.invokeMethod<dynamic>('pickUri') as String?;
     } on PlatformException {
       rethrow;
     } on MissingPluginException {
@@ -65,19 +66,19 @@ class UriPicker {
     return uri;
   }
 
-  static Future<String> getDisplayName(String uri) async {
+  static Future<String?> getDisplayName(String uri) async {
     if (Platform.isIOS || Platform.isAndroid) {
       return await FilePickerWritable().readFile(
         identifier: uri,
         reader: (fileInfo, file) async => fileInfo.fileName,
       );
     }
-    String displayName;
+    String? displayName;
     try {
       displayName = await _channel
           .invokeMethod<dynamic>('getDisplayName', <String, String>{
         'uri': uri,
-      }) as String;
+      }) as String?;
     } on PlatformException {
       rethrow;
     }
@@ -86,7 +87,7 @@ class UriPicker {
 
   static Future<void> isUriOpenable(String uri) async {
     if (Platform.isIOS || Platform.isAndroid) {
-      return true;
+      return;
     }
     try {
       await _channel.invokeMethod<dynamic>('isUriOpenable', <String, String>{
@@ -101,7 +102,7 @@ class UriPicker {
 
   static Future<void> takePersistablePermission(String uri) async {
     if (Platform.isIOS || Platform.isAndroid) {
-      return true;
+      return;
     }
     try {
       await _channel
@@ -115,19 +116,19 @@ class UriPicker {
     }
   }
 
-  static Future<String> readTextFromUri(String uri) async {
+  static Future<String?> readTextFromUri(String uri) async {
     if (Platform.isIOS || Platform.isAndroid) {
       return await FilePickerWritable().readFile(
         identifier: uri,
         reader: (fileInfo, file) => file.readAsString(),
       );
     }
-    String fileContents;
+    String? fileContents;
     try {
       fileContents = await _channel
           .invokeMethod<dynamic>('readTextFromUri', <String, String>{
         'uri': uri,
-      }) as String;
+      }) as String?;
     } on PlatformException {
       rethrow;
     }

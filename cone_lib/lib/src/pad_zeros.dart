@@ -3,11 +3,11 @@
 
 import 'package:intl/intl.dart' show NumberFormat;
 
-String padZeros({String locale, String quantity, String commodity}) {
+String padZeros({String? locale, String? quantity, String? commodity}) {
   if (locale == null || quantity == null) {
     throw Exception('Please use explicit locale with padZeros');
   }
-  final int decimalDigits =
+  final int? decimalDigits =
       NumberFormat.currency(name: commodity).decimalDigits;
   final NumberFormat parser = NumberFormat.decimalPattern(locale);
   NumberFormat formatter;
@@ -20,7 +20,7 @@ String padZeros({String locale, String quantity, String commodity}) {
       final int integerDigits = parsed.round().toString().length;
 
       formatter = NumberFormat(
-          '0.${'0' * decimalDigits}'
+          '0.${'0' * decimalDigits!}'
           '${'#' * (15 - integerDigits - decimalDigits)}',
           locale);
       final String result = formatter.format(parsed);

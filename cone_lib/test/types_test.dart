@@ -133,12 +133,13 @@ void main() {
   });
   group('Copying a posting.', () {
     final Posting posting0 = Posting(
-      (dynamic b) => b
+      (PostingBuilder b) => b
         ..key = 0
         ..account = 'a',
     );
-    final Posting posting1 = posting0.rebuild((dynamic b) => b..key = 1);
-    final Posting posting2 = posting1.rebuild((dynamic b) => b..account = 'b');
+    final Posting posting1 = posting0.rebuild((PostingBuilder b) => b..key = 1);
+    final Posting posting2 =
+        posting1.rebuild((PostingBuilder b) => b..account = 'b');
     test('Just a key.', () {
       expect(posting1.key, 1);
     });
@@ -149,7 +150,7 @@ void main() {
   });
   group('Test generated code.', () {
     test('Test built values.', () {
-      expect(() => Comment(), throwsA(isA<BuiltValueNullFieldError>()));
+      expect(Comment.new, throwsA(isA<BuiltValueNullFieldError>()));
       expect(
         () => Comment((CommentBuilder b) => b..firstLine = -1),
         throwsA(isA<BuiltValueNullFieldError>()),
@@ -176,7 +177,7 @@ void main() {
           ..comment = ''),
       );
 
-      expect(trivialComment.hashCode, 182578061);
+      expect(trivialComment.hashCode, 307143837);
 
       expect(
         () => CommentBuilder().build(),
@@ -188,11 +189,6 @@ void main() {
       expect(
         () => CommentBuilder().build(),
         throwsA(isA<BuiltValueNullFieldError>()),
-      );
-
-      expect(
-        () => trivialComment.toBuilder()..replace(null),
-        throwsA(isArgumentError),
       );
     });
   });

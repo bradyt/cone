@@ -113,10 +113,10 @@ Transaction _parseTransaction(Token<String> token) {
 }
 
 Amount _parseAmount(String amount) {
-  String commodity;
-  String quantity;
-  bool commodityOnLeft;
-  int spacing;
+  String? commodity;
+  String? quantity;
+  bool? commodityOnLeft;
+  int? spacing;
 
   if (amount.startsWith(RegExp(r'[-+0-9.,]+'))) {
     commodityOnLeft = false;
